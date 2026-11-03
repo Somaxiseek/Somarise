@@ -1,0 +1,140 @@
+<view class="page form-page">
+  <!-- 卡片复习模式：一次一张，左右滑换下一个 -->
+  <block wx:if="{{view==='card'}}">
+    <view class="vc-top">
+      <view class="vc-back" bindtap="closeCards" hover-class="vc-tap" role="button" aria-label="回到词库列表">
+        <view class="vc-back-caret"></view><text>列表</text>
+      </view>
+      <text class="vc-count">{{idx + 1}} / {{deckLen}}</text>
+      <view class="vc-shuffle" bindtap="reshuffle" hover-class="vc-tap" role="button" aria-label="重新洗牌">{{deckLen>1 ? '换一批' : ''}}</view>
+    </view>
+
+    <view class="vc-stage">
+      <view class="vcard {{anim ? 'vcard-anim' : ''}} {{flipped ? 'vcard-open' : ''}}" style="transform: translateX({{dx}}px) rotate({{rot}}deg);"
+            bindtouchstart="onCardStart" bindtouchmove="onCardMove" bindtouchend="onCardEnd" bindtouchcancel="onCardCancel"
+            bindtap="flip" role="button" aria-label="{{flipped ? '收起 ' : '看 '}}{{card.word}} 的释义">
+        <view wx:if="{{card}}" class="vcard-in">
+          <view class="vcard-meta">
+            <text class="vcard-cat">{{card.catLabel}}</text>
+          </view>
+
+          <view class="vcard-head {{flipped ? 'is-open' : ''}}">
+            <view class="vcard-word-wrap">
+              <view class="vcard-word">{{card.word}}</view>
+              <view wx:if="{{card.audio}}" class="speak vcard-speak" catchtap="speakCard" hover-class="speak-hover" role="button" aria-label="朗读 {{card.word}}"><view class="speak-icon"></view></view>
+            </view>
+            <view class="vcard-ipa">{{card.ipa}}<text class="vpos"> {{card.pos}}</text></view>
+          </view>
+
+          <block wx:if="{{flipped}}">
+            <view class="vcard-zh">{{card.meaning}}</view>
+            <view class="vcard-lines">
+              <view wx:for="{{card.lines}}" wx:key="index" class="vcard-line">
+                <view class="vcard-en">
+                  <block wx:for="{{item.segs}}" wx:for-item="seg" wx:key="index">
+                    <text wx:if="{{seg.id}}" class="wl" data-id="{{seg.id}}" catchtap="openWord" hover-class="wl-hover" role="button" aria-label="看 {{seg.t}} 的意思">{{seg.t}}</text>
+                    <text wx:else>{{seg.t}}</text>
+                  </block>
+                </view>
+                <view class="vcard-zh-line">{{item.zh}}</view>
+              </view>
+            </view>
+          </block>
+          <view wx:else class="vcard-hint">点一下看释义</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="vc-foot">
+      <view class="vc-arrows">
+        <view class="vc-arrow" bindtap="prev" hover-class="vc-tap" role="button" aria-label="上一个"><view class="vc-arrow-caret vc-arrow-left"></view></view>
+        <view class="vc-arrow" bindtap="next" hover-class="vc-tap" role="button" aria-label="下一个"><view class="vc-arrow-caret"></view></view>
+      </view>
+      <view class="vc-tip">左右滑换下一个 · 顺序每次都不一样</view>
+    </view>
+  </block>
+
+  <block wx:else>
+    <view class="vocab-top">
+      <text class="vocab-title">我的词库</text>
+      <view class="vocab-top-right">
+        <text class="vocab-sub">{{stats.learned}} / {{stats.total}}</text>
+        <view wx:if="{{list.length && filter!=='new'}}" class="vcard-entry" bindtap="openCards" hover-class="vc-tap" role="button" aria-label="随机卡片复习">卡片</view>
+      </view>
+    </view>
+
+    <view class="vocab-sum">
+      <view class="sum-cell"><text class="sum-num">{{stats.total - stats.learned}}</text>未学</view>
+      <view class="sum-cell"><text class="sum-num">{{stats.learning}}</text>待回忆</view>
+      <view class="sum-cell"><text class="sum-num">{{stats.known}}</text>已掌握</view>
+      <view class="sum-cell"><text class="sum-num">{{dueCount}}</text>今天到期</view>
+    </view>
+
+    <view class="vocab-filter">
+      <text wx:for="{{filters}}" wx:key="key" class="vchip {{filter===item.key?'vchip-on':''}}" data-key="{{item.key}}" bindtap="pickFilter" role="button" aria-label="筛选 {{item.label}}">{{item.label}} {{item.n}}</text>
+    </view>
+
+    <view class="vocab-list">
+      <!-- 未学：轻量列表，点一行去单词页；待学的排前面挂着小签 -->
+      <block wx:if="{{filter==='new'}}">
+        <view wx:for="{{list}}" wx:key="id" class="vocab-row" data-id="{{item.id}}" bindtap="openWord" role="button" aria-label="看 {{item.word}} 的意思">
+          <view class="vrow">
+            <view class="vmain">
+              <text class="vword">{{item.word}}</text>
+              <text class="vzh">{{item.meaning}}<text class="vpos"> {{item.pos}}</text></text>
+            </view>
+            <view class="vrow-right">
+              <view class="speak" data-id="{{item.id}}" catchtap="speak" role="button" aria-label="朗读 {{item.word}}" wx:if="{{item.audio}}"><view class="speak-icon"></view></view>
+              <text class="vbadge {{item.parked?'vbadge-due':'vbadge-new'}}">{{item.dueLabel}}</text>
+            </view>
+          </view>
+        </view>
+        <view wx:if="{{newMore}}" class="vocab-more" bindtap="loadMoreNew" hover-class="btn-ghost-hover" role="button" aria-label="再看 100 个">再往下翻 100 个</view>
+        <view wx:if="{{loaded && !list.length}}" class="empty-note">词库里的词全学过了，厉害。</view>
+      </block>
+
+      <!-- 待回忆 / 已掌握：学过的词，点一行展开例句 -->
+      <block wx:else>
+      <view wx:for="{{list}}" wx:key="id" class="vocab-row" data-id="{{item.id}}" bindtap="toggle" role="button" aria-label="展开 {{item.word}} 的例句">
+        <view class="vrow">
+          <view class="vmain">
+            <text class="vword">{{item.word}}</text>
+            <text class="vzh">{{item.meaning}}<text class="vpos"> {{item.pos}}</text></text>
+          </view>
+          <view class="vrow-right">
+            <view class="speak" data-id="{{item.id}}" catchtap="speak" role="button" aria-label="朗读 {{item.word}}" wx:if="{{item.audio}}"><view class="speak-icon"></view></view>
+            <text class="vbadge vbadge-{{item.state}}">{{item.dueLabel}}</text>
+          </view>
+        </view>
+        <view wx:if="{{openId===item.id}}" class="vbody">
+          <view wx:for="{{item.lines}}" wx:key="index" class="vline">
+            <view class="line-body">
+              <view class="line-en">
+                <block wx:for="{{item.segs}}" wx:for-item="seg" wx:key="index">
+                  <text wx:if="{{seg.id}}" class="wl" data-id="{{seg.id}}" catchtap="openWord" hover-class="wl-hover" role="button" aria-label="看 {{seg.t}} 的意思">{{seg.t}}</text>
+                  <text wx:else>{{seg.t}}</text>
+                </block>
+              </view>
+              <view class="line-zh">{{item.zh}}</view>
+            </view>
+            <view wx:if="{{item.audio}}" class="line-speak" catchtap="speakLine" data-word="{{item.wid}}" data-index="{{index}}" hover-class="line-speak-hover" role="button" aria-label="朗读这一句"><view class="line-speak-icon"></view></view>
+          </view>
+        </view>
+      </view>
+      </block>
+    </view>
+
+    <view wx:if="{{loaded && filter!=='new' && !list.length}}" class="empty-note">{{filter==='mastered'?'走完记忆曲线的词都会进到这里。':'这里还是空的。学过的词都会收进来。'}}</view>
+
+    <!-- 进学习的入口：有词的时候吸在屏幕底部，空的时候跟着提示语，别让人找不到 -->
+    <view hover-class="btn-soft-hover-fixed" class="vocab-cta {{list.length && filter!=='new' ? 'vocab-cta-fixed' : 'vocab-cta-inline'}}" bindtap="goLearn" role="button" aria-label="{{dueCount ? '复习今天到期的 ' + dueCount + ' 个词' : '学几个新词'}}">
+      <text class="cta-text">{{filter==='new' ? '去学几个新词' : (dueCount ? '复习今天到期的 ' + dueCount + ' 个' : '学几个新词')}}</text>
+      <view class="cta-arrow"></view>
+    </view>
+
+    <!-- 重新开始：清掉全部学习进度。学过词才给看，新用户没有可清的 -->
+    <view wx:if="{{loaded && stats.learned}}" class="vocab-reset" hover-class="btn-ghost-hover" bindtap="resetLearn" role="button" aria-label="重新开始，清空学习进度">想重新开始？清空学习进度</view>
+  </block>
+
+  <dock current=""/>
+</view>

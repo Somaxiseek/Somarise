@@ -1,0 +1,54 @@
+/* 体测：记录今天 + 按年/月/周折叠的趋势（沿用记录页轻量化语言） */
+.body-page { padding: 24rpx var(--pad-page) calc(170rpx + env(safe-area-inset-bottom)); --accent: #32A964; --accent-ink: #fff; }
+.body-heading { font-size: var(--fs-title); font-weight: 750; color: var(--ink-1); letter-spacing: -1rpx; margin: 10rpx 0 20rpx; }
+
+.body-card { background: #fff; border-radius: 32rpx; padding: 24rpx var(--pad-card) 20rpx; margin-bottom: 16rpx; box-shadow: 0 1rpx 6rpx rgba(17,17,17,.03); }
+.body-row.head { display: flex; align-items: baseline; justify-content: space-between; gap: 16rpx; }
+.body-label { font-size: var(--fs-caption); font-weight: 400; color: var(--ink-5); line-height: 1.6; }
+.body-note { font-size: var(--fs-caption); color: var(--ink-6); }
+.body-scope { font-size: var(--fs-caption); color: var(--ink-6); margin-left: 12rpx; }
+.body-date { font-size: var(--fs-caption); color: var(--ink-4); flex: none; }
+
+.body-fields { display: flex; gap: 30rpx; margin-top: 16rpx; }
+.body-field { flex: 1; min-width: 0; border-bottom: 1rpx solid #f0f0f1; padding-bottom: 6rpx; }
+.body-field label { display: block; font-size: var(--fs-caption); color: var(--ink-5); margin: 0 0 2rpx; }
+.body-field input { font-size: var(--fs-subhead); color: var(--ink-1); height: 72rpx; padding: 0; background: transparent; border: 0; border-radius: 0; }
+
+.body-save { margin-top: 22rpx; }
+.body-ok { font-size: var(--fs-caption); color: #32A964; margin-top: 14rpx; text-align: center; }
+
+/* 图例 + 折线图 */
+.body-legend { display: flex; gap: 18rpx; flex: none; }
+.lg { display: flex; align-items: center; gap: 8rpx; font-size: var(--fs-caption); color: var(--ink-5); }
+.lg::before { content: ''; width: 12rpx; height: 12rpx; border-radius: 50%; }
+.lg-weight::before { background: #32A964; }
+.lg-waist::before { background: #3D6EDC; }
+.body-chart { display: block; width: 100%; height: 340rpx; margin-top: 14rpx; }
+.range-row { display: flex; gap: 10rpx; margin-top: 16rpx; }
+.range-chip { padding: 0 24rpx; line-height: 54rpx; border-radius: 100rpx; background: #f5f5f6; color: var(--ink-4); font-size: var(--fs-caption); border: 1rpx solid transparent; transition: background .2s ease, color .2s ease; }
+/* 选中态跟记录页的日期分段同一套：白底 + 这一页自己的描边色 + 墨色字，
+   不再用浅绿底 —— 全站「筛选选中」只有一种长相 */
+.range-chip-on { background: #ffffff; border: 1rpx solid #32A964; color: var(--ink-1); font-weight: 600; }
+.body-hint { font-size: var(--fs-caption); color: var(--ink-6); line-height: 1.6; margin-top: 12rpx; }
+
+/* 年 → 月 → 周 折叠列表 */
+.tree-year { border-top: 1rpx solid #f5f5f6; }
+.tree-year:first-of-type { border-top: 0; }
+.tree-row { display: flex; align-items: center; padding: 15rpx 0; font-size: var(--fs-caption); color: var(--ink-3); }
+.tree-year-row { font-size: var(--fs-meta); color: var(--ink-1); font-weight: 600; }
+.tree-month-row { padding-left: 26rpx; color: var(--ink-2); }
+.tree-week-row { padding-left: 52rpx; color: var(--ink-4); font-size: var(--fs-caption); }
+.tree-caret { width: 22rpx; flex: none; font-size: var(--fs-micro); color: var(--ink-6); }
+.tree-leaf { color: var(--ink-7); }
+.tree-name { flex: 1.1; min-width: 0; }
+.tree-val { flex: 1; min-width: 0; text-align: center; font-variant-numeric: tabular-nums; }
+.tree-count { flex: none; width: 76rpx; text-align: right; font-size: var(--fs-micro); color: var(--ink-5); }
+.tree-row-open .tree-name { font-weight: 700; color: var(--ink-1); }
+
+/* 记录列表 */
+.body-empty { font-size: var(--fs-meta); color: var(--ink-5); padding: 26rpx 0 10rpx; text-align: center; }
+.body-entry { display: flex; align-items: center; gap: 14rpx; padding: 16rpx 0; border-top: 1rpx solid #f5f5f6; font-size: var(--fs-caption); color: var(--ink-3); }
+.body-entry:first-of-type { border-top: 0; }
+.body-entry-date { flex: .9; min-width: 0; color: var(--ink-1); font-weight: 600; }
+.body-entry-val { flex: 1; min-width: 0; text-align: center; font-variant-numeric: tabular-nums; }
+.body-entry-del { flex: none; color: var(--ink-6); font-size: var(--fs-caption); padding: 4rpx 8rpx; }

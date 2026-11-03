@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "dock": "/components/dock/dock",
+    "chart-heat": "/components/chart-heat/chart-heat",
+    "pixel-face": "/components/pixel-face/pixel-face"
+  }
+}

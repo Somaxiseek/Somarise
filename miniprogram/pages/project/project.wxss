@@ -1,0 +1,51 @@
+/* 项目详情：头图 + 今天优先的布局，统计类信息逐步下移 */
+.det-page { padding: 24rpx var(--pad-page) calc(170rpx + env(safe-area-inset-bottom)); }
+.det-head { display: flex; flex-direction: column; align-items: center; padding: 24rpx 0 4rpx; text-align: center; }
+.det-title { font-size: var(--fs-title); font-weight: 700; margin-top: 18rpx; letter-spacing: -1rpx; }
+.det-sub { font-size: var(--fs-meta); color: var(--ink-4); margin-top: 8rpx; }
+.det-meta { font-size: var(--fs-caption); color: var(--ink-5); margin-top: 8rpx; }
+
+.det-card { background: #fff; border-radius: 32rpx; padding: 26rpx var(--pad-card); margin: 18rpx 0 0; box-shadow: 0 1rpx 6rpx rgba(17,17,17,.03); }
+.det-card-title { display: flex; align-items: baseline; justify-content: space-between; font-size: var(--fs-body); font-weight: 600; color: var(--ink-1); }
+.det-card-note { font-size: var(--fs-caption); color: var(--ink-5); font-weight: 400; }
+.det-hint { font-size: var(--fs-caption); color: var(--ink-5); line-height: 1.7; margin-top: 14rpx; }
+.det-more { text-align: center; font-size: var(--fs-caption); color: var(--ink-5); padding: 20rpx 0 2rpx; }
+
+.det-stats { display: flex; margin-top: 20rpx; }
+.det-stat { flex: 1; min-width: 0; text-align: center; }
+.det-stat + .det-stat { border-left: 1rpx solid #f4f4f5; }
+.det-num { display: block; font-size: var(--fs-title); font-weight: 700; color: var(--ink-1); font-variant-numeric: tabular-nums; }
+.det-cap { display: block; font-size: var(--fs-micro); color: var(--ink-5); margin-top: 6rpx; }
+
+.det-week { display: flex; gap: 12rpx; margin-top: 20rpx; }
+.det-dot { flex: 1; height: 12rpx; border-radius: 6rpx; background: #f0f0f0; }
+.det-page .goal-track { margin-top: 18rpx; height: 6rpx; }
+
+/* 快捷操作（编辑 / 历史 / 补录）：下沉到统计之后，量级也放轻 */
+.det-actions { display: flex; gap: 14rpx; margin: 22rpx 0 0; }
+.det-action { flex: 1; min-width: 0; text-align: center; line-height: 84rpx; background: #fff; border-radius: 20rpx; font-size: var(--fs-meta); color: var(--ink-3); padding: 0; margin: 0; border: 0; box-sizing: border-box; box-shadow: 0 1rpx 6rpx rgba(17,17,17,.03); }
+
+/* ---- 饮水：今天 ---- */
+.det-water { padding-bottom: 20rpx; }
+.det-water-date { font-size: var(--fs-caption); color: var(--ink-5); }
+.det-water-main { display: flex; align-items: center; gap: 24rpx; margin-top: 18rpx; }
+.det-ring { flex: none; display: flex; }
+.det-water-side { flex: 1; min-width: 0; }
+.det-water-num { font-size: var(--fs-em); font-weight: 700; color: var(--ink-1); font-variant-numeric: tabular-nums; }
+.det-water-unit { font-size: var(--fs-caption); font-weight: 400; color: var(--ink-5); }
+.det-water-remain { font-size: var(--fs-caption); color: var(--ink-5); margin-top: 6rpx; }
+.det-water-quick { display: flex; gap: 10rpx; margin-top: 16rpx; }
+.det-water-quick button { flex: 1; min-width: 0; margin: 0; padding: 0; line-height: 60rpx; border-radius: 16rpx; background: #f5f5f6; color: var(--ink-1); font-size: var(--fs-meta); font-weight: 600; }
+
+.det-water-input { display: flex; gap: 12rpx; align-items: center; margin-top: 20rpx; }
+.det-water .water-amount { flex: 1; min-width: 0; height: 80rpx; min-height: 80rpx; padding: 0 20rpx; margin: 0; background: #f7f7f8; border: 0; border-radius: 16rpx; font-size: var(--fs-body); }
+.det-water-save { flex: 0 0 140rpx; width: 140rpx; margin: 0; padding: 0; line-height: 80rpx; height: 80rpx; border-radius: 16rpx; background: #ededed; color: var(--ink-5); font-size: var(--fs-meta); font-weight: 600; }
+/* 以前写成 var(--accent)，而 --accent 是浅灰 #e8e8e8，白字压浅灰等于看不见 */
+.det-water-save-on { background: #ffffff; color: #2f5a63; border: 2rpx solid #C4E6EC; box-shadow: 0 4rpx 14rpx rgba(6, 150, 180, .10); }
+
+.det-water-foot { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; margin-top: 16rpx; font-size: var(--fs-caption); color: var(--ink-6); }
+.det-water-mode { color: var(--ink-5); }
+
+/* 记录列表：卡内用分隔线，不再套一层白卡 */
+.det-page .history-item { background: transparent; padding: 18rpx 0; margin: 0; border-radius: 0; border-top: 1rpx solid #f5f5f6; font-size: var(--fs-meta); }
+.det-page .empty-note { padding: 28rpx 8rpx; font-size: var(--fs-meta); }

@@ -1,0 +1,8 @@
+<view class="ring" style="width:{{size}}px;height:{{size}}px" role="progressbar" aria-label="{{label||percent+'%'}}">
+  <view class="ring-track" style="background:{{track}}">
+    <view class="ring-fill" style="background:{{fill}}"/>
+    <view class="ring-hole" style="left:{{stroke}}px;top:{{stroke}}px;width:{{hole}}px;height:{{hole}}px;background:{{bg}}"/>
+    <view wx:for="{{caps}}" wx:key="key" class="ring-cap" style="left:{{item.left}}px;top:{{item.top}}px;width:{{item.dotSize}}px;height:{{item.dotSize}}px;background:{{item.color}};box-shadow:{{item.shadow}}"/>
+  </view>
+  <view class="ring-label" style="font-size:{{numFont}}px;color:{{labelColor}}">{{label||percent+'%'}}</view>
+</view>

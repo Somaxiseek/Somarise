@@ -1,0 +1,2 @@
+<view class="page form-page"><view class="screen-heading">{{ocr?'选择截图对应项目':'选择打卡项目'}}</view><view class="project-row" wx:for="{{projects}}" wx:key="id" data-id="{{item.id}}" bindtap="choose"><text class="project-row-main">{{item.name}}</text><text>›</text></view>  <dock current=""/>
+</view>

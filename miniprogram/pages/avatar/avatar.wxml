@@ -1,0 +1,33 @@
+<view class="page form-page">
+  <view class="screen-heading">挑个头像</view>
+  <view class="field-note">20 位朋友，随时可以换</view>
+
+  <view class="av-card">
+    <block wx:for="{{groups}}" wx:key="title" wx:for-item="g">
+      <view class="av-group-title">
+        <text class="av-gt-t">{{g.title}}</text>
+        <view class="av-gt-line"></view>
+      </view>
+      <view class="av-grid">
+        <view class="av-item" wx:for="{{g.items}}" wx:key="id" wx:for-item="item"
+          data-id="{{item.id}}" bindtap="pick" hover-class="av-hover">
+          <view class="av-circle {{current===item.id?'on':''}}">
+            <image class="av-img" src="{{item.src}}" mode="aspectFit"/>
+          </view>
+          <text class="av-name {{current===item.id?'on':''}}">{{item.label}}</text>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view class="av-none {{current===''?'on':''}}" bindtap="clear" hover-class="av-hover">
+    <text class="av-none-t">先不选</text>
+    <text class="av-none-s">用昵称首字当头像</text>
+  </view>
+
+  <button class="primary" hover-class="btn-soft-hover" bindtap="save" disabled="{{saving}}">
+    {{saving?'正在保存…':'保存'}}
+  </button>
+
+  <view class="page-footnote">头像只在你的账号里显示，不会上传任何照片。</view>
+</view>

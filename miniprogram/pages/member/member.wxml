@@ -1,0 +1,82 @@
+<view class="page member-page">
+  <view class="member-head">
+    <view class="screen-heading">{{name}}</view>
+    <view class="field-note">只读：你改不了 TA 的任何记录，也没有代记的入口</view>
+    <!-- 教练自己写的备注（用户 10-30）：会员昵称认不出人时对上的真名，会员看不到 -->
+    <view wx:if="{{remark}}" class="field-note">备注 · {{remark}}</view>
+  </view>
+
+  <view class="period-row">
+    <view wx:for="{{periods}}" wx:key="v" class="chip {{period===item.v?'chip-on':''}}" data-v="{{item.v}}" bindtap="pickPeriod" role="button">{{item.label}}视图</view>
+    <view class="period-range">{{rangeText}}</view>
+  </view>
+
+  <block wx:if="{{loaded}}">
+    <!-- 最上面五项：有氧 / 力量 / 周均饮水 / 体重差值 / 腰围差值 -->
+    <view class="stat-grid">
+      <view wx:for="{{cards}}" wx:key="key" class="stat-cell">
+        <view class="stat-value">{{item.value}}<text class="stat-unit">{{item.unit}}</text></view>
+        <view class="stat-label">{{item.label}}</view>
+        <view class="stat-sub">{{item.sub}}</view>
+      </view>
+    </view>
+
+    <!-- 抗阻强度分布：TA 打卡时登记的，教练据此判断练得偏轻还是偏重 -->
+    <view wx:if="{{strengthLine}}" class="si-line">{{strengthLine}}</view>
+
+    <!-- 往下是能左右滑的 banner：一页一项，看它在每一天里的具体数值 -->
+    <view class="metric-tabs">
+      <view wx:for="{{metrics}}" wx:key="key" class="metric-tab {{tab===index?'metric-tab-on':''}}" data-i="{{index}}" bindtap="pickMetric" role="button">{{item.label}}</view>
+    </view>
+
+    <swiper class="banner" current="{{tab}}" bindchange="onSwipe" duration="200">
+      <swiper-item wx:for="{{metrics}}" wx:for-item="m" wx:key="key">
+        <view class="banner-card">
+          <view class="banner-head">
+            <view class="banner-title">{{m.label}} · 每天</view>
+            <view class="banner-unit">单位 {{m.unit}}</view>
+          </view>
+          <view class="banner-range">{{m.rangeText}}</view>
+
+          <block wx:if="{{m.kind==='bar'}}">
+            <view class="bar-plot">
+              <view wx:if="{{m.key==='water'}}" class="bar-goal" style="bottom:{{goalLine}}%"></view>
+              <view wx:for="{{m.bars}}" wx:for-item="b" wx:key="id" class="bar-col">
+                <view class="bar-fill" style="height:{{b.h}}%;background:{{b.color}}"></view>
+              </view>
+            </view>
+            <view class="bar-axis">
+              <view wx:for="{{m.bars}}" wx:for-item="b" wx:key="id" class="bar-x">{{b.label}}</view>
+            </view>
+          </block>
+
+          <block wx:else>
+            <!-- 体重 / 腰围没有「0 起点」，用棒棒糖图：竖线到点，点的高度才是数值 -->
+            <view class="bar-plot">
+              <view wx:for="{{m.dots}}" wx:for-item="d" wx:key="id" class="bar-col dot-col">
+                <view wx:if="{{d.has}}" class="dot-stem" style="height:{{d.y}}%"></view>
+                <view wx:if="{{d.has}}" class="dot-node" style="bottom:{{d.y}}%"></view>
+              </view>
+            </view>
+            <view class="bar-axis">
+              <view wx:for="{{m.dots}}" wx:for-item="d" wx:key="id" class="bar-x">{{d.label}}</view>
+            </view>
+          </block>
+
+          <view class="banner-hint">{{m.hint}}</view>
+
+          <scroll-view class="day-list" scroll-y>
+            <view wx:for="{{m.rows}}" wx:for-item="r" wx:key="label" class="day-row">
+              <text class="day-row-date">{{r.label}}</text>
+              <text class="day-row-text">{{r.text}}</text>
+            </view>
+          </scroll-view>
+        </view>
+      </swiper-item>
+    </swiper>
+
+    <view class="field-note board-note">
+      个人页最短到周：有氧、饮水、体测差值都是「周均 / 较上周」的口径，单日算不出平均。要看某一天的绝对值，回总看板切到日视图。
+    </view>
+  </block>
+</view>

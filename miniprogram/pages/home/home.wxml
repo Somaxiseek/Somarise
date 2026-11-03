@@ -1,0 +1,194 @@
+<view class="page log-page">
+  <view class="brand-title">Somarise</view>
+  <view wx:if="{{quote}}" class="reflection"><view class="daily-quote">{{quote}}</view></view>
+  <block wx:if="{{loaded}}">
+    <block wx:if="{{view==='log'}}">
+      <view wx:if="{{ring}}" class="daily-card">
+        <view class="daily-head">
+          <view class="daily-heading">
+            <view class="daily-title">{{ringView==='day'?'今日目标':'本周目标'}}</view>
+            <view class="daily-date">{{ringView==='day'?report.day:weekLabel}}</view>
+          </view>
+          <view class="ring-switch">
+            <text class="ring-tab {{ringView==='day'?'ring-tab-on':''}}" data-view="day" bindtap="switchRing" role="button">日</text>
+            <text class="ring-tab {{ringView==='week'?'ring-tab-on':''}}" data-view="week" bindtap="switchRing" role="button">周</text>
+          </view>
+          <button class="share-pill" bindtap="shareNow">分享</button>
+        </view>
+        <view class="ring-body" bindtap="ringManage" role="button" aria-label="管理圆环">
+          <!-- 环装进固定宽度的格位：图例怎么长都不推它（用户 10-31：环必须定死在一处） -->
+          <view class="ring-slot"><rings values="{{ring.values}}" size="120" center="{{ring.center}}"/></view>
+          <view class="ring-legend">
+            <view wx:for="{{ring.items}}" wx:key="key" class="ring-item">
+              <view class="ring-dot" style="background:{{item.color}}"/>
+              <view class="ring-item-main">
+                <view class="ring-item-head"><text class="ring-item-label">{{item.label}}</text><text class="ring-item-val">{{item.valueText}}</text></view>
+                <view class="ring-item-note {{item.noteTone==='ok'?'ring-note-ok':''}} {{item.noteTone==='strong'?'ring-note-strong':''}}">{{item.remainText}}</view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view wx:if="{{ringView==='week'&&ring.needsTarget}}" class="daily-warn" bindtap="goalManage" role="button">本周仅记录 · 可随时设置目标 ›</view>
+      </view>
+      <view class="sport-card body-card body-summary-card" bindtap="openBody" role="button" aria-label="记录体重腰围与查看历史">
+        <view class="sport-accent" style="background:#32A964"/>
+        <view class="body-summary-content">
+          <view class="body-summary-head"><view class="sport-name">体测<text class="sport-en">BODY</text></view><text class="body-summary-period">本周均值 ›</text></view>
+          <view class="body-summary-metrics">
+            <view class="body-summary-column"><view class="body-summary-value"><text class="body-summary-label">体重</text><text class="body-summary-number">{{bodyCard.weight}}</text><text class="body-summary-unit">kg</text></view><view class="body-summary-delta">{{bodyCard.weightDelta}}</view></view>
+            <view class="body-summary-column"><view class="body-summary-value"><text class="body-summary-label">腰围</text><text class="body-summary-number">{{bodyCard.waist}}</text><text class="body-summary-unit">cm</text></view><view class="body-summary-delta">{{bodyCard.waistDelta}}</view></view>
+          </view>
+        </view>
+      </view>
+      <!-- 饮水是首页唯一保留的打卡动作：上面一条是今日累计（满格=今日目标），
+           下面一条选「这一杯」的量，点水滴才真正记一笔，防误触 -->
+      <view wx:if="{{water}}" class="sport-card water-card" bindtap="toggleWater" role="button" aria-label="展开最近七天的饮水">
+        <view class="sport-accent" style="background:{{water.color}}"/>
+        <view class="sport-content">
+          <view class="sport-name">饮水<text class="sport-en">HYDRATION</text><text class="expand-chevron" style="color:{{water.color}}">{{waterOpen?'▴':'▾'}}</text></view>
+          <view class="sport-last">{{water.totalMl}} / {{water.targetMl}} ml</view>
+          <!-- 进度只看右边的圆环（用户 10-29：横向累计条删掉，只留一条选量滑块） -->
+          <!-- 这一杯：拖圆点选量（只改预览），点水滴才记录 -->
+          <view class="water-choose">
+            <view class="water-cup" catchtouchstart="waterDragStart" catchtouchmove="waterDragMove" catchtouchend="waterDragEnd" catchtouchcancel="waterDragEnd">
+              <view class="water-cup-fill" style="width:{{water.choosePct}}%;background:{{water.color}}"/>
+              <view class="water-knob" style="left:{{water.knobPct}}%;border-color:{{water.color}}"/>
+              <view wx:if="{{waterDragging}}" class="water-bubble" style="left:{{waterDragX}}%"><view class="drop-mark drop-mark-sm"/><text>+{{waterDragMl}} ml</text></view>
+            </view>
+            <view class="water-drop {{waterChooseMl?'':'water-drop-off'}} {{waterBusy?'water-drop-busy':''}}" style="{{waterChooseMl?'border-color:'+water.color+'59;color:'+water.color:''}}" catchtap="waterConfirm" role="button" aria-label="记下这一杯"><view class="drop-mark"/><text class="water-drop-text">{{waterChooseMl?waterChooseMl+' ml':'选量'}}</text></view>
+          </view>
+        </view>
+        <view class="sport-counter">
+          <progress-ring percent="{{water.percent}}" size="64" color="{{water.color}}" label="{{water.percent}}%"/>
+        </view>
+      </view>
+      <view wx:if="{{water&&waterOpen}}" class="water-week">
+        <view class="water-week-head">最近 7 天</view>
+        <view wx:for="{{water.days}}" wx:key="date" class="water-day {{item.isToday?'water-day-today':''}}">
+          <text class="water-day-label">{{item.label}}</text>
+          <view class="water-day-track"><view class="water-day-fill" style="width:{{item.percent}}%;background:{{water.color}}"/></view>
+          <text class="water-day-num">{{item.totalMl}}<text class="water-day-target"> / {{item.targetMl}}</text></text>
+        </view>
+        <view wx:if="{{water.totalMl}}" class="water-week-clear" catchtap="waterClearAll" role="button">记错了？清空今天的饮水</view>
+      </view>
+      <view wx:if="{{!categories.length}}" class="empty-note">留一点空间，给你想坚持的事。<view>点下面的「新的打卡项目」，建第一个。</view></view>
+      <block wx:for="{{categories}}" wx:key="id" wx:for-item="category">
+        <view class="sport-card category-card" data-id="{{category.id}}" bindtap="category" role="button" aria-label="{{category.name}}">
+          <view class="sport-accent" style="background: {{category.accent}}"/>
+          <view class="sport-content">
+            <view class="sport-name">{{category.name}}<text wx:if="{{category.en}}" class="sport-en">{{category.en}}</text><text wx:if="{{category.expandable}}" class="expand-chevron" style="color: {{category.accent}}" catchtap="toggleCardExpand" data-id="{{category.id}}" role="button" aria-label="展开历史">{{category.open?'▴':'▾'}}</text></view>
+            <view class="sport-last">{{category.statusText||category.last||'尚未打卡'}}</view>
+            <view class="trail"><view wx:for="{{category.trail}}" wx:key="date" wx:for-item="dot" class="trail-dot {{dot.active?'filled':''}}" style="{{dot.active?'background:'+category.accent:''}}"/></view>
+          </view>
+          <view class="sport-counter">
+            <block wx:if="{{category.water}}">
+              <progress-ring percent="{{category.water.percent}}" size="64" color="{{category.accent}}" label="{{category.water.percent}}%"/>
+            </block>
+            <block wx:elif="{{category.preset==='hydration'}}">
+              <progress-ring percent="{{0}}" size="64" color="{{category.accent}}" label="设置"/>
+            </block>
+            <block wx:elif="{{category.quickProjectId}}">
+              <text class="counter-caption">{{category.counterCaption}}</text>
+              <view class="counter-number" style="color: {{category.accent}}">{{category.counterCount}}</view>
+            </block>
+            <block wx:else>
+              <text class="counter-caption">{{category.counterCaption}}</text>
+              <view class="counter-number" style="color: {{category.accent}}" catchtap="toggleCounter" data-id="{{category.id}}" role="button" aria-label="切换次数与目标百分比">{{category.counterPercentMode?category.counterPercent+'%':category.counterCount}}</view>
+              <text class="counter-fraction {{category.counterPercentMode?'':'counter-fraction-hidden'}}">{{category.counterFraction||'0 / 0'}}</text>
+            </block>
+          </view>
+        </view>
+        <view wx:if="{{category.open}}" class="project-list">
+          <!-- 心肺卡展开只列「本周每条记录」：本月/本周多少分钟周环上已经有了，这里不再重复（用户 10-30） -->
+          <block wx:if="{{category.name==='心肺训练'}}">
+            <view wx:if="{{!cardioWeekLog.length}}" class="cardio-history">
+              <view class="cardio-empty">本周还没有心肺记录，点这张卡记一笔 ›</view>
+            </view>
+            <!-- 本周单条记录：环上的等效分钟看不出构成，列出来才对得上账。
+                 点开进详情可改，左滑露出「删除」（2026-10-30） -->
+            <view wx:if="{{cardioWeekLog.length}}" class="cardio-history">
+              <view class="cardio-history-head">本周 {{cardioWeekLog.length}} 条记录</view>
+              <view wx:for="{{cardioWeekLog}}" wx:key="id" wx:for-item="item" class="swipe-row">
+                <view wx:if="{{swipeId===item.id}}" class="swipe-action {{swipeDragging?'':'swipe-anim'}}" style="transform: translateX({{swipeW - swipeDx}}px)" data-id="{{item.id}}" catchtap="removeActivity" role="button" aria-label="删除这条记录">删除</view>
+                <view class="cardio-row" data-id="{{item.id}}" bindtouchstart="swipeStart" bindtouchmove="swipeMove" bindtouchend="swipeEnd" bindtap="openLog" role="button" aria-label="编辑这条记录">
+                  <text class="cardio-row-sym" style="color: {{category.accent}}">{{item.symbol}}</text>
+                  <view class="ch-log-main"><view class="ch-log-title">{{item.label}} · {{item.when}}</view><view class="ch-log-sub">{{item.mins}} 分钟 · {{item.intLabel}} · {{item.clock}}</view></view>
+                  <text class="ch-log-go">›</text>
+                </view>
+              </view>
+            </view>
+            <view wx:if="{{category.quickSports.length}}" class="add-sport-row" data-id="{{category.id}}" bindtap="addSport" role="button">＋ 添加运动项目</view>
+          </block>
+          <!-- 抗阻展开：本周每一笔都列出来（练的哪块、几月几号周几），左滑删除 -->
+          <block wx:elif="{{category.name==='抗阻训练'}}">
+            <view class="cardio-history">
+              <view class="cardio-history-head">本周 {{category.weekLog.length}} 次训练</view>
+              <view wx:if="{{!category.weekLog.length}}" class="cardio-empty">本周还没有抗阻记录，点这张卡记一笔 ›</view>
+              <view wx:for="{{category.weekLog}}" wx:key="id" wx:for-item="item" class="swipe-row">
+                <view wx:if="{{swipeId===item.id}}" class="swipe-action {{swipeDragging?'':'swipe-anim'}}" style="transform: translateX({{swipeW - swipeDx}}px)" data-id="{{item.id}}" catchtap="removeCheckin" role="button" aria-label="删除这条记录">删除</view>
+                <view class="cardio-row" data-id="{{item.id}}" bindtouchstart="swipeStart" bindtouchmove="swipeMove" bindtouchend="swipeEnd" bindtap="closeSwipe">
+                  <view class="ch-log-dot" style="background: {{category.accent}}"/>
+                  <view class="ch-log-main"><view class="ch-log-title">{{item.partLabel}}</view><view class="ch-log-sub">{{item.when}} · {{item.intLabel}}</view></view>
+                </view>
+              </view>
+            </view>
+          </block>
+          <block wx:else>
+            <view class="project-row" wx:for="{{category.projects}}" wx:key="id" wx:for-item="project" data-id="{{project.id}}" bindtap="project"><view class="sport-accent" style="background: {{project.accent}}"/><view class="project-row-main"><view class="history-name">{{project.name}}</view><view wx:if="{{project.water}}" class="sport-last">今日 {{project.water.totalMl}} / {{project.water.targetMl}} ml</view><view wx:elif="{{!project.goal}}" class="sport-last">仅记录 · 累计 {{project.progress.count}} 次</view><view wx:else class="sport-last">{{project.goal.period==='weekly'?'本周':project.goal.period==='yearly'?'今年':project.goal.period==='window'?'期限内':'连续'}} {{project.progress.count}} / {{project.goal.target}}{{project.goal.period==='streak'?'天':'次'}} · 已达标 {{project.progress.completedGoals}} 个周期</view><view class="mini-days"><view wx:for="{{project.last7}}" wx:key="date" wx:for-item="dot" class="mini-day {{dot.active?'mini-day-on':''}}" style="{{dot.active?'background:'+project.accent:''}}"/></view><view wx:if="{{!project.water}}" class="goal-track"><view style="width: {{project.progress.percent}}%; background: {{project.accent}}"/></view></view><progress-ring wx:if="{{project.water}}" percent="{{project.water.percent}}" size="56" color="{{project.accent}}" label="{{project.water.percent}}%"/></view>
+            <view wx:if="{{category.quickSports.length}}" class="add-sport-row" data-id="{{category.id}}" bindtap="addSport" role="button">＋ 添加运动项目</view>
+            <button wx:if="{{category.name!=='心肺训练'}}" class="text-action add-project" data-id="{{category.id}}" bindtap="createProject">＋ 添加项目</button>
+          </block>
+        </view>
+      </block>
+      <!-- 列表末尾常驻的「新建」入口：不再是「得先展开某张卡才看得到＋」，
+           也不用去猜底部 ＋ 的弹出菜单里有这一项（用户 10-29：找不到建新习惯的地方） -->
+      <view class="add-habit" bindtap="addHabit" hover-class="add-habit-hover" role="button" aria-label="新建一个打卡项目">
+        <text class="add-habit-plus">＋</text>
+        <view class="add-habit-main">
+          <view class="add-habit-title">新的打卡项目</view>
+          <view class="add-habit-sub">想多坚持一件？喝水、拉伸、早睡都行</view>
+        </view>
+      </view>
+    </block>
+
+  </block>
+  <!-- 加载骨架:云函数冷启动那几秒也要「看得见在加载」(11-02 审核驳回对策:不再是一行小字) -->
+  <view wx:else class="home-skeleton">
+    <view class="hs-card">
+      <view class="hs-ring-row">
+        <view class="hs-ring"/>
+        <view class="hs-legend">
+          <view class="hs-line hs-line-lg"/>
+          <view class="hs-line hs-line-sm"/>
+          <view class="hs-line hs-line-sm hs-line-half"/>
+        </view>
+      </view>
+    </view>
+    <view class="hs-card">
+      <view class="hs-line hs-line-lg hs-line-half"/>
+      <view class="hs-line hs-line-sm hs-gap-top"/>
+    </view>
+    <view class="hs-hint">{{loadFailed?'云端连接失败,请检查网络后再试':'正在连接云端数据…'}}</view>
+    <button class="hs-retry" bindtap="retry">重试</button>
+  </view>
+  <view wx:if="{{celebrate}}" class="celebrate-mask" catchtap="dismissCelebrate"><view class="celebrate-card" catchtap="popupNoop"><view class="celebrate-ring"><text class="celebrate-check">✓</text></view><view class="celebrate-title">{{celebrate.title}}</view><view class="celebrate-sub">{{celebrate.sub}}</view></view></view>
+  <view wx:if="{{shareOpen}}" class="share-mask" catchtap="closeShare">
+    <view class="share-panel" catchtap="shareNoop">
+      <view class="share-panel-title">今天的记录 · 分享卡片</view>
+      <!-- 图导不出来就留在画布上：画布上一直是画好的那张卡，看得见、不转圈 -->
+      <view class="share-artboard">
+        <image wx:if="{{shareImage}}" class="share-preview" src="{{shareImage}}" mode="aspectFit" binderror="shareImageError"/>
+        <canvas type="2d" id="shareCard" class="share-canvas"/>
+        <textarea wx:if="{{shareEditing}}" class="share-inline-summary" focus="{{shareEditing}}" value="{{shareDraft}}" maxlength="96" bindinput="editShareSummary" bindblur="finishShareEdit" catchtap="shareNoop" adjust-position="true" placeholder="写下今天的运动"/>
+        <view wx:else class="share-summary-hit" catchtap="beginShareEdit" role="button" aria-label="编辑今天做了什么"/>
+
+        <view class="share-shuffle" catchtap="shuffleShareQuote" role="button" aria-label="换一句语录">↻</view>
+      </view>
+      <view wx:if="{{shareNote}}" class="share-note">{{shareNote}}</view>
+      <button class="share-send" bindtap="sendShareImage">分享这张记录 ↗</button><button class="share-save-link" open-type="share">转发小程序卡片</button>
+      <view wx:if="{{shareImage}}" class="share-save-link" bindtap="saveShare">存到相册（发朋友圈就先存图，再去朋友圈选它）</view>
+    </view>
+  </view>
+  <ring-editor show="{{ringEditor}}" view="{{ringView}}" id="ringEditor" bind:close="ringEditorClose"/>
+  <dock current="log" bindsame="dockSame"/>
+</view>

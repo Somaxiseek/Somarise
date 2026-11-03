@@ -1,0 +1,126 @@
+/* 学习页：一屏一个词，全部居左读。黑白灰，只有主按钮和选中的档位用黑底。 */
+.learn-top { display: flex; align-items: baseline; justify-content: space-between; gap: 16rpx; margin: 10rpx 0 0; }
+.learn-title { font-size: var(--fs-title); font-weight: 750; letter-spacing: -2rpx; }
+.learn-sub { font-size: var(--fs-caption); color: var(--ink-5); font-variant-numeric: tabular-nums; }
+/* 进度条跟记录页「本周有氧」同款，只是填成英语紫：这一页是英语模块 */
+.learn-bar { height: 8rpx; border-radius: 8rpx; background: #f0f0f1; margin: 20rpx 2rpx 26rpx; overflow: hidden; }
+.learn-bar-fill { height: 100%; border-radius: 8rpx; background: #A659C5; transition: width .4s ease; }
+
+.word-card { padding: 32rpx 32rpx 30rpx; text-align: left; border-radius: 32rpx; }
+.word-meta { display: flex; align-items: center; gap: 12rpx; }
+.word-tag { font-size: var(--fs-micro); color: #A659C5; background: #F3EAF8; border-radius: 8rpx; padding: 4rpx 10rpx; letter-spacing: .5rpx; }
+.word-kind { font-size: var(--fs-micro); color: var(--ink-6); }
+.word-head { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; margin: 24rpx 0 8rpx; }
+.word-big { flex: 1; min-width: 0; font-size: var(--fs-hero); font-weight: 750; letter-spacing: -1rpx; line-height: 1.2; word-break: break-word; text-align: left; }
+.word-ipa { font-size: var(--fs-caption); color: var(--ink-5); text-align: left; }
+.word-pos { color: var(--ink-7); }
+
+/* 喇叭：点一下听这个词怎么读。图标是内联 SVG，跟着字色走，不额外加图片资源 */
+.speak { flex: none; width: 62rpx; height: 62rpx; border-radius: 50%; background: #f5f5f6; display: flex; align-items: center; justify-content: center; }
+.speak-hover { background: #e9e9ea; }
+.speak-icon { width: 28rpx; height: 28rpx; background: no-repeat center / contain url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTQgOS41aDMuMkwxMiA1LjZ2MTIuOEw3LjIgMTQuNUg0eiIgZmlsbD0iIzUyNTI1MiIvPjxwYXRoIGQ9Ik0xNS40IDguNmE0LjggNC44IDAgMCAxIDAgNi44IiBzdHJva2U9IiM1MjUyNTIiIHN0cm9rZS13aWR0aD0iMS43IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMTguMiA2LjJhOC4yIDguMiAwIDAgMSAwIDExLjYiIHN0cm9rZT0iIzUyNTI1MiIgc3Ryb2tlLXdpZHRoPSIxLjciIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg=="); }
+
+/* 展开后的注解：释义 + 两句例句，全部左对齐、同字号，靠字重分主次 */
+.word-zh { font-size: var(--fs-subhead); font-weight: 650; margin-top: 30rpx; padding-top: 28rpx; border-top: 1rpx solid #f2f2f3; text-align: left; }
+.word-lines { display: flex; flex-direction: column; gap: 24rpx; margin-top: 22rpx; }
+/* 例句块：左侧一条淡紫细条，块与块之间只留空隙，不画线 */
+.word-line { display: flex; align-items: center; gap: 14rpx; text-align: left; border-left: 6rpx solid #EBD9F3; padding-left: 20rpx; }
+.line-body { flex: 1; min-width: 0; }
+/* 整句朗读的小喇叭：比单词喇叭小一号，有录音才画 */
+.line-speak { flex: none; width: 46rpx; height: 46rpx; border-radius: 50%; background: #f5f5f6; display: flex; align-items: center; justify-content: center; }
+.line-speak-hover { background: #e9e9ea; }
+.line-speak-icon { width: 22rpx; height: 22rpx; background: no-repeat center / contain url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTQgOS41aDMuMkwxMiA1LjZ2MTIuOEw3LjIgMTQuNUg0eiIgZmlsbD0iIzUyNTI1MiIvPjxwYXRoIGQ9Ik0xNS40IDguNmE0LjggNC44IDAgMCAxIDAgNi44IiBzdHJva2U9IiM1MjUyNTIiIHN0cm9rZS13aWR0aD0iMS43IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMTguMiA2LjJhOC4yIDguMiAwIDAgMSAwIDExLjYiIHN0cm9rZT0iIzUyNTI1MiIgc3Ryb2tlLXdpZHRoPSIxLjciIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg=="); }
+.line-en { font-size: var(--fs-body); font-weight: 650; color: var(--ink-1); line-height: 1.55; text-align: left; }
+.line-zh { font-size: var(--fs-body); font-weight: 400; color: var(--ink-5); line-height: 1.55; margin-top: 4rpx; text-align: left; }
+/* 例句里能点的词：英语紫 + 一条淡下划线，看得出能点，又不抢整句的分量 */
+.line-en .wl { color: #A659C5; border-bottom: 2rpx solid #E3CFF0; }
+.wl-hover { opacity: .55; }
+/* 只在这一页第一次出现：告诉人句里的紫词是能点的 */
+.link-tip { font-size: var(--fs-micro); color: var(--ink-7); margin-top: 14rpx; }
+.word-fold { display: flex; align-items: center; justify-content: center; gap: 8rpx; margin-top: 26rpx; padding-top: 18rpx; border-top: 1rpx solid #f5f5f6; font-size: var(--fs-caption); color: var(--ink-6); }
+.fold-caret { width: 13rpx; height: 13rpx; border-top: 2rpx solid #b0b0b0; border-left: 2rpx solid #b0b0b0; transform: rotate(45deg) translateY(2rpx); }
+
+/* 看释义收在卡片里：一条细分隔线 + 一行小字，不再占一个整块大按钮 */
+.word-peek { display: flex; align-items: center; justify-content: center; gap: 8rpx; margin-top: 30rpx; padding-top: 20rpx; border-top: 1rpx solid #f2f2f3; font-size: var(--fs-caption); font-weight: 500; color: var(--ink-4); }
+.word-peek-hover { opacity: .6; }
+.peek-caret { width: 12rpx; height: 12rpx; border-right: 2rpx solid #b0b0b0; border-bottom: 2rpx solid #b0b0b0; transform: rotate(45deg) translate(-1rpx, -1rpx); }
+
+/* 评价固定在卡片下方（原来主按钮的位置）：先看释义再评，或者直接评都行 */
+.grade-row { margin-top: 20rpx; display: flex; gap: 12rpx; }
+.form-page .grade { flex: 1; min-width: 0; margin: 0; padding: 0; line-height: 90rpx; border-radius: 24rpx; font-size: var(--fs-meta); font-weight: 600; background: #f5f5f6; color: var(--ink-3); }
+.form-page .grade::after { border: 0; }
+/* 「记得」是这一页的主操作：英语紫描边的浮光胶囊 */
+.form-page .grade-good { background: #ffffff; color: #5b4470; border: 2rpx solid #E3CFF0; box-shadow: 0 4rpx 16rpx rgba(120, 60, 160, .10); }
+
+.done-card { text-align: center; padding: 42rpx var(--pad-card) 34rpx; }
+.done-mark { width: 76rpx; height: 76rpx; line-height: 76rpx; border-radius: 50%; background: #F3EAF8; color: #A659C5; font-size: var(--fs-subhead); margin: 0 auto 18rpx; }
+.done-title { font-size: var(--fs-body); font-weight: 650; }
+.done-sub { font-size: var(--fs-caption); color: var(--ink-5); margin-top: 10rpx; line-height: 1.6; }
+/* 两颗并排居中：继续学是主操作（黑底），翻词库是次操作（灰底） */
+.done-acts { display: flex; justify-content: center; gap: 16rpx; margin-top: 22rpx; }
+.done-link { display: inline-flex; align-items: center; justify-content: center; padding: 0 30rpx; line-height: 60rpx; min-height: 60rpx; border-radius: 999rpx; background: #ffffff; border: 1rpx solid #e0e0e0; color: var(--ink-4); font-size: var(--fs-caption); }
+
+.learn-note { font-size: var(--fs-micro); color: var(--ink-7); line-height: 1.7; margin: 26rpx 0 0; }
+/* 词库入口：白卡一行，右箭头，点进去翻学过的词 */
+.vocab-entry { margin: 24rpx 0 32rpx; }
+.vocab-entry .field-note { margin: 6rpx 0 0; font-variant-numeric: tabular-nums; }
+/* 学完当天的量还能继续：这条比「翻词库」更靠前，是主推的动作 */
+.done-more { background: #ffffff; color: #5b4470; border: 2rpx solid #E3CFF0; box-shadow: 0 4rpx 16rpx rgba(120, 60, 160, .10); font-weight: 600; }
+
+/* 词根拆分：un·able 这样点开隔开，每一段都能点 */
+.word-big-split { font-size: var(--fs-display); letter-spacing: 0; }
+.word-joint { color: var(--ink-7); font-weight: 400; margin: 0 4rpx; }
+.word-seg { }
+.word-seg-on { border-bottom: 2rpx dashed #d9b8e8; padding-bottom: 2rpx; }
+
+/* 词根浮窗 */
+.part-mask { position: fixed; inset: 0; background: rgba(0,0,0,.30); display: flex; align-items: flex-end; z-index: 60; }
+.part-card { width: 100%; background: #fff; border-radius: 32rpx 32rpx 0 0; padding: 18rpx var(--pad-page) calc(30rpx + env(safe-area-inset-bottom)); }
+.part-grab { width: 72rpx; height: 8rpx; border-radius: 100rpx; background: #ececee; margin: 0 auto 26rpx; }
+/* 上下文行：先说清这一段是从哪个词里拆出来的 */
+.part-ctx { font-size: var(--fs-caption); color: var(--ink-6); line-height: 1.6; margin-bottom: 18rpx; }
+.part-ctx-seg { color: var(--ink-6); }
+.part-ctx-on { color: #A659C5; font-weight: 500; }
+.part-head { display: flex; align-items: baseline; gap: 12rpx; }
+.part-key { font-size: var(--fs-title); font-weight: 750; letter-spacing: -.5rpx; }
+.part-type { font-size: var(--fs-micro); color: #A659C5; background: #F3EAF8; border-radius: 8rpx; padding: 4rpx 10rpx; }
+.part-zh { font-size: var(--fs-body); font-weight: 650; margin-top: 18rpx; }
+.part-hint { font-size: var(--fs-meta); color: var(--ink-4); line-height: 1.6; margin-top: 10rpx; }
+.part-ex { font-size: var(--fs-meta); color: var(--ink-5); margin-top: 14rpx; }
+.part-ex-label { color: var(--ink-7); margin-right: 10rpx; }
+/* 常见词做成胶囊组；拆不出来的条目还是走上面那行纯文字 */
+.part-caps { margin-top: 18rpx; }
+.part-caps .part-ex-label { display: block; font-size: var(--fs-caption); color: var(--ink-5); margin: 0 0 12rpx; }
+.part-chips { display: flex; flex-wrap: wrap; gap: 12rpx; }
+.part-chip { background: #f5f5f6; color: var(--ink-4); font-size: var(--fs-caption); border: 1rpx solid transparent; border-radius: 100rpx; padding: 0 24rpx; line-height: 54rpx; }
+.part-close { margin-top: 26rpx; text-align: center; line-height: 84rpx; border-radius: 24rpx; background: #f5f5f6; font-size: var(--fs-meta); font-weight: 600; color: var(--ink-3); }
+
+/* 复习 / 学新词 分段（用户 10-30：两块分开，各有各的按钮） */
+/* 页签与下面的卡片是一个整体（用户 10-30）：选中的页签白底，和卡片同色、同一个外框，
+   没选中的那条是灰底 —— 一眼就知道自己在哪一页。 */
+.learn-tabpanel { margin: 20rpx 0 24rpx; background: #ffffff; border: 2rpx solid var(--ink-7); border-radius: 32rpx; overflow: hidden; }
+.learn-seg { display: flex; background: #f4f4f5; }
+.learn-seg-item { flex: 1; text-align: center; font-size: var(--fs-caption); color: var(--ink-5); padding: 20rpx 0; background: #f4f4f5; line-height: 1; }
+.learn-seg-item.learn-seg-on { background: #ffffff; color: var(--ink-1); font-weight: 600; }
+/* 面板里的卡片不再自带圆角和外边距，跟页签贴成一个整体 */
+.learn-tabpanel .card { margin: 0; border-radius: 0; }
+.learn-tabpanel .grade-row { margin: 0; padding: 0 var(--pad-card) 28rpx; }
+.learn-tabpanel .strike-card { border-radius: 0; margin: 0 var(--pad-card) 28rpx; }
+.learn-seg-n { color: #A659C5; font-weight: 650; margin-left: 4rpx; }
+
+/* 新词连续没记住：放一放 / 进待回忆 的选择 */
+.strike-card { background: #ffffff; border-radius: 32rpx; padding: 20rpx 28rpx; margin-top: 20rpx; }
+.strike-acts { display: flex; justify-content: space-between; margin-top: 14rpx; }
+
+/* 学习范围：标题行下的小胶囊 + 底部勾选浮层 */
+.learn-scope { display: inline-flex; align-items: center; gap: 8rpx; margin-top: 16rpx; padding: 10rpx 24rpx; background: #f5f5f6; border-radius: 999rpx; align-self: flex-start; }
+.learn-scope-text { font-size: var(--fs-meta); color: var(--ink-3); line-height: 1; }
+.scope-caret { width: 0; height: 0; border-left: 8rpx solid transparent; border-right: 8rpx solid transparent; border-top: 10rpx solid var(--ink-5); }
+.cat-mask { position: fixed; inset: 0; background: rgba(0,0,0,.30); display: flex; align-items: flex-end; z-index: 60; }
+.cat-card { width: 100%; background: #fff; border-radius: 32rpx 32rpx 0 0; padding: 18rpx var(--pad-page) calc(30rpx + env(safe-area-inset-bottom)); }
+.cat-head { font-size: var(--fs-subhead); font-weight: 700; color: var(--ink-1); }
+.cat-note { font-size: var(--fs-caption); color: var(--ink-4); line-height: 1.6; margin-top: 10rpx; }
+.cat-chips { display: flex; flex-wrap: wrap; gap: 14rpx; margin: 24rpx 0 6rpx; }
+.cat-chip { background: #f5f5f6; color: var(--ink-4); font-size: var(--fs-meta); border: 2rpx solid transparent; border-radius: 999rpx; padding: 0 28rpx; line-height: 64rpx; }
+.cat-chip-on { background: #ffffff; color: var(--ink-1); border-color: var(--ink-1); font-weight: 600; }
+.cat-save { margin-top: 24rpx; background: #ffffff; color: var(--ink-1); border: 2rpx solid var(--ink-7); box-shadow: 0 6rpx 20rpx rgba(0,0,0,.06); border-radius: 999rpx; line-height: 84rpx; font-size: var(--fs-body); font-weight: 600; }

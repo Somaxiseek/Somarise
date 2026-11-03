@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "目标设置",
+  "usingComponents": {
+    "dock": "/components/dock/dock",
+    "goal-set": "/components/goal-set/goal-set"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "dock": "/components/dock/dock",
+    "pixel-face": "/components/pixel-face/pixel-face"
+  }
+}

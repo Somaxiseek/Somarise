@@ -1,0 +1,34 @@
+/* 日历热力图：年视图网格。明亮青梯度（与水同系），网格下是闭环周小星 + 月份标签（参考贡献网格）
+   一格 18rpx（≈9px）：53 列挤进一屏的话每格只剩 6px，跟马赛克一样看不出密度，
+   所以固定格宽 + 横向滑动（GitHub 在手机端也是这个做法），默认滚到最右（最近的日子）。 */
+.ch-scroll { width: 100%; white-space: nowrap; }
+.ch-body { display: inline-block; }
+
+/* inline-flex 而不是 flex：flex 的宽度会退回容器宽（100%），53 列就被均分压缩了；
+   inline-flex 永远按内容撑开，横向滑动才有东西可滑。 */
+.ch-grid { display: inline-flex; gap: 4rpx; }
+/* flex: none 是必须的：不加的话 53 列会被 flex 压进一屏（每格只剩 6px，像马赛克），
+   横向滑动也就永远滑不动了。 */
+.ch-col { display: flex; flex-direction: column; gap: 4rpx; flex: none; }
+/* 空格子（已开始但没练）：饮水 #06B6D4 的极浅青蓝底（用户 10-30 要求从绿底换成青蓝底） */
+.ch-cell { width: 18rpx; height: 18rpx; border-radius: 4rpx; background: #DCF1F7; flex: none; box-sizing: border-box; }
+/* 热度三档也跟着换青色系（用户 10-30：这个板块里的绿色都要换成青色） */
+.ch-cell.l1 { background: #A6E1EC; }
+.ch-cell.l2 { background: #4EC3DE; }
+.ch-cell.l3 { background: #0AA6CE; }
+/* 还没到的日子：白底 + 一圈浅细框——今年还剩多少，一眼看得出 */
+.ch-cell.fut { background: #ffffff; box-shadow: inset 0 0 0 2rpx #C7E3EB; }
+/* 还没开始的日子（开始日之前、已过去）：浅青灰填充——跟「没练」的青蓝空格、
+   「还没到」的白底细框都区分开，一眼能看出自己是从哪天开始记的（用户 10-30） */
+.ch-cell.pre { background: #E6EBEE; }
+/* 今天：一圈墨色内描边，一眼找得到「现在站在哪儿」（空着的今天也要看得见） */
+.ch-cell.td { box-shadow: inset 0 0 0 3rpx rgba(23, 23, 23, .55); }
+
+/* 闭环周的小星：金色菱形，宽度和列对齐，攒多少颗一眼能数 */
+.ch-marks { display: flex; gap: 4rpx; margin-top: 8rpx; }
+.ch-mk { flex: none; width: 18rpx; height: 12rpx; display: flex; align-items: center; justify-content: center; }
+.ch-star { width: 9rpx; height: 9rpx; background: #E8A33D; border-radius: 2rpx; transform: rotate(45deg); }
+
+/* 标签跟着列宽走；两位数（10/11/12）会溢出 1–2rpx，两边留的是空格，不会互相压 */
+.ch-months { display: flex; gap: 4rpx; margin-top: 6rpx; }
+.ch-ml { flex: none; width: 18rpx; font-size: var(--fs-micro); color: var(--ink-4); text-align: center; line-height: 1; }

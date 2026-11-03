@@ -1,0 +1,11 @@
+.rings { position: relative; flex: none; }
+/* 每一环都是一个独立的圆：本体=轨道色（环色淡到 14%），进度用 conic-gradient 铺一层，
+   再用背景色圆挖掉中间的洞。圆头是单独一个圆点，用 left/top 钉在中心线上。
+   overflow:hidden 只裁到外圆：圆头直径=环宽、正好内切于外圆，不会被裁出缺口；
+   但端头的阴影必须裁在环内（否则会溢到隔壁环上，看着像脏了一块）。 */
+.arc { position: absolute; border-radius: 50%; background: #f2f2f3; overflow: hidden; }
+.arc-fill { position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: 50%; }
+.arc-hole { position: absolute; border-radius: 50%; }
+.arc-dot { position: absolute; border-radius: 50%; }
+.rings-center { position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+.rings-num { font-weight: 700; color: var(--ink-1); line-height: 1.1; font-variant-numeric: tabular-nums; }

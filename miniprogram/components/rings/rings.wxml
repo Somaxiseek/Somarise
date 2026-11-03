@@ -1,0 +1,13 @@
+<!-- 同心环：纯 WXSS + conic-gradient 画，不用 canvas，滚动时不会脱离页面浮在上面 -->
+<view class="rings" style="width:{{size}}px;height:{{size}}px">
+  <view wx:for="{{arcs}}" wx:key="idx" wx:if="{{!item.hidden}}" class="arc" style="left:{{item.offset}}px;top:{{item.offset}}px;width:{{item.box}}px;height:{{item.box}}px;background:{{item.track}}">
+    <view class="arc-fill" style="background:{{item.fill}}"/>
+    <view class="arc-hole" style="left:{{item.inset}}px;top:{{item.inset}}px;width:{{item.hole}}px;height:{{item.hole}}px;background:{{bg}}"/>
+    <view wx:for="{{item.caps}}" wx:for-item="cap" wx:key="key" class="arc-dot" style="left:{{cap.left}}px;top:{{cap.top}}px;width:{{item.dotSize}}px;height:{{item.dotSize}}px;background:{{item.color}};box-shadow:{{cap.shadow}}"/>
+  </view>
+  <!-- 中心默认留白：一环都没闭就什么都不写（空环本身就在说「还没开始」），
+       闭了第一环才第一次出现「1/3」。环加粗后孔径只剩 28px，别再往这儿塞副标题。 -->
+  <view wx:if="{{center}}" class="rings-center">
+    <text class="rings-num" style="font-size:{{numFont}}px">{{center}}</text>
+  </view>
+</view>

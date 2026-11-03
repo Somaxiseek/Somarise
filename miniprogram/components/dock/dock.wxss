@@ -1,0 +1,35 @@
+.bottom-dock {
+  position: fixed; bottom: 0; left: 0; right: 0; width: 100%; box-sizing: border-box;
+  display: flex; align-items: center;
+  background: #f5f5f5; border-top: 1rpx solid #e5e5e5;
+  padding: 16rpx 0 calc(16rpx + env(safe-area-inset-bottom));
+  z-index: 10;
+}
+.dock-slot {
+  flex: 1 1 0; width: auto; min-width: 0; height: 84rpx; box-sizing: border-box;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6rpx; color: var(--ink-4);
+}
+.dock-label { font-size: var(--fs-caption); line-height: 24rpx; }
+.dock-selected { color: var(--ink-1); }
+
+/* 底部图标：统一用 2.5rpx 线条自己画，不再混用 ▦ / Aa / ✦ / ⌂ 这些字库字符 ——
+   它们在不同机型上字重和基线都不一样，是这一条栏最显眼的「不统一」。
+   四个图标同一个线宽、同一个 28rpx 外框、同一个 currentColor。 */
+.dock-glyph { position: relative; width: 28rpx; height: 28rpx; box-sizing: border-box; flex: none; }
+/* 打卡 = 同心圆，跟首页那圈环是同一个语言 */
+.dg-log { border: 2.5rpx solid currentColor; border-radius: 50%; }
+.dg-log::after { content: ''; position: absolute; left: 50%; top: 50%; width: 9rpx; height: 9rpx; margin: -4.5rpx 0 0 -4.5rpx; border-radius: 50%; background: currentColor; }
+/* 学习 = 一本打开的书：方框 + 中缝 */
+.dg-learn { border: 2.5rpx solid currentColor; border-radius: 6rpx; }
+.dg-learn::after { content: ''; position: absolute; left: 50%; top: 3rpx; bottom: 3rpx; width: 2rpx; margin-left: -1rpx; background: currentColor; }
+/* 成就 = 菱形（徽章的抽象） */
+.dg-badge { width: 24rpx; height: 24rpx; margin: 2rpx; border: 2.5rpx solid currentColor; border-radius: 4rpx; transform: rotate(45deg); }
+/* 我的 = 头 + 肩 */
+.dg-me::before { content: ''; position: absolute; left: 50%; top: 1rpx; width: 11rpx; height: 11rpx; margin-left: -5.5rpx; box-sizing: border-box; border: 2.5rpx solid currentColor; border-radius: 50%; }
+.dg-me::after { content: ''; position: absolute; left: 1rpx; right: 1rpx; bottom: 1rpx; height: 11rpx; box-sizing: border-box; border: 2.5rpx solid currentColor; border-bottom: 0; border-radius: 14rpx 14rpx 0 0; }
+/* 看板 = 三根柱（数据板的抽象） */
+.dg-board::after { content: ''; position: absolute; left: 4rpx; bottom: 3rpx; width: 4.5rpx; height: 10rpx; background: currentColor; border-radius: 1rpx; }
+.dg-board::before { content: ''; position: absolute; left: 50%; bottom: 3rpx; width: 4.5rpx; height: 16rpx; margin-left: -2.25rpx; background: currentColor; border-radius: 1rpx; }
+.dg-board { border: 2.5rpx solid currentColor; border-radius: 6rpx; }
+.dg-board > .dg-bar-r { content: ''; position: absolute; right: 4rpx; bottom: 3rpx; width: 4.5rpx; height: 13rpx; background: currentColor; border-radius: 1rpx; }

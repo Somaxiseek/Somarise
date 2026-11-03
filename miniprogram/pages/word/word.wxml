@@ -1,0 +1,47 @@
+<view class="page form-page">
+  <block wx:if="{{word}}">
+    <view class="card word-card">
+      <view class="word-meta">
+        <text wx:if="{{word.catLabel}}" class="word-tag">{{word.catLabel}}</text>
+        <text class="word-kind">{{state}}</text>
+      </view>
+      <view class="word-head">
+        <view class="word-big">{{word.word}}</view>
+        <view wx:if="{{word.audio}}" class="speak" catchtap="speak" hover-class="speak-hover" role="button" aria-label="朗读 {{word.word}}"><view class="speak-icon"></view></view>
+      </view>
+      <view class="word-ipa">{{word.ipa}}<text class="word-pos"> {{word.pos}}</text></view>
+      <view class="word-zh">{{word.meaning}}</view>
+
+      <view wx:if="{{word.linked}}" class="link-tip">句里带下划线的词，点开就能看它的意思</view>
+      <view class="word-lines">
+        <view wx:for="{{word.lines}}" wx:key="index" class="word-line">
+          <view class="line-body">
+            <view class="line-en">
+              <block wx:for="{{item.segs}}" wx:for-item="seg" wx:key="index">
+                <text wx:if="{{seg.id}}" class="wl" data-id="{{seg.id}}" catchtap="openWord" hover-class="wl-hover" role="button" aria-label="看 {{seg.t}} 的意思">{{seg.t}}</text>
+                <text wx:else>{{seg.t}}</text>
+              </block>
+            </view>
+            <view class="line-zh">{{item.zh}}</view>
+          </view>
+          <view wx:if="{{item.audio}}" class="line-speak" catchtap="speakLine" data-index="{{index}}" hover-class="line-speak-hover" role="button" aria-label="朗读这一句"><view class="line-speak-icon"></view></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 评价跟学习页同一套：先看清楚再说，不说也行，词已经收进去了 -->
+    <view wx:if="{{!graded}}" class="grade-row">
+      <button class="grade" data-grade="again" bindtap="grade" disabled="{{busy}}">还不认识</button>
+      <button class="grade" data-grade="hard" bindtap="grade" disabled="{{busy}}">有点模糊</button>
+      <button class="grade grade-good" data-grade="good" bindtap="grade" disabled="{{busy}}">记得</button>
+    </view>
+    <view wx:else class="graded">
+      <view class="graded-state">{{state}}<text wx:if="{{next}}" class="graded-next">{{next}}</text></view>
+      <view class="graded-back" hover-class="btn-ghost-hover" bindtap="back" role="button" aria-label="返回">回到刚才的地方</view>
+    </view>
+  </block>
+
+  <view wx:if="{{loaded && missing}}" class="empty-note">没找到这个词。回学习页再看看。</view>
+
+  <view class="word-foot">从例句里点到哪，就学到哪 —— 这些词本来就是串在一起的。</view>
+</view>

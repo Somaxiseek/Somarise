@@ -1,0 +1,87 @@
+<view class="page det-page" style="--accent:{{project.accent||'#111111'}};--accent-ink:{{project.accentInk||'#fff'}}">
+<block wx:if="{{loaded}}">
+  <view class="det-head">
+    <proj-glyph shape="{{project.icon}}" color="{{project.accent}}" size="lg"/>
+    <view class="det-title">{{project.name}}</view>
+    <view wx:if="{{project.note}}" class="det-sub">{{project.note}}</view>
+    <view class="det-meta">{{project.created}} 开始 · {{goalText}} {{project.progress.count}} / {{project.progress.target}}{{project.goal.period==='streak'?'天':'次'}}</view>
+  </view>
+
+  <view class="det-card">
+    <view class="det-card-title">概览</view>
+    <view class="det-stats">
+      <view class="det-stat"><text class="det-num">{{project.progress.total}}</text><text class="det-cap">总次数</text></view>
+      <view class="det-stat"><text class="det-num">{{project.totalDays}}</text><text class="det-cap">总天数</text></view>
+      <view class="det-stat"><text class="det-num">{{project.avgGap==null?'—':project.avgGap}}</text><text class="det-cap">平均间隔（天）</text></view>
+    </view>
+  </view>
+
+  <!-- 饮水：今天最重要，记录入口紧跟概览 -->
+  <view wx:if="{{project.kind==='hydration'}}" class="det-card det-water">
+    <view class="det-card-title">
+      <text>今天</text>
+      <picker class="det-water-date" mode="date" value="{{date}}" end="{{project.today}}" bindchange="date">{{date}} ▾</picker>
+    </view>
+    <view class="det-water-main">
+      <view class="det-ring"><progress-ring percent="{{water.percent}}" size="120" color="{{project.color||'#06B6D4'}}" label="{{water.percent}}%"/></view>
+      <view class="det-water-side">
+        <view class="det-water-num">{{water.totalMl}}<text class="det-water-unit"> / {{water.targetMl}} ml</text></view>
+        <view class="det-water-remain">{{water.achieved?'今天已达标 ✓':'再喝 '+water.remainingMl+' ml 就达标'}}</view>
+        <view class="det-water-quick">
+          <button data-step="250" bindtap="waterQuick" disabled="{{busy}}">+250</button>
+          <button data-step="500" bindtap="waterQuick" disabled="{{busy}}">+500</button>
+          <button data-step="1000" bindtap="waterQuick" disabled="{{busy}}">+1000</button>
+        </view>
+      </view>
+    </view>
+    <view class="det-water-input">
+      <input class="water-amount" type="number" placeholder="{{entryMode==='add'?'或输入本次饮水（ml）':'输入更正后的当天总量（ml）'}}" placeholder-class="ph" value="{{amountMl}}" bindinput="amount"/>
+      <button class="det-water-save {{amountMl?'det-water-save-on':''}}" bindtap="waterSave" disabled="{{busy}}">{{entryMode==='add'?'记录':'保存'}}</button>
+    </view>
+    <view class="det-water-foot">
+      <text>{{project.hydration.weightKg}}kg × {{project.hydration.coefficient}}ml/kg = {{project.hydration.targetMl}}ml / 天</text>
+      <text class="det-water-mode" bindtap="waterMode">{{entryMode==='add'?'修改今日总量':'返回增加饮水'}}</text>
+    </view>
+  </view>
+
+  <view class="det-card">
+    <view class="det-card-title">{{goalText}}目标<text class="det-card-note">{{project.progress.percent}}%</text></view>
+    <view class="goal-track"><view style="width: {{project.progress.percent}}%; background: {{project.color||'#111111'}}"/></view>
+    <view class="det-hint">{{project.progress.achieved?'目标已达成':'继续积累每一天'}} · 已达标 {{project.progress.completedGoals}} 个周期 · 最长连续 {{project.progress.longest}} 天</view>
+  </view>
+
+  <view class="det-card">
+    <view class="det-card-title">最近 7 天<text class="det-card-note">{{project.weekCount}} / 7 天</text></view>
+    <view class="det-week">
+      <view wx:for="{{project.week}}" wx:key="date" class="det-dot {{item.active?'det-dot-on':''}}" style="{{item.active?'background:'+(project.color||'#111111'):''}}"/>
+    </view>
+  </view>
+
+  <view class="det-actions">
+    <view class="det-action" bindtap="edit" role="button">编辑</view>
+    <view class="det-action" bindtap="toggleHistory" role="button">{{historyOpen?'收起记录':'历史记录'}}</view>
+    <block wx:if="{{project.sportType}}">
+      <view class="det-action" bindtap="record" role="button">补录</view>
+    </block>
+    <picker wx:else class="det-action" mode="date" value="{{project.today}}" end="{{project.today}}" bindchange="backfill">补录</picker>
+  </view>
+
+  <view class="det-card">
+    <view class="det-card-title">打卡记录<text class="det-card-note">{{project.records.length}} 条</text></view>
+    <view class="empty-note" wx:if="{{!project.records.length}}">还没有记录</view>
+    <view wx:for="{{visibleRecords}}" wx:key="id" class="history-item">
+      <block wx:if="{{project.sportType}}">
+        <view data-id="{{item.id}}" bindtap="detail"><view>{{item.occurredAt}}</view><view class="muted">{{item.distanceM}} m · {{item.durationText}} 分钟{{item.paceText?' · '+item.paceText:''}} · 点击编辑</view></view>
+      </block>
+      <block wx:else>
+        <text>{{item.date}}{{project.kind==='hydration'?' · '+item.amountMl+' ml':''}}</text>
+        <button class="text-action" data-id="{{item.id}}" bindtap="remove">删除</button>
+      </block>
+    </view>
+    <view wx:if="{{!historyOpen&&project.records.length>3}}" class="det-more" bindtap="toggleHistory" role="button">查看全部 {{project.records.length}} 条</view>
+  </view>
+
+  <view wx:if="{{celebrate}}" class="celebrate-mask" catchtap="dismissCelebrate"><view class="celebrate-card" catchtap="popupNoop"><view class="celebrate-ring"><text class="celebrate-check">✓</text></view><view class="celebrate-title">打卡成功</view><view class="celebrate-sub">连续 {{project.progress.current}} 天 · 累计 {{project.progress.total}} 次</view></view></view>
+</block>
+  <dock current=""/>
+</view>

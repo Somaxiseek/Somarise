@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "openapi": [
+      "ocr.printedText"
+    ]
+  },
+  "triggers": [
+    {
+      "name": "keepWarm",
+      "type": "timer",
+      "config": "0 */5 * * * * *"
+    }
+  ]
+}

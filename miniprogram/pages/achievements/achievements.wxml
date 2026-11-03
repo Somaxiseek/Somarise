@@ -1,0 +1,77 @@
+<view class="page form-page">
+  <view class="screen-heading">成就</view>
+  <text class="screen-sub">回顾你一路走来的变化</text>
+
+  <block wx:if="{{loaded}}">
+    <!-- 顶部三格统计：数字在上、标签在下，都用「天」一个量纲 -->
+    <view class="summary-strip">
+      <view class="stat"><text class="stat-num">{{summary.total}} 天</text><text class="stat-label">累计记录</text></view>
+      <view class="stat"><text class="stat-num">{{summary.longest}} 天</text><text class="stat-label">最长连续</text></view>
+      <view class="stat"><text class="stat-num">{{summary.recent}} 天</text><text class="stat-label">28 天内</text></view>
+    </view>
+
+    <!-- 12 月徽章墙：完成就用当月色点亮，未到就是灰线环 -->
+    <view class="wall-card">
+      <view class="wall-head">
+        <text class="section-title">2026 年度徽章</text>
+        <text class="wall-count">{{litCount}} / 12 已点亮</text>
+      </view>
+      <view class="badge-grid">
+        <view wx:for="{{wall}}" wx:key="month" class="badge badge-{{item.state}} {{item.selected?'badge-selected':''}}" bindtap="toggleMonth" data-month="{{item.month}}" role="button" aria-label="{{item.label}}月">
+          <view class="badge-ring-wrap">
+            <view class="badge-ring" style="background:{{item.track}}">
+              <view class="badge-fill" style="background:{{item.fill}}"></view>
+              <view class="badge-hole"></view>
+            </view>
+            <text wx:if="{{item.showNum}}" class="badge-num" style="color:{{item.numColor}}">{{item.label}}</text>
+            <text wx:else class="badge-check" style="color:{{item.color}}">✓</text>
+          </view>
+          <text wx:if="{{item.lit}}" class="badge-cap" style="color:{{item.color}}">{{item.caption}}</text>
+        </view>
+      </view>
+      <view class="wall-note">点亮 = 这个月每一周都闭环。点任意月份，展开看那个月的日历。</view>
+    </view>
+
+    <!-- 点开月徽章 → 展开当月日历（周日起头，行尾小环 = 这一周已闭环） -->
+    <view wx:if="{{cal}}" class="cal-card">
+      <view class="cal-head">
+        <text class="cal-title">{{cal.title}}</text>
+        <text class="cal-sub">{{cal.closedWeeksCount}} / {{cal.weeksCount}} 周已闭环</text>
+      </view>
+      <view class="weekdays"><text wx:for="{{['日','一','二','三','四','五','六']}}" wx:key="*this" class="weekday">{{item}}</text></view>
+      <view wx:for="{{cal.weeks}}" wx:key="index" class="cal-week">
+        <view wx:for="{{item.cells}}" wx:for-item="c" wx:key="key" class="cal-cell">
+          <view wx:if="{{!c.blank}}" class="cal-day {{c.active?'is-active':''}} {{c.today?'is-today':''}}">
+            <text class="cal-n">{{c.n}}</text>
+            <view wx:if="{{c.active}}" class="cal-dot"></view>
+          </view>
+        </view>
+        <view wx:if="{{item.closed}}" class="week-closed" aria-label="本周已闭环"></view>
+      </view>
+      <view wx:if="{{!cal.hasRecords}}" class="cal-empty">这个月还没开始记录</view>
+    </view>
+
+    <!-- 里程碑：按模块折叠 -->
+    <view class="ms-section">
+      <text class="section-title">里程碑</text>
+      <view wx:for="{{milestones}}" wx:key="key" class="ms-group">
+        <view class="ms-head" bindtap="toggleGroup" data-key="{{item.key}}" role="button">
+          <text class="ms-name">{{item.name}}</text>
+          <text class="ms-count">{{item.earned}} / {{item.total}} 已得</text>
+          <view class="ms-arrow {{item.open?'ms-arrow-open':''}}"></view>
+        </view>
+        <view wx:if="{{item.open}}" class="ms-body">
+          <view wx:for="{{item.items}}" wx:for-item="it" wx:key="id" class="ms-item">
+            <view class="ms-mark {{it.earned?'ms-mark-on':''}}" style="{{it.earned?('border-color:'+item.color):''}}"></view>
+            <view class="ms-text"><text class="ms-label">{{it.label}}</text><text class="ms-note">{{it.note}}</text></view>
+            <view wx:if="{{it.earned}}" class="ms-done">已得</view>
+            <view wx:else class="ms-bar"><view class="ms-bar-fill" style="width:{{it.target?it.progress*100/it.target:0}}%"></view></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 成就不在底部导航里了：从看板右上角进来，回到导航栏的返回键即可 -->
+  <dock current=""/>
+</view>

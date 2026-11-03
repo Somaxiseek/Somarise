@@ -1,0 +1,59 @@
+/* 挑头像：4 列网格；头像是成品圆图（圆底+动物一张图，圆外透明），
+   统一直径的圆形容器直接装图；分组小标题克制、无彩色块；选中只加一圈细黑描边。 */
+.av-card { background: #fff; border-radius: 32rpx; padding: 8rpx var(--pad-card) 8rpx; margin: 8rpx 0 24rpx; }
+
+/* 分组标题：加粗黑色文字 + 一条向右延展的浅灰细分隔线（标题 + 分隔线样式） */
+.av-group-title {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 22rpx 4rpx 14rpx;
+  margin-top: 8rpx;
+}
+.av-gt-t {
+  flex: 0 0 auto;
+  font-size: var(--fs-meta);
+  color: var(--ink-1);
+  font-weight: 700;
+  letter-spacing: 1rpx;
+}
+.av-gt-line {
+  flex: 1 1 auto;
+  height: 1rpx;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.av-grid { display: flex; flex-wrap: wrap; }
+.av-item {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+  padding: 16rpx 0 20rpx;
+}
+.av-hover { opacity: 0.7; }
+
+/* 成品圆图容器：统一直径；图自带的圆外透明边让动物不会顶到描边；选中加细黑外圈 */
+.av-circle {
+  width: 104rpx;
+  height: 104rpx;
+  border-radius: 50%;
+}
+.av-circle.on { box-shadow: 0 0 0 3rpx var(--ink-1); }
+
+/* 成品圆图：整张铺进容器（图内已有留白），像素风用 pixelated 保持边缘锐利 */
+.av-img {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.av-name { font-size: var(--fs-caption); color: var(--ink-4); }
+.av-name.on { color: var(--ink-1); font-weight: 600; }
+
+/* 「先不选」：一行说明，不用卡片，避免和上面的网格抢重量 */
+.av-none { display: flex; align-items: baseline; gap: 14rpx; margin: 0 4rpx 40rpx; padding: 24rpx 0; }
+.av-none.on .av-none-t { color: var(--ink-1); font-weight: 600; }
+.av-none-t { font-size: var(--fs-body); color: var(--ink-2); }
+.av-none-s { font-size: var(--fs-caption); color: var(--ink-4); }

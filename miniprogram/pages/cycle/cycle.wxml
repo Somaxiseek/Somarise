@@ -1,0 +1,185 @@
+<view class="page form-page">
+  <view class="heading-row">
+  <view class="screen-heading">周期看板</view>
+  <view class="head-chips">
+    <!-- 教练端：只对教练显示。自己的看板在这里，会员的看板在教练端。 -->
+    <view wx:if="{{coach}}" class="ach-chip" bindtap="openCoach" hover-class="me-hover" role="button" aria-label="教练端">
+      <text class="ach-t">教练端 ›</text>
+    </view>
+    <!-- 成就不再是底部 tab：收进看板右上角的小角标 -->
+    <view class="ach-chip" bindtap="openAchievements" hover-class="me-hover" role="button" aria-label="成就">
+      <view class="ach-diamond"/><text class="ach-t">成就</text>
+    </view>
+  </view>
+</view>
+
+  <block wx:if="{{loaded}}">
+    <!-- 个人卡片：进门第一眼看到「我是谁、我攒了多少」。点头像换像素头像 -->
+    <view class="me-card">
+      <view class="me-top" bindtap="openAvatar" hover-class="me-hover">
+        <pixel-face name="{{user.avatar}}" size="170" fallback="{{user.nickname}}"/>
+        <text class="me-name">{{user.nickname}}</text>
+        <view class="me-sub">
+          <text class="me-handle">{{meta}}</text>
+          <text class="me-dot">·</text>
+          <text class="me-edit">换头像</text>
+        </view>
+      </view>
+      <view class="me-stats">
+        <view class="ms" wx:for="{{meStats}}" wx:key="k">
+          <view class="ms-v">
+            <text class="ms-n">{{item.n}}</text>
+            <text class="ms-u">{{item.u}}</text>
+          </view>
+          <text class="ms-l">{{item.l}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 本周：最小单位。列的是本周各项周目标，不是又一张打卡表单 -->
+    <view class="cycle-card">
+      <view class="cycle-head">
+        <text class="section-title">本周</text>
+        <text class="cycle-range">{{weekRange}}</text>
+        <text class="cycle-pill {{weekClosed?'pill-on':''}}">{{weekClosed?'本周完成':'进行中'}}</text>
+      </view>
+
+      <view wx:if="{{anyWeekly}}" class="goal-list">
+        <view wx:for="{{weekGoals}}" wx:key="key" class="goal-row">
+          <view class="goal-dot" style="background: {{item.color}}"/>
+          <view class="goal-main">
+            <view class="goal-top">
+              <text class="goal-label">{{item.label}}</text>
+              <text class="goal-figure">{{item.current}} / {{item.target}}{{item.unit}}{{item.closed?'  ✓':''}}</text>
+            </view>
+            <view class="goal-track"><view class="goal-fill" style="width: {{item.percent}}%; background: {{item.color}}"/></view>
+          </view>
+        </view>
+      </view>
+      <view wx:else class="cycle-empty">你还没有周目标。去「我的 → 目标设置」里，给心肺或抗阻定一个每周线，这里就会显示本周进度。</view>
+    </view>
+
+    <!-- 月 / 季度 / 半年 / 年那四张「N/M 周闭环」卡整块删了（2026-10-30）：
+         底下回顾区的热力图和柱图已经把「哪几周动过、动得多不多」讲得更清楚，
+         再摆四根一样的灰条只是重复。闭环周数改用在热力图上方那句话里。 -->
+
+    <!-- 趋势：日历热力图（年=贡献网格，周/月=柱状图）+ 本月构成饼图 -->
+    <view class="trend-head">
+      <text class="section-title">回顾</text>
+    </view>
+
+    <view class="chart-card heat-card">
+      <view class="heat-head">
+        <text class="chart-title">运动热力图</text>
+        <view class="hm-seg">
+          <view class="hm-seg-item {{heatView==='week'?'on':''}}" data-v="week" bindtap="setHeatView">周</view>
+          <view class="hm-seg-item {{heatView==='month'?'on':''}}" data-v="month" bindtap="setHeatView">月</view>
+          <view class="hm-seg-item {{heatView==='year'?'on':''}}" data-v="year" bindtap="setHeatView">年</view>
+        </view>
+      </view>
+
+      <!-- 一句话回顾：走到哪儿了。达成（本周/本月闭环、有闭环周）时换庆祝款
+           —— 暖底 + 金色标记，不用百分比，也不催。 -->
+      <view class="cheer {{cheer.on?'cheer-on':''}}">
+        <view class="cheer-mk"><view class="cheer-gem"/></view>
+        <view class="cheer-txt">
+          <text class="cheer-t">{{cheer.title}}</text>
+          <text class="cheer-s">{{cheer.sub}}</text>
+        </view>
+      </view>
+
+      <!-- 年：贡献网格，网格下面一排小星 = 循环闭环的那几周 -->
+      <block wx:if="{{heatView==='year'}}">
+        <chart-heat id="heat" columns="{{heat.columns}}" monthlabels="{{heat.monthLabels}}" marks="{{heat.closedMarks}}" focus="{{heat.todayCol}}"/>
+        <view class="heat-legend">
+          <text class="hl-t">少</text>
+          <view class="hl-sq"></view>
+          <view class="hl-sq l1"></view>
+          <view class="hl-sq l2"></view>
+          <view class="hl-sq l3"></view>
+          <text class="hl-t">多</text>
+          <view class="hl-gap"/>
+          <view class="hl-gem"/>
+          <text class="hl-t">闭环的一周</text>
+          <view class="hl-gap"/>
+          <view class="hl-sq hl-pre"></view>
+          <text class="hl-t">还没开始</text>
+          <view class="hl-gap"/>
+          <view class="hl-sq hl-fut"></view>
+          <text class="hl-t">还没到</text>
+        </view>
+        <view class="heat-stats">
+          <view class="hs">
+            <text class="hs-n">{{heat.stats.activeDays}}</text>
+            <text class="hs-l">近一年活跃天</text>
+          </view>
+          <view class="hs">
+            <text class="hs-n">{{heat.stats.longest}}</text>
+            <text class="hs-l">最长连续天</text>
+          </view>
+          <view class="hs">
+            <text class="hs-n">{{heat.stats.current}}</text>
+            <text class="hs-l">当前连续天</text>
+          </view>
+        </view>
+      </block>
+
+      <!-- 周：本周 7 天。当天那根下面的字加粗，凑满三项的那天顶上给颗小星 -->
+      <block wx:elif="{{heatView==='week'}}">
+        <view class="wk-bars">
+          <view class="wk-col" wx:for="{{heat.week}}" wx:key="label">
+            <view class="wk-slot">
+              <view wx:if="{{item.value>=3}}" class="wk-gem"/>
+              <view wx:if="{{item.value}}" class="wk-bar {{item.cls}}" style="height:{{item.pct}}%"/>
+            </view>
+            <text class="wk-lab {{item.today?'wk-lab-on':''}} {{item.pre?'wk-lab-off':''}}">{{item.label}}</text>
+          </view>
+        </view>
+      </block>
+
+      <!-- 月：近 12 个月，柱顶写天数，最勤的那个月数字与月份标金色 -->
+      <block wx:elif="{{heatView==='month'}}">
+        <view class="mo-bars">
+          <view class="mo-col" wx:for="{{heat.month}}" wx:key="label">
+            <text class="mo-val {{item.best?'mo-val-on':''}}">{{item.value ? item.value : ''}}</text>
+            <view class="mo-slot">
+              <view class="mo-bar {{item.best?'mo-bar-on':''}}" style="height:{{item.pct}}%"/>
+            </view>
+            <text class="mo-lab {{item.best?'mo-lab-on':''}}">{{item.label}}</text>
+          </view>
+        </view>
+        <text wx:if="{{heat.monthCap}}" class="mini-cap">{{heat.monthCap}}</text>
+      </block>
+    </view>
+
+    <view class="chart-card">
+      <view class="chart-head">
+        <text class="chart-title">本月强度构成</text>
+        <text class="chart-sub">按次数</text>
+      </view>
+      <block wx:if="{{intensityTotal===0}}">
+        <view class="cb-empty">这个月还没有运动记录。记有氧或抗阻时顺手选个强度，这里就能看出你练得偏轻还是偏重。</view>
+      </block>
+      <block wx:else>
+        <view class="pie-row">
+          <view class="pie-donut" style="{{pieStyle}}">
+            <view class="pie-hole">
+              <text class="pie-n">{{intensityTotal}}</text>
+              <text class="pie-u">次</text>
+            </view>
+          </view>
+          <view class="pie-legend">
+            <view wx:for="{{intensity}}" wx:key="key" class="pie-leg">
+              <view class="pie-dot" style="background: {{item.color}}"/>
+              <text class="pie-leg-label">{{item.label}}</text>
+              <text class="pie-leg-val">{{item.value}} 次 · {{item.pct}}%</text>
+            </view>
+          </view>
+        </view>
+        <text class="pie-note">有氧和抗阻合在一起算：抗阻打卡时登记的强度也计进来。</text>
+      </block>
+    </view>
+  </block>
+
+  <dock current="cycle"/>
+</view>

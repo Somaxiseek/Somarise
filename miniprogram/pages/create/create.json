@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "新建项目",
+  "usingComponents": {
+    "dock": "/components/dock/dock",
+    "proj-glyph": "/components/proj-glyph/proj-glyph"
+  }
+}

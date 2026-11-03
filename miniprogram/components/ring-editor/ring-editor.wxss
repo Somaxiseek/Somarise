@@ -1,0 +1,58 @@
+/* 圆环编辑器：首页内浮层。遮罩半透明、底下是真实首页，卡片淡入 + 缩放进场，
+   不走 navigateTo 的侧滑转场 —— 看起来是浮窗，不是翻页。 */
+.editor-mask{ position:fixed; left:0; top:0; right:0; bottom:0; background:rgba(0,0,0,0.45); display:flex; align-items:center; justify-content:center; padding:64rpx 36rpx; box-sizing:border-box; z-index:100; animation:ring-mask-in 0.18s ease-out; }
+.editor-card{ width:100%; max-width:620rpx; max-height:84vh; background:#ffffff; border-radius:32rpx; padding:32rpx; box-sizing:border-box; display:flex; flex-direction:column; animation:ring-card-in 0.22s ease-out; }
+@keyframes ring-mask-in{ from{opacity:0;} to{opacity:1;} }
+@keyframes ring-card-in{ from{opacity:0; transform:scale(0.94) translateY(16rpx);} to{opacity:1; transform:none;} }
+
+.editor-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8rpx; }
+.editor-x{ font-size:var(--fs-em); color:var(--ink-4); line-height:1; padding:8rpx; }
+
+.editor-preview{ display:flex; align-items:center; justify-content:center; padding:8rpx 0 16rpx; }
+
+/* 已隐藏区：主列表不出现，收到底部灰化，点「显示」放回来 */
+.edit-row-off{ border-bottom:none; padding-top:12rpx; padding-bottom:12rpx; }
+.edit-row-off .edit-dot{ opacity:0.35; }
+.edit-label-off{ color:var(--ink-4); font-weight:400; }
+
+.editor-list{ flex:1; min-height:120rpx; padding:0 8rpx; }
+/* 一行一个内容（用户 10-29）：名称 + 周期小签 + 进度说明排在同一行，行体量收小 */
+.edit-row{ display:flex; align-items:center; flex-wrap:wrap; padding:16rpx 8rpx; border-bottom:1rpx solid #f0f0f0; }
+.edit-dot{ flex:0 0 22rpx; width:22rpx; height:22rpx; border-radius:50%; margin-right:20rpx; }
+.edit-main{ flex:1; min-width:0; }
+.edit-label{ display:flex; align-items:center; gap:10rpx; font-size:var(--fs-caption); font-weight:600; color:var(--ink-1); line-height:1.4; min-width:0; }
+.edit-tag{ flex:0 0 auto; font-size:var(--fs-micro); font-weight:400; color:var(--ink-4); background:#f4f4f5; border-radius:999rpx; padding:2rpx 10rpx; }
+/* 第四项起不画环（环固定三圈）：标出来，别让人以为环漏画了 */
+.edit-tag-off{ background:transparent; padding:2rpx 0; color:var(--ink-5); }
+.edit-note{ flex:1; min-width:0; font-size:var(--fs-micro); font-weight:400; color:var(--ink-5); line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:right; }
+/* 显隐按钮和「始终」：小一号的胶囊，跟进度说明之间留出缝，不挤在一起 */
+.edit-toggle{ flex:0 0 auto; margin-left:12rpx; font-size:var(--fs-micro); color:var(--ink-4); padding:4rpx 14rpx; border-radius:999rpx; border:1rpx solid #d4d4d4; }
+.edit-toggle.edit-on{ color:var(--ink-1); border-color:var(--ink-1); }
+.edit-locked{ flex:0 0 auto; margin-left:12rpx; font-size:var(--fs-micro); color:var(--ink-4); padding:4rpx 14rpx; }
+
+/* 取色：精选色板，挑过就高亮；还能恢复默认 */
+.palette{ flex-basis:100%; display:flex; flex-wrap:wrap; align-items:center; gap:16rpx; margin-top:16rpx; padding-top:16rpx; border-top:1rpx solid #f0f0f0; }
+.swatch{ width:48rpx; height:48rpx; border-radius:50%; border:1rpx solid rgba(0,0,0,0.08); box-sizing:border-box; }
+.swatch-on{ border:3rpx solid var(--ink-1); }
+.swatch-reset{ width:auto; min-width:64rpx; padding:0 16rpx; display:flex; align-items:center; justify-content:center; font-size:var(--fs-micro); color:var(--ink-1); background:#ffffff; border:1rpx solid #d4d4d4; border-radius:999rpx; }
+
+.editor-foot{ margin-top:16rpx; text-align:center; padding:0 24rpx; }
+.editor-hint{ font-size:var(--fs-micro); color:var(--ink-5); margin-top:8rpx; }
+
+/* 编辑入口：小字按钮，选中态描边变黑 */
+.edit-gear{ flex:0 0 auto; font-size:var(--fs-micro); color:var(--ink-4); padding:6rpx 14rpx; border-radius:999rpx; border:1rpx solid #e5e5e5; margin-left:12rpx; }
+.edit-gear-on{ color:var(--ink-1); border-color:var(--ink-1); }
+
+/* 编辑面板：行下方展开，浅灰底一小块 */
+.edit-panel{ flex-basis:100%; background:#f8f8f9; border-radius:20rpx; padding:18rpx 20rpx; margin-top:14rpx; }
+.edit-panel-cap{ font-size:var(--fs-micro); color:var(--ink-5); line-height:1.5; }
+
+/* 周规则：1-7 天的小药丸，点了弹确认（定死提示在确认框里） */
+.rule-pills{ display:flex; flex-wrap:wrap; margin-right:-12rpx; margin-top:12rpx; }
+.rule-pill{ margin:0 12rpx 10rpx 0; padding:0 22rpx; line-height:52rpx; border-radius:999rpx; background:#ffffff; border:1rpx solid #e5e5e5; font-size:var(--fs-micro); color:var(--ink-2); font-variant-numeric:tabular-nums; }
+.rule-pill:last-child{ margin-bottom:0; }
+
+/* 已定死的规则：只读文字 + 删除重设 */
+.rule-set{ display:flex; align-items:center; justify-content:space-between; margin-top:12rpx; }
+.rule-set-txt{ font-size:var(--fs-caption); font-weight:600; color:var(--ink-1); }
+.rule-clear{ font-size:var(--fs-micro); color:var(--ink-4); padding:6rpx 16rpx; border-radius:999rpx; border:1rpx solid #e5e5e5; background:#ffffff; }

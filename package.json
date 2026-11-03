@@ -1,0 +1,29 @@
+{
+  "name": "Somarise-local-mvp",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node server/http.js",
+    "start:lan": "HOST=0.0.0.0 node server/http.js",
+    "lan": "node scripts/lan.js",
+    "reset": "node scripts/reset.js",
+    "preflight": "node scripts/preflight.js",
+    "test": "node --test tests/*.test.js",
+    "build:cloud": "node scripts/build-cloud.js",
+    "cloud:env": "node scripts/cloud-env.js",
+    "cloud:deploy": "node scripts/cloud-deploy.js",
+    "upload": "node scripts/upload.js",
+    "shots": "node scripts/shots.js",
+    "audio": "node scripts/build-audio.js",
+    "audio:sent": "node scripts/build-sent-audio.js",
+    "audio:manifest": "node scripts/sync-audio-manifest.js"
+  },
+  "devDependencies": {
+    "@cloudbase/node-sdk": "^3.18.7",
+    "@napi-rs/canvas": "^1.0.13",
+    "miniprogram-automator": "^0.13.0"
+  }
+}

@@ -1,0 +1,56 @@
+<view class="page form-page">
+  <view class="screen-heading">教练授权</view>
+  <view class="field-note">授权之后，你的教练才能看到你的训练看板</view>
+
+  <block wx:if="{{loaded}}">
+    <block wx:if="{{!link}}">
+      <view class="form-card">
+        <view class="section-title">教练会看到什么</view>
+        <view class="scope-row">周 / 月 / 季度 / 半年 / 年的目标进度与闭环情况</view>
+        <view class="scope-row">每天的体测：体重、腰围</view>
+        <view class="scope-row">每天的心肺分钟、抗阻训练、饮水毫升数和完成百分比</view>
+        <view class="field-note">教练只能看，改不了你的任何记录和目标。看不到你的学习进度。授权随时可以撤回。</view>
+      </view>
+
+      <view class="form-card">
+        <view class="section-title">输入教练码</view>
+        <view class="field-note">教练码在教练 App 的「会员周期看板」那一页上，六位字符，念得出来也打得进去。</view>
+
+        <view class="field">
+          <label>教练码</label>
+          <input class="code-input" value="{{code}}" bindinput="onCode" placeholder="例如 K7M2QX" maxlength="8"/>
+        </view>
+
+        <view class="field">
+          <label>教练怎么称呼你</label>
+          <!-- type="nickname"：键盘上方浮「使用微信昵称」，点一下就把微信名字填进来（官方能力，不用授权弹窗） -->
+          <input type="nickname" value="{{name}}" bindinput="onName" placeholder="例如 小林（可点键盘上的「使用微信昵称」）" maxlength="30"/>
+        </view>
+
+        <view class="switch-line">
+          <text class="consent-text">我同意把上面这些分享给这位教练</text>
+          <switch color="#111111" checked="{{consent}}" bindchange="onConsent"/>
+        </view>
+
+        <button class="primary" bindtap="submit" disabled="{{saving || !consent}}">{{saving ? '授权中…' : '确认授权'}}</button>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view class="form-card">
+        <view class="section-title">已授权{{coach.name ? '给 ' + coach.name : ''}}</view>
+        <view class="field-note">授权于 {{authorizedAt}}</view>
+        <view class="scope-row">教练能看到：周期闭环、每天的体测与训练饮水数据</view>
+        <view class="field-note" wx:if="{{coach.active === false}}">这位教练的教练权限已经停用，看板暂时打不开了。</view>
+      </view>
+
+      <view class="form-card">
+        <view class="section-title">解除授权</view>
+        <view class="field-note">解除后教练立刻看不到你的看板，你的记录和目标一条都不会动。</view>
+        <button bindtap="revoke">解除授权</button>
+      </view>
+    </block>
+  </block>
+
+  <dock current="account"/>
+</view>

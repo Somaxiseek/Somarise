@@ -1,0 +1,75 @@
+/* 记录运动：跟首页同一套语言 —— 黑白灰、白色大圆角卡、大数字、极少色 */
+.rec-page { padding: 24rpx var(--pad-page) calc(330rpx + env(safe-area-inset-bottom)); }
+
+.rec-head { font-size: var(--fs-title); font-weight: 750; letter-spacing: -2rpx; color: var(--ink-1); margin: 10rpx 0 24rpx; }
+
+/* 本周有氧：压成一行细字，是背景信息不抢地方（用户 10-29） */
+.rec-week-line { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; padding: 2rpx 6rpx 18rpx; }
+.rec-week-cap { font-size: var(--fs-micro); color: var(--ink-5); letter-spacing: 1rpx; }
+.rec-week-line-val { font-size: var(--fs-micro); color: var(--ink-4); font-variant-numeric: tabular-nums; }
+.rec-notice { background: #fff; border-radius: 20rpx; padding: 16rpx 22rpx; font-size: var(--fs-micro); color: var(--ink-4); margin: 0 0 20rpx; line-height: 1.6; }
+
+/* 表单白卡 */
+.rec-card { background: #fff; border-radius: 32rpx; padding: 8rpx var(--pad-card) 12rpx; margin-bottom: 20rpx; }
+.rec-block { padding: 24rpx 0 6rpx; border-bottom: 1rpx solid #f4f4f5; }
+.rec-block:last-of-type { border-bottom: 0; }
+.rec-label { display: flex; align-items: baseline; gap: 10rpx; font-size: var(--fs-micro); color: var(--ink-5); letter-spacing: .5rpx; }
+.rec-hint { font-size: var(--fs-micro); color: var(--ink-7); }
+
+/* 类型：未选是浅灰药丸，选中是黑，不再把没选的压到看不见 */
+.rec-chips { display: flex; flex-wrap: wrap; padding: 14rpx 0 10rpx; margin-right: -12rpx; }
+.rec-chip { margin: 0 12rpx 12rpx 0; padding: 0 24rpx; line-height: 54rpx; border: 1rpx solid transparent; border-radius: 100rpx; background: #f5f5f6; color: var(--ink-4); font-size: var(--fs-caption); transition: background .15s ease, color .15s ease; }
+.rec-chip-on { background: #ffffff; border: 1rpx solid #171717; color: var(--ink-1); font-weight: 600; }
+/* 运动类型：比「练的是」那排更小一号，7 个也不占地方（2026-11-01） */
+.rec-type-chips { padding: 10rpx 0 6rpx; }
+.rec-chip-sm { margin: 0 10rpx 10rpx 0; padding: 0 18rpx; line-height: 48rpx; font-size: var(--fs-micro); }
+
+/* 日期：一个下拉行（用户 10-29 定稿），点开是系统自带的渐变高光滚筒 */
+.rec-when { padding-bottom: 20rpx; }
+.rec-picker { display: flex; align-items: center; justify-content: space-between; margin-top: 14rpx; padding: 0 22rpx; line-height: 72rpx; border-radius: 18rpx; background: #f5f5f6; font-size: var(--fs-meta); font-weight: 600; color: var(--ink-1); font-variant-numeric: tabular-nums; }
+.rec-picker-arrow { font-size: var(--fs-subhead); color: var(--ink-5); line-height: 1; }
+
+/* 截图识别：降级成一行虚线小字，兜底入口不占首屏 */
+.rec-ocr-link { border: 1rpx dashed #d4d4d4; border-radius: 20rpx; text-align: center; line-height: 76rpx; font-size: var(--fs-caption); color: var(--ink-5); margin-bottom: 20rpx; }
+
+/* 主数据：时长/距离是大数字，一眼就是这条记录的重点 */
+.rec-metrics { display: flex; padding: 22rpx 0 6rpx; }
+.rec-metric { flex: 1; min-width: 0; margin-right: 20rpx; }
+.rec-metric:last-child { margin-right: 0; }
+.rec-metric-label { font-size: var(--fs-micro); color: var(--ink-5); letter-spacing: .5rpx; }
+.rec-req { font-size: var(--fs-micro); color: var(--ink-7); margin-left: 8rpx; text-decoration: none; }
+.rec-metric-box { display: flex; align-items: baseline; margin-top: 8rpx; }
+.rec-page .rec-metric-num { flex: 1; width: auto; min-width: 0; height: 72rpx; min-height: 72rpx; box-sizing: border-box; padding: 0; border: 0; border-radius: 0; background: transparent; font-size: var(--fs-display); font-weight: 750; letter-spacing: -1.5rpx; color: var(--ink-1); line-height: 72rpx; font-variant-numeric: tabular-nums; }
+.rec-metric-note { font-size: var(--fs-micro); color: var(--ink-5); padding-bottom: 16rpx; }
+
+/* 次要指标：一行两列，小字标签 + 中等数字 */
+.rec-pair { display: flex; padding: 20rpx 0; border-top: 1rpx solid #f4f4f5; }
+.rec-cell { flex: 1; min-width: 0; margin-right: 20rpx; }
+.rec-cell:last-child { margin-right: 0; }
+.rec-cell-label { font-size: var(--fs-micro); color: var(--ink-5); }
+.rec-cell-box { display: flex; align-items: baseline; margin-top: 6rpx; }
+.rec-page .rec-cell-box input { flex: 1; width: auto; min-width: 0; height: 52rpx; min-height: 52rpx; box-sizing: border-box; padding: 0; border: 0; border-radius: 0; background: transparent; font-size: var(--fs-body); font-weight: 600; color: var(--ink-1); font-variant-numeric: tabular-nums; }
+
+/* 可见性开关 */
+.rec-switch { display: flex; align-items: center; justify-content: space-between; gap: 20rpx; padding: 20rpx 0 22rpx; border-top: 1rpx solid #f4f4f5; }
+.rec-switch-label { font-size: var(--fs-caption); color: var(--ink-3); }
+
+/* 脚注 */
+.rec-foot { display: flex; flex-direction: column; gap: 8rpx; font-size: var(--fs-micro); color: var(--ink-6); line-height: 1.7; padding: 4rpx 0 22rpx; }
+
+/* 保存：小号白药丸悬在 dock 上方 —— 主操作够显眼，又不压一屏黑块。
+   背后的渐隐要盖到按钮顶边（140rpx + 80rpx = 220rpx 处）才算盖住：
+   原来 58% 才实心，滚到中段时「会喘，但还能说」会从按钮两侧穿出来。 */
+.rec-page::after { content: ''; position: fixed; left: 0; right: 0; bottom: 0; height: calc(320rpx + env(safe-area-inset-bottom)); background: linear-gradient(to bottom, rgba(245,245,245,0) 0%, rgba(245,245,245,.92) 22%, #f5f5f5 34%); pointer-events: none; z-index: 8; }
+.rec-page button.rec-save { position: fixed; left: 50%; right: auto; bottom: calc(140rpx + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 9; box-sizing: border-box; width: 360rpx; max-width: calc(100% - 80rpx); margin: 0; padding: 0 36rpx; line-height: 80rpx; border-radius: 999rpx; background: #ffffff; color: #6b423e; border: 2rpx solid #F2CFCB; font-size: var(--fs-body); font-weight: 650; letter-spacing: 1rpx; box-shadow: 0 6rpx 20rpx rgba(200, 60, 50, .10); }
+.rec-page button.rec-save[disabled] { background: #f4f4f5; color: var(--ink-6); border-color: #e8e8e8; box-shadow: none; }
+.rec-page button.ghost.rec-remove { display: block; width: 100%; background: transparent; color: var(--ink-5); font-size: var(--fs-caption); line-height: 72rpx; margin: 4rpx 0 0; }
+
+
+/* 心肺 / 抗阻 两个入口：分段控件，跟「今天 / 昨天」同一套语言 */
+
+/* 强度：三颗小胶囊（用户 10-29：不默认选、别占地方），身体感受的解释走选中后的那行小字 */
+.rec-int-sm { display: flex; padding: 14rpx 0 2rpx; }
+.rec-int-pill { margin-right: 10rpx; padding: 0 24rpx; line-height: 48rpx; border: 1rpx solid transparent; border-radius: 100rpx; background: #f5f5f6; color: var(--ink-4); font-size: var(--fs-micro); transition: background .15s ease, color .15s ease; }
+.rec-int-pill-on { background: #ffffff; border: 1rpx solid #171717; color: var(--ink-1); font-weight: 600; }
+.rec-int-note { font-size: var(--fs-micro); color: var(--ink-5); line-height: 1.6; padding: 12rpx 0 16rpx; }

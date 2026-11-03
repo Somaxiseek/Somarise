@@ -1,0 +1,566 @@
+/* ==========================================================================
+   全站视觉规范（2026-10-29 统一）
+   这一层是唯一口径：所有页面只允许从这里取字号、墨色、边距。
+   新增样式时不要写裸数字，写 var(--fs-*) / var(--ink-*) / var(--pad-*)。
+
+   ── 字阶：10 档，相邻档位差 2~8rpx，一眼能分出层级 ──
+     19 micro    角标、单位、必填星号、「已得」这类极小注记
+     21 caption  说明文字、图例、时间戳、小胶囊
+     24 meta     行内元数据、chip、次级标签
+     27 body     正文、列表主文字、行标题
+     32 subhead  区块小标题、强调数字、图标字符
+     36 em       页面内大数字、段落主句
+     40 title    页面标题、主数字
+     48 display  记录页主输入数字
+     56 hero     单词、页面巨型数字
+     64 mega     首页品牌字、庆祝符号
+   ── 墨阶：7 档，越淡表示越次要 ──
+     ink-1 #171717 标题 / 主数字 / 主文字
+     ink-2 #3d3d3d 正文（次主）
+     ink-3 #545454 说明性正文
+     ink-4 #6f6f6f 辅助信息、标签
+     ink-5 #9c9c9c 弱化：时间、单位、未选中
+     ink-6 #b8b8b8 极弱：hint、placeholder
+     ink-7 #d4d4d4 禁用 / 分隔 / 空值
+   ── 边距：页面左右一律 32rpx（16pt），卡片横向内边距一律 32rpx ──
+      任何文字都不许贴到屏幕边或卡片边，最小 32rpx。
+   ── 圆角：只有两档 ──
+      页面级白卡 32rpx（.form-card / .sport-card / .rec-card / .gs-card / .vocab-row …）
+      卡内小块 20rpx（.info-pop / .rec-notice 这类说明块）
+      胶囊一律 999rpx；圆形 50%。除此之外不要再出现 16/22/26/38 这些中间值。
+   ========================================================================== */
+page {
+  /* 字阶 */
+  --fs-micro: 19rpx;
+  --fs-caption: 21rpx;
+  --fs-meta: 24rpx;
+  --fs-body: 27rpx;
+  --fs-subhead: 32rpx;
+  --fs-em: 36rpx;
+  --fs-title: 40rpx;
+  --fs-display: 48rpx;
+  --fs-hero: 56rpx;
+  --fs-mega: 64rpx;
+  /* 墨阶 */
+  --ink-1: #171717;
+  --ink-2: #3d3d3d;
+  --ink-3: #545454;
+  --ink-4: #6f6f6f;
+  --ink-5: #9c9c9c;
+  --ink-6: #b8b8b8;
+  --ink-7: #d4d4d4;
+  /* 边距 */
+  --pad-page: 32rpx;
+  --pad-card: 32rpx;
+  --gap-row: 24rpx;
+
+  /* 兼容旧变量名：老样式里还有 var(--ink) / var(--muted) 的引用 */
+  --ink: var(--ink-1);
+  --muted: var(--ink-4);
+  --line: #e5e5e5;
+  --bg: #f5f5f5;
+  --primary: #171717;
+  --accent: #e8e8e8;
+  background: var(--bg);
+  color: var(--ink-1);
+  font-family: system-ui, 'PingFang SC', sans-serif;
+  font-size: var(--fs-body);
+}
+.page { padding: 32rpx var(--pad-page) calc(170rpx + env(safe-area-inset-bottom)); }
+.muted { color: var(--muted); font-size: var(--fs-meta); margin: 14rpx 0; line-height: 1.6; }
+.card { background: #fff; border-radius: 32rpx; padding: 28rpx var(--pad-card); margin: 32rpx 0; border: 1rpx solid var(--line); }
+button { margin: 16rpx 0; background: #ededed; color: var(--primary); font-size: var(--fs-body); border-radius: 16rpx; }
+button::after { border: 0; }
+/* 主按钮一律走浮光胶囊：白底 + 浅青描边 + 10% 投影（不再有实心黑块） */
+button.primary { background: #ffffff; color: #3f4d55; border: 2rpx solid #C9E4E9; border-radius: 999rpx; box-shadow: 0 4rpx 16rpx rgba(23, 90, 110, .10); }
+button[disabled] { background: var(--line); color: var(--muted); }
+button.primary[disabled] { background: #f4f4f5; color: var(--ink-6); border-color: #e8e8e8; box-shadow: none; }
+/* input 是输入框，picker 是「点开一行的入口」——两者不能共用一套框。
+   picker 被画成输入框时，页面上「分组 / 日期」那些行会白多出一个灰方块，
+   和卡片里其余的分隔行完全不是一套东西。 */
+input { padding: 24rpx; background: var(--bg); color: var(--ink-1); border: 1rpx solid var(--line); border-radius: 12rpx; margin: 12rpx 0; }
+picker { display: block; box-sizing: border-box; color: var(--ink-1); }
+/* 占位字全站一个颜色（ink-6）。以前 record 用 ink-7、create 用 ink-6，同一个「例如 62」深浅不一样。
+   用法：<input placeholder-class="ph"/> */
+.ph { color: var(--ink-6); }
+label { display: block; margin-top: 26rpx; }
+
+/* ---- 浮光胶囊按钮体系：白底 + 浅描边 + 柔和投影，实心黑块全部退场 ----
+   底永远是白的，层级和分类只靠「描边色 + 投影色 + 字色」表达 */
+.btn-soft, .btn-ghost {
+  box-sizing: border-box;
+  display: flex; align-items: center; justify-content: center; gap: 10rpx;
+  min-height: 76rpx; padding: 0 36rpx;
+  background: #ffffff;
+  border: 2rpx solid #C9E4E9;
+  border-radius: 999rpx;
+  font-size: var(--fs-meta); line-height: 1.4;
+  color: #3f4d55;
+  box-shadow: 0 4rpx 16rpx rgba(23, 90, 110, .10);
+}
+button.btn-soft, button.btn-ghost { border-radius: 999rpx; }
+/* 原生 button 有默认描边，不清掉浮光款会出现重影 */
+button.btn-soft::after, button.btn-ghost::after { border: 0; }
+/* 分类色变体：只换描边 / 投影 / 字色 */
+.btn-soft--english  { border-color: #E3CFF0; box-shadow: 0 4rpx 16rpx rgba(120, 60, 160, .10); color: #5b4470; }
+.btn-soft--water    { border-color: #C4E6EC; box-shadow: 0 4rpx 16rpx rgba(6, 150, 180, .10);  color: #2f5a63; }
+.btn-soft--cardio   { border-color: #F2CFCB; box-shadow: 0 4rpx 16rpx rgba(200, 60, 50, .09);  color: #6b423e; }
+.btn-soft--sport    { border-color: #F3D3D1; box-shadow: 0 4rpx 16rpx rgba(200, 90, 80, .09);  color: #6b423e; }
+.btn-soft--strength { border-color: #CFD9F2; box-shadow: 0 4rpx 16rpx rgba(60, 90, 190, .10);  color: #414a63; }
+.btn-soft--body     { border-color: #CBE7D6; box-shadow: 0 4rpx 16rpx rgba(40, 140, 90, .10);  color: #3d5a49; }
+.btn-soft--danger   { border-color: #F2CFCB; box-shadow: 0 4rpx 16rpx rgba(200, 60, 50, .09);  color: #a04a42; }
+/* 次级操作：灰描边，无投影 */
+.btn-ghost { border-color: #e0e0e0; box-shadow: none; padding: 0 32rpx; color: var(--ink-4); }
+/* .form-page button.primary 特异性 (0,2,1) 高于上面的变体 (0,1,0)，
+   分类色变体要配套提权，否则页面里的保存按钮一律渲染成通用浅青 */
+.form-page button.primary.btn-soft--english  { border-color: #E3CFF0; box-shadow: 0 4rpx 16rpx rgba(120, 60, 160, .10); color: #5b4470; }
+.form-page button.primary.btn-soft--water    { border-color: #C4E6EC; box-shadow: 0 4rpx 16rpx rgba(6, 150, 180, .10);  color: #2f5a63; }
+.form-page button.primary.btn-soft--cardio   { border-color: #F2CFCB; box-shadow: 0 4rpx 16rpx rgba(200, 60, 50, .09);  color: #6b423e; }
+.form-page button.primary.btn-soft--sport    { border-color: #F3D3D1; box-shadow: 0 4rpx 16rpx rgba(200, 90, 80, .09);  color: #6b423e; }
+.form-page button.primary.btn-soft--strength { border-color: #CFD9F2; box-shadow: 0 4rpx 16rpx rgba(60, 90, 190, .10);  color: #414a63; }
+.form-page button.primary.btn-soft--body     { border-color: #CBE7D6; box-shadow: 0 4rpx 16rpx rgba(40, 140, 90, .10);  color: #3d5a49; }
+.form-page button.primary.btn-soft--danger   { border-color: #F2CFCB; box-shadow: 0 4rpx 16rpx rgba(200, 60, 50, .09);  color: #a04a42; }
+/* 点按：轻微下沉，不变色块 */
+.btn-soft-hover { transform: scale(.98); box-shadow: 0 2rpx 8rpx rgba(23, 90, 110, .08); }
+.btn-ghost-hover { opacity: .6; }
+/* 固定定位的按钮不能再加 transform（会盖掉 translateX(-50%)），用投影收缩表达按下 */
+.btn-soft-hover-fixed { box-shadow: 0 2rpx 8rpx rgba(23, 90, 110, .08); }
+.btn-soft[disabled], .btn-ghost[disabled] { background: #f4f4f5; color: var(--ink-6); border-color: #e8e8e8; box-shadow: none; }
+
+.hero { margin: -32rpx -32rpx 0; padding: 28rpx 32rpx 52rpx; background: #111111; color: #fff; }
+.hero .title { color: #fff; }
+.hero .muted { color: var(--ink-7); }
+.stats { border-left: 8rpx solid var(--primary); }
+/* Compact logging layout inspired by the supplied FastLog screenshots. */
+.card { border: 0; border-radius: 32rpx; }
+.log-page { padding: 32rpx var(--pad-page) calc(200rpx + env(safe-area-inset-bottom)); }
+.brand-title { font-size: var(--fs-mega); font-weight: 800; letter-spacing: -2rpx; margin: 14rpx 0 12rpx; }
+.daily-quote { font-size: var(--fs-body); line-height: 1.6; margin: 12rpx 0; }
+.demo-label { font-size: var(--fs-caption); color: var(--muted); margin: 10rpx 0 24rpx; }
+.filter-tabs { display: flex; gap: 12rpx; margin-bottom: 32rpx; }
+.filter-pill { margin: 0; padding: 0 28rpx; border-radius: 50rpx; background: #eaeaea; color: var(--ink); font-size: var(--fs-body); line-height: 72rpx; }
+/* 选中态不再填黑底：改成白底 + 深色描边 + 深字，选中依然一眼可辨，但不再是黑块 */
+.filter-pill.selected { background: #ffffff; border: 1rpx solid #171717; color: var(--ink-1); font-weight: 600; }
+.sport-card { background: #fff; border-radius: 32rpx; padding: 30rpx 28rpx; margin-bottom: 20rpx; display: flex; align-items: center; gap: 20rpx; }
+.sport-content { flex: 1 1 0; min-width: 0; }
+.sport-name { display: flex; align-items: center; font-size: var(--fs-subhead); font-weight: 650; gap: 10rpx; }
+.sport-en { font-size: var(--fs-micro); letter-spacing: 1rpx; color: var(--muted); font-weight: 400; }
+.sport-last { font-size: var(--fs-meta); color: var(--muted); margin: 12rpx 0; }
+.trail { display: flex; gap: 4rpx; margin-top: 20rpx; }
+.trail-dot { height: 16rpx; flex: 1; min-width: 0; border-radius: 5rpx; background: #eeeeee; }
+.trail-dot.filled { background: var(--primary); }
+.sport-counter { flex: 0 0 130rpx; width: 130rpx; min-width: 0; display: flex; align-items: center; flex-direction: column; }
+.counter-caption { font-size: var(--fs-micro); color: var(--muted); margin-bottom: 8rpx; white-space: nowrap; }
+.count-circle { width: 100rpx; height: 100rpx; padding: 0; margin: 0; line-height: 100rpx; border-radius: 50%; background: var(--primary); color: #fff; font-size: var(--fs-display); font-weight: 700; }
+.quick-actions { display: flex; gap: 16rpx; align-items: stretch; margin: 26rpx 0; }
+.quick-actions button { margin: 0; padding: 16rpx 24rpx; border-radius: 26rpx; background: #ededed; font-size: var(--fs-body); }
+.quick-actions .upload-action { flex: 1; text-align: left; }
+.upload-action text { display: block; font-size: var(--fs-caption); color: var(--muted); }
+.section-row { display: flex; align-items: center; justify-content: space-between; gap: 12rpx; margin: 24rpx 0; }
+.section-title { font-size: var(--fs-body); font-weight: 600; }
+/* 说明文字：一律收进标题旁的小圆点，点开才展开，正文不被大段灰字占满 */
+.title-with-info { display: flex; align-items: center; gap: 10rpx; }
+.note-label { font-size: var(--fs-caption); color: var(--muted); }
+.info-dot {
+  position: relative;
+  width: 28rpx; height: 28rpx; flex: 0 0 28rpx;
+  border: 1.5rpx solid #d9d9d9; border-radius: 50%;
+  color: var(--ink-5); font-size: var(--fs-micro); font-weight: 700; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  box-sizing: border-box;
+}
+/* 视觉只有 28rpx，热区外扩到约 52rpx，手指点得中 */
+.info-dot::before { content: ''; position: absolute; left: -12rpx; top: -12rpx; right: -12rpx; bottom: -12rpx; }
+/* 选中的说明点：白底 + 墨色描边 + 墨色感叹号，不再填黑块 */
+.info-dot-on { border-color: #171717; background: #ffffff; color: var(--ink-1); }
+/* 白底 + 细边框：落在浅灰页面或白色卡片上都看得出这是一块独立的说明 */
+.info-pop {
+  margin: -6rpx 0 20rpx;
+  padding: 22rpx 24rpx;
+  border-radius: 20rpx;
+  border: 1.5rpx solid #ececec;
+  background: #fff;
+  font-size: var(--fs-caption);
+  line-height: 1.65;
+  color: var(--ink-4);
+}
+.info-pop + .info-pop { margin-top: -8rpx; }
+/* info-pop 内部结构：用多个子 view 分行、要点用条目，长说明不再糊成一段。
+   短说明仍可整句一行（见 tests/infopop.test.js 对单行长度的守规）。 */
+.info-pop .ip-lead { font-weight: 600; color: var(--ink-2); margin-bottom: 10rpx; }
+.info-pop .ip-line { color: var(--ink-4); }
+.info-pop .ip-line + .ip-line,
+.info-pop .ip-bul + .ip-bul,
+.info-pop .ip-line + .ip-bul,
+.info-pop .ip-bul + .ip-line { margin-top: 8rpx; }
+.info-pop .ip-bul { position: relative; padding-left: 26rpx; color: var(--ink-4); }
+.info-pop .ip-bul::before {
+  content: ''; position: absolute; left: 4rpx; top: 0; bottom: 0; margin: auto 0;
+  width: 8rpx; height: 8rpx; border-radius: 50%; background: var(--ink-7);
+}
+.info-pop .ip-strong { font-weight: 600; color: var(--ink-2); }
+.note-line { display: flex; align-items: center; margin: 18rpx 0; }
+.text-action { background: transparent; margin: 0; padding: 0; font-size: var(--fs-meta); }
+.empty-note { text-align: center; padding: 50rpx 16rpx; color: var(--muted); font-size: var(--fs-body); }
+.empty-note view { font-size: var(--fs-caption); margin-top: 14rpx; }
+.history-item { display: flex; align-items: center; justify-content: space-between; background: #fff; padding: 28rpx var(--pad-card); margin-bottom: 16rpx; border-radius: 30rpx; gap: 16rpx; }
+.history-name { font-weight: 600; font-size: var(--fs-body); }
+.history-result { font-size: var(--fs-em); font-weight: 650; white-space: nowrap; }
+.history-result text { font-size: var(--fs-caption); font-weight: 400; margin-left: 8rpx; color: var(--muted); }
+/* summary-strip 的旧全局样式已删（只有成就页在用，且 .summary-strip text 45rpx 黑粗会劫持页面的 .stat-label/.stat-num），样式归 achievements.wxss */
+.calendar-card { background: #fff; border-radius: 38rpx; padding: 24rpx var(--pad-card); margin: 24rpx 0; }
+.month-control { display: flex; align-items: center; gap: 10rpx; }
+.month-control button { background: transparent; font-size: var(--fs-title); line-height: 50rpx; padding: 0 8rpx; margin: 0; }
+.month-control picker { border: 0; margin: 0; padding: 0; background: transparent; font-size: var(--fs-meta); color: var(--muted); }
+.weekday { color: var(--muted); font-size: var(--fs-meta); padding: 12rpx 0; }
+.calendar-cell { height: 76rpx; position: relative; display: flex; justify-content: center; align-items: center; }
+.day-disc { width: 56rpx; height: 56rpx; line-height: 56rpx; text-align: center; border: 2rpx solid transparent; border-radius: 50%; font-size: var(--fs-meta); }
+.checked-day { border-color: var(--primary); color: var(--primary); font-weight: 650; }
+.today { background: #ededed; }
+.day-count { position: absolute; right: 0; top: 1rpx; min-width: 25rpx; line-height: 25rpx; background: var(--primary); color: #fff; border-radius: 20rpx; font-size: var(--fs-micro); text-align: center; }
+.calendar-footer { display: flex; border-top: 1rpx solid var(--line); margin-top: 26rpx; padding-top: 24rpx; }
+.calendar-footer > view { width: 33.33%; text-align: center; color: var(--muted); font-size: var(--fs-micro); }
+.calendar-footer text { display: block; color: var(--ink); font-size: var(--fs-subhead); font-weight: 650; margin-bottom: 8rpx; }
+
+/* Override native button sizing explicitly inside the fixed counter column. */
+.sport-counter > button.count-circle[size="mini"] {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 100rpx;
+  width: 100rpx;
+  min-width: 100rpx;
+  max-width: 100rpx;
+  height: 100rpx;
+  min-height: 100rpx;
+  max-height: 100rpx;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  border-radius: 50%;
+}
+.reflection { margin: 12rpx 0 22rpx; }
+.reflection .daily-quote { font-size: var(--fs-body); line-height: 1.6; margin-bottom: 8rpx; }
+.quote-credit { font-size: var(--fs-caption); color: var(--muted); }
+.category-card { cursor: pointer; }
+.category-hint { color: var(--primary); font-size: var(--fs-caption); margin-top: 16rpx; }
+.category-count { width: 100rpx; height: 100rpx; border-radius: 50%; background: var(--primary); color: #fff; font-size: var(--fs-display); font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.filter-tabs { flex-wrap: wrap; }
+.reflection { margin-bottom: 30rpx; }
+.project-list { margin: -6rpx 0 24rpx; padding: 0 12rpx; }
+.project-row { background: #fff; border-radius: 32rpx; padding: 26rpx; display: flex; align-items: center; gap: 20rpx; margin-bottom: 12rpx; }
+.project-row-main { flex: 1; min-width: 0; }
+.project-arrow { font-size: var(--fs-title); color: var(--ink-4); }
+.goal-track { height: 10rpx; border-radius: 12rpx; background: #eeeeee; overflow: hidden; }
+.goal-track > view { height: 100%; background: #111111; border-radius: 12rpx; }
+.project-progress { font-weight: 650; font-size: var(--fs-title); }
+.add-project { margin: 20rpx 0; padding: 14rpx; }
+.achievement-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16rpx; margin: 22rpx 0; }
+.achievement { background: #ededed; color: var(--ink-4); border-radius: 28rpx; padding: 24rpx 16rpx; text-align: center; font-size: var(--fs-meta); }
+.achievement.earned { background: #fff; color: var(--ink-1); }
+.achievement-mark { font-size: var(--fs-title); margin-bottom: 14rpx; }
+.water-panel { display: flex; flex-direction: column; align-items: center; gap: 16rpx; }
+.water-panel input, .water-panel picker, .water-panel > button { width: 100%; box-sizing: border-box; }
+.water-quick { display: flex; gap: 12rpx; width: 100%; }
+.water-quick button { flex: 1; min-width: 0; padding: 0 8rpx; font-size: var(--fs-meta); }
+.sport-counter.water-counter { flex: 0 0 72px; width: 72px; }
+.word-card { text-align: center; padding: 42rpx 28rpx; }
+.word-title { font-size: var(--fs-mega); font-weight: 700; margin-bottom: 24rpx; }
+.word-example { font-size: var(--fs-body); line-height: 1.7; margin: 18rpx 0; }
+.word-meaning { font-size: var(--fs-em); margin: 24rpx 0; }
+
+/* Five equal native view slots avoid WeChat button minimum-width rules. */
+.bottom-dock { position: fixed; bottom: 0; left: 0; right: 0; width: 100%; box-sizing: border-box; display: flex; align-items: center; background: #f5f5f5; border-top: 1rpx solid #e5e5e5; padding: 16rpx 0 calc(16rpx + env(safe-area-inset-bottom)); z-index: 10; }
+.dock-slot { flex: 0 0 20%; width: 20%; min-width: 0; height: 84rpx; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5rpx; color: var(--ink-4); }
+.dock-icon { font-size: var(--fs-subhead); line-height: 38rpx; }
+.dock-label { font-size: var(--fs-caption); line-height: 24rpx; }
+.dock-selected { color: var(--ink-1); }
+/* 底部 ＋：也走浮光 —— 白底胶囊 + 灰描边 + 小投影，＋ 用墨色，不再是一块黑 */
+.dock-plus { width: 100rpx; max-width: 90%; height: 76rpx; border-radius: 999rpx; box-sizing: border-box; display: flex; align-items: center; justify-content: center; background: #ffffff; color: var(--ink-1); border: 2rpx solid #e2e2e4; box-shadow: 0 4rpx 14rpx rgba(23, 90, 110, .10); font-size: var(--fs-title); line-height: 1; }
+/* Supporting screens share the calm, rounded logging-page design. */
+.form-page { padding: 32rpx var(--pad-page) calc(170rpx + env(safe-area-inset-bottom)); }
+.screen-heading { font-size: var(--fs-hero); font-weight: 750; letter-spacing: -1rpx; margin: 14rpx 0 32rpx; line-height: 1.3; }
+.form-card, .menu-card { background: #fff; border-radius: 32rpx; padding: 30rpx var(--pad-card); margin: 0 0 32rpx; }
+.panel-heading { font-size: var(--fs-body); font-weight: 650; margin: 0; line-height: 1.5; }
+.field-note { color: var(--ink-4); font-size: var(--fs-meta); line-height: 1.7; margin: 12rpx 0; }
+.form-field { margin-top: 26rpx; border-bottom: 1rpx solid #eeeeee; }
+.form-page .form-field > label { font-size: var(--fs-caption); color: var(--ink-4); margin: 0 0 6rpx; }
+.form-page input, .form-page picker { box-sizing: border-box; background: transparent; color: var(--ink-1); border: 0; padding: 16rpx 0; margin: 0; border-radius: 0; font-size: var(--fs-subhead); min-height: 48rpx; }
+.form-page input { height: 78rpx; width: 100%; }
+.field-arrow { float: right; color: var(--ink-5); font-size: var(--fs-subhead); }
+.form-page button { box-sizing: border-box; display: block; width: 100%; min-width: 0; margin: 20rpx 0 0; padding: 0 20rpx; line-height: 96rpx; border-radius: 26rpx; background: #ededed; color: var(--ink-1); font-size: var(--fs-subhead); font-weight: 600; letter-spacing: 1rpx; }
+/* 主按钮走浮光胶囊：以前写成 var(--accent)，而 --accent 是浅灰 #e8e8e8，白字压浅灰等于看不见 */
+.form-page button.primary { background: #ffffff; color: #3f4d55; border: 2rpx solid #C9E4E9; border-radius: 999rpx; line-height: 76rpx; font-size: var(--fs-body); letter-spacing: 0; box-shadow: 0 4rpx 16rpx rgba(23, 90, 110, .10); }
+/* 卡片里的动作按钮：药丸居中、不满宽。满宽是「下一步」的语言，塞进设置卡里会压得整张卡很沉。
+   这里挂 .form-page 而不是 .form-card：卡片容器有 form-card / body-card / gs-card 好几种，
+   挂在容器上就会漏掉后两种（体测、目标设置的保存键之前就是这样满宽的）。 */
+.form-page button.primary { width: 340rpx; max-width: 100%; margin: 26rpx auto 4rpx; padding: 0 40rpx; }
+.form-page button[disabled] { background: #e5e5e5; color: var(--ink-4); }
+.form-page button.primary[disabled] { background: #f4f4f5; color: var(--ink-6); border-color: #e8e8e8; box-shadow: none; }
+.form-page button.inline-action { text-align: left; font-size: var(--fs-meta); line-height: 54rpx; margin-top: 12rpx; padding: 0; background: transparent; }
+.menu-card { display: flex; align-items: center; justify-content: space-between; gap: 20rpx; }
+.menu-arrow { font-size: var(--fs-title); color: var(--ink-4); }
+.menu-card .field-note { margin-bottom: 0; }
+.switch-line { display: flex; align-items: center; justify-content: space-between; gap: 20rpx; font-size: var(--fs-body); margin-top: 26rpx; }
+.status-line { background: #f5f5f5; border-radius: 16rpx; padding: 18rpx; margin-top: 20rpx; font-size: var(--fs-meta); }
+.target-readout { font-size: var(--fs-hero); font-weight: 700; margin: 24rpx 0; }
+.target-readout text, .feed-result text { font-size: var(--fs-caption); color: var(--ink-4); font-weight: 400; margin-left: 8rpx; }
+.page-footnote { text-align: center; color: var(--ink-4); font-size: var(--fs-caption); line-height: 1.7; margin: 28rpx 0; }
+.list-line { padding: 22rpx 0; border-bottom: 1rpx solid #eeeeee; font-size: var(--fs-body); }
+.list-line:last-child { border-bottom: 0; }
+.rank-line { display: flex; gap: 20rpx; align-items: center; }
+.rank-index { width: 32rpx; color: var(--ink-4); }
+.rank-name { flex: 1; }
+.feed-result { font-size: var(--fs-subhead); font-weight: 650; margin-top: 18rpx; }
+.water-heading { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16rpx; font-size: var(--fs-body); }
+.water-heading .water-date { width: auto; min-width: 0; border: 0; margin: 0; padding: 4rpx 0 4rpx 12rpx; background: transparent; font-size: var(--fs-caption); color: var(--ink-4); border-radius: 0; }
+.water-panel .water-input-label { width: 100%; margin: 14rpx 0 0; font-size: var(--fs-meta); }
+.water-panel input.water-amount { display: block; box-sizing: border-box; width: 100%; height: 96rpx; min-height: 96rpx; padding: 0 22rpx; margin: 0; line-height: normal; font-size: var(--fs-subhead); border: 1rpx solid #e5e5e5; border-radius: 18rpx; background: #f5f5f5; }
+.water-panel button.water-mode-link { width: auto; min-width: 0; margin: 0; padding: 0 12rpx; line-height: 50rpx; background: transparent; font-size: var(--fs-meta); color: var(--ink-4); }
+.category-count { font-size: var(--fs-title); }
+.project-goal-counter { width: 88rpx; height: 88rpx; flex: 0 0 88rpx; border-radius: 50%; background: #111111; color: #fff; display: flex; align-items: center; justify-content: center; font-size: var(--fs-subhead); font-weight: 650; }
+
+/* Both counter modes reserve identical caption, circle, and fraction space. */
+.sport-counter > .counter-caption { display: block; height: 28rpx; line-height: 28rpx; margin: 0 0 8rpx; }
+.sport-counter > .category-count { flex: 0 0 100rpx; width: 100rpx; height: 100rpx; }
+.counter-fraction { display: block; height: 26rpx; line-height: 26rpx; margin-top: 8rpx; font-size: var(--fs-micro); color: var(--ink-4); white-space: nowrap; }
+.counter-fraction-hidden { visibility: hidden; }
+
+/* ---- Home v2: quiet metric line, per-category accent, thinner tracks ---- */
+.daily-quote { font-size: var(--fs-body); line-height: 1.55; color: var(--ink-3); margin: 8rpx 0 2rpx; }
+/* 首页顶部那条「连续天 / 本月 / 28 天达标率」已经整体移进成就页：
+   首页只讲今天，历史统计只出现在用户主动打开的那一页，对应样式一并删掉 */
+.sport-card { position: relative; overflow: hidden; padding: 28rpx var(--pad-card) 28rpx 42rpx; }
+.sport-accent { position: absolute; left: 10rpx; top: 36rpx; bottom: 36rpx; width: 6rpx; border-radius: 6rpx; opacity: .85; }
+.sport-name { font-size: var(--fs-body); }
+.sport-last { font-size: var(--fs-caption); margin: 8rpx 0 0; }
+.trail { margin-top: 18rpx; gap: 5rpx; }
+.trail-dot { height: 8rpx; border-radius: 4rpx; background: #ededed; }
+.counter-number { font-size: var(--fs-display); font-weight: 750; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.project-goal-counter { background: transparent; width: auto; flex: 0 0 auto; font-size: var(--fs-subhead); font-weight: 750; }
+.project-row { position: relative; overflow: hidden; padding: 24rpx var(--pad-card); }
+.project-row .sport-accent { top: 30rpx; bottom: 30rpx; }
+.goal-track { height: 6rpx; background: #f0f0f0; margin-top: 14rpx; }
+.goal-track > view { transition: width .5s ease; }
+.trail-dot { transition: background .3s ease; }
+.celebrate-mask { position: fixed; inset: 0; z-index: 99; display: flex; align-items: center; justify-content: center; background: rgba(23,23,23,.45); animation: mask-in .2s ease both; }
+.celebrate-card { background: #fff; border-radius: 40rpx; padding: 52rpx 64rpx; display: flex; flex-direction: column; align-items: center; animation: pop-in .35s cubic-bezier(.2,1.4,.4,1) both; }
+.celebrate-ring { width: 128rpx; height: 128rpx; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; animation: ring-pulse 1s ease .35s both; }
+.celebrate-check { color: #fff; font-size: var(--fs-mega); font-weight: 700; line-height: 1; }
+.celebrate-title { font-size: var(--fs-title); font-weight: 750; margin-top: 26rpx; }
+.celebrate-sub { font-size: var(--fs-meta); color: var(--muted); margin-top: 12rpx; }
+@keyframes mask-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pop-in { from { opacity: 0; transform: scale(.7); } to { opacity: 1; transform: scale(1); } }
+@keyframes ring-pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(17,17,17,.35); } 100% { transform: scale(1.08); box-shadow: 0 0 0 34rpx rgba(17,17,17,0); } }
+
+/* ---- Record page: compact chips + prominent scan card ---- */
+.form-page input { height: 64rpx; min-height: 64rpx; }
+.form-page .screen-heading { font-size: var(--fs-title); margin: 10rpx 0 14rpx; }
+.field-row { display: flex; gap: 30rpx; }
+.field-row .field { flex: 1; min-width: 0; }
+.field { margin-top: 22rpx; border-bottom: 1rpx solid #eeeeee; padding-bottom: 6rpx; }
+.field > label { font-size: var(--fs-caption); color: var(--ink-4); margin: 0 0 2rpx; }
+.field input, .field picker { min-height: 60rpx; }
+.field-value { font-size: var(--fs-caption); color: var(--ink-5); margin-top: 2rpx; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 12rpx; padding: 10rpx 0 12rpx; }
+/* 选项胶囊：全站只有这一套（行高 54 + 上下各 1rpx 描边 ≈ 56rpx 高 / 左右内边距 24 /
+   浅灰底 #f5f5f6 / 21rpx 墨阶 ink-4）。选中一律「白底 + 1rpx 描边 + ink-1 + 600」。
+   base 上留 1rpx 透明边框，选中时尺寸不跳。
+   以前是 44/52/54/56/62/72 六种高度、七种灰底（#eaeaea/#f0f0f1/#f2f2f3/#f5f5f6/#f6f6f7/#f7f7f8/#fafafa）。 */
+.chip { padding: 0 24rpx; line-height: 54rpx; border: 1rpx solid transparent; border-radius: 100rpx; background: #f5f5f6; color: var(--ink-4); font-size: var(--fs-caption); }
+.chip-on { background: #ffffff; border: 1rpx solid #171717; color: var(--ink-1); font-weight: 600; }
+.chip-off { opacity: .35; }
+.scan-card { display: flex; align-items: center; gap: 20rpx; background: #111111; color: #fff; border-radius: 32rpx; padding: 28rpx; margin: 24rpx 0 0; }
+.scan-glyph { flex: 0 0 72rpx; width: 72rpx; height: 72rpx; border-radius: 50%; background: rgba(255,255,255,.16); display: flex; align-items: center; justify-content: center; font-size: var(--fs-title); }
+.scan-body { flex: 1; min-width: 0; }
+.scan-title { font-size: var(--fs-body); font-weight: 650; }
+.scan-sub { font-size: var(--fs-caption); color: var(--ink-6); margin-top: 8rpx; line-height: 1.5; }
+.scan-arrow { font-size: var(--fs-title); color: var(--ink-5); }
+.scan-notice { background: #ededed; border-radius: 18rpx; padding: 16rpx 20rpx; font-size: var(--fs-caption); color: var(--ink-3); margin: 14rpx 0 0; }
+.metric-preview { font-size: var(--fs-caption); color: var(--ink-4); margin-top: 16rpx; }
+.form-page button.ghost { background: transparent; color: var(--ink-4); }
+
+/* ---- Home: quick check-in button + row action chips ---- */
+.expand-chevron { font-size: var(--fs-body); margin-left: 10rpx; font-weight: 700; padding: 4rpx 14rpx; border-radius: 999rpx; background: rgba(0,0,0,0.05); }
+.quick-action { width: 96rpx; height: 96rpx; border-radius: 50%; border: 3rpx dashed; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-size: var(--fs-title); font-weight: 700; }
+.row-action { flex: 0 0 auto; min-width: 104rpx; box-sizing: border-box; text-align: center; padding: 0 26rpx; line-height: 62rpx; border-radius: 100rpx; border: 2rpx solid; font-size: var(--fs-meta); font-weight: 600; }
+.quick-done { border-style: solid; font-size: var(--fs-em); font-variant-numeric: tabular-nums; }
+.quick-sport-row { display: flex; flex-wrap: wrap; gap: 12rpx; padding: 4rpx 0 6rpx; }
+.quick-sport { padding: 0 22rpx; line-height: 58rpx; border-radius: 100rpx; border: 2rpx dashed #d4d4d4; color: var(--ink-4); font-size: var(--fs-meta); }
+.add-sport-row { margin: 4rpx 0 20rpx; text-align: center; line-height: 84rpx; border-radius: 32rpx; border: 2rpx dashed #d4d4d4; color: var(--ink-4); font-size: var(--fs-body); background: #fff; }
+/* 心肺卡展开后的历史回顾：白卡 + 32rpx 圆角，与首页其它卡一致；字号/文字色只走 token */
+.cardio-history { background: #fff; border-radius: 32rpx; padding: var(--pad-card); margin-bottom: 12rpx; }
+.cardio-history-head { font-size: var(--fs-body); font-weight: 600; color: var(--ink-1); margin-bottom: 14rpx; }
+.cardio-row { display: flex; align-items: center; gap: 16rpx; padding: 10rpx 0; }
+.cardio-row-sym { font-size: var(--fs-subhead); width: 36rpx; text-align: center; }
+.cardio-row-label { flex: 1 1 auto; min-width: 0; font-size: var(--fs-body); color: var(--ink-1); }
+.cardio-row-count { font-size: var(--fs-meta); color: var(--ink-4); }
+.cardio-row-min { font-size: var(--fs-meta); color: var(--ink-4); min-width: 130rpx; text-align: right; }
+.cardio-empty { font-size: var(--fs-meta); color: var(--ink-4); padding: 8rpx 0; }
+/* 本周单条记录行（2026-10-30）：心肺点进去改/删，抗阻行内直接删 */
+.cardio-week-cap { font-weight: 400; font-size: var(--fs-meta); color: var(--ink-4); margin-left: 12rpx; }
+.ch-log-main { flex: 1 1 auto; min-width: 0; }
+.ch-log-title { font-size: var(--fs-body); color: var(--ink-1); }
+.ch-log-sub { font-size: var(--fs-meta); color: var(--ink-4); margin-top: 2rpx; }
+.ch-log-go { font-size: var(--fs-meta); color: var(--ink-4); }
+/* 左滑删除（2026-10-30）：删除块从右侧滑进来，行内文字保持不动。
+   块只在滑开时渲染（wx:if），否则会在大面积白底上透出一圈发丝红边。 */
+.swipe-row { position: relative; overflow: hidden; border-radius: 24rpx; }
+.swipe-action { position: absolute; top: 0; right: 0; bottom: 0; width: 168rpx; display: flex; align-items: center; justify-content: center; background: #D93B36; color: #fff; font-size: var(--fs-body); border-radius: 0 24rpx 24rpx 0; box-shadow: -8rpx 0 20rpx rgba(120, 30, 24, .10); }
+.swipe-anim { transition: transform .2s cubic-bezier(.2, .7, .3, 1); }
+.ch-log-dot { width: 12rpx; height: 12rpx; border-radius: 999rpx; flex: 0 0 auto; margin: 0 4rpx 0 12rpx; }
+
+/* 自建项目行里的最近 7 天小格（用户 10-30）：一行 7 个，跟卡片上的 28 天 trail 同语言 */
+.mini-days { display: flex; gap: 12rpx; margin: 10rpx 0 4rpx; }
+.mini-day { flex: 1 1 0; height: 40rpx; border-radius: 10rpx; background: var(--heat-empty, #EEF2F4); }
+.mini-day-on { background: #BFE6EE; }
+
+/* 列表末尾的「新的打卡项目」：虚线还是「这里还能加东西」的那套语言（同 .add-sport-row），
+   但做成一张带说明的卡 —— 它是整页唯一的成长入口，不能只是行尾一行小字。
+   用户 10-29：改版后找不到新建习惯的地方，底部 ＋ 的菜单里那项没人会去猜。 */
+.add-habit { display: flex; align-items: center; gap: 18rpx; margin: 4rpx 0 20rpx; padding: 24rpx var(--pad-card);
+  background: #fff; border: 2rpx dashed #d4d4d4; border-radius: 32rpx; }
+.add-habit-hover { background: #fbfbfb; border-color: #c6c6c6; }
+.add-habit-plus { flex: none; font-size: var(--fs-title); font-weight: 300; line-height: 1; color: var(--ink-4); }
+.add-habit-main { flex: 1 1 0; min-width: 0; }
+.add-habit-title { font-size: var(--fs-body); color: var(--ink-2); font-weight: 600; }
+.add-habit-sub { font-size: var(--fs-caption); color: var(--ink-5); margin-top: 6rpx; }
+.row-action-undo { border-style: dashed; }
+
+/* ---- Home: 今日战报 + 可收起的体测 ---- */
+.daily-card { background: #fff; border-radius: 32rpx; padding: 26rpx var(--pad-card) 24rpx; margin: 16rpx 0 20rpx; }
+/* 头部固定高度：日/周切换时标题+日期行高不变，圆环位置不跳动 */
+.daily-head { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; height: 64rpx; }
+/* 标题固定两行（标题 + 日期/周区间），日/周切换时高度不跳 */
+.daily-heading { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; min-height: 56rpx; }
+.daily-title { font-size: var(--fs-meta); color: var(--ink-1); font-weight: 600; line-height: 1.25; }
+/* 日期不换行：周区间 10/26 – 11/01 始终一行，头部高度恒定、圆环不下滑 */
+.daily-date { margin-top: 4rpx; font-size: var(--fs-caption); color: var(--ink-5); font-weight: 400; line-height: 1.2; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.share-pill { flex: none; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: auto; min-width: 0; height: 52rpx; margin: 0; padding: 0 22rpx; line-height: 1; border-radius: 100rpx; background: #f7f7f8; color: var(--ink-3); font-size: var(--fs-caption); font-weight: 500; }
+.share-pill::after { border: 0; }
+.daily-score { display: flex; align-items: baseline; gap: 8rpx; margin-top: 14rpx; }
+.daily-num { font-size: var(--fs-title); font-weight: 750; color: var(--ink-1); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.daily-total { font-size: var(--fs-caption); font-weight: 500; color: var(--ink-5); }
+.daily-cap { font-size: var(--fs-micro); color: var(--ink-5); }
+.daily-dot { font-size: var(--fs-micro); color: var(--ink-7); }
+.daily-bars { display: flex; gap: 16rpx; margin-top: 16rpx; }
+.daily-bar { flex: 1; min-width: 0; }
+.daily-bar-head { display: flex; align-items: baseline; justify-content: space-between; gap: 6rpx; }
+.daily-bar-label { font-size: var(--fs-micro); color: var(--ink-5); }
+.daily-bar-val { font-size: var(--fs-micro); color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.daily-met { color: #32A964; font-weight: 600; }
+.daily-track { height: 6rpx; border-radius: 6rpx; background: #f2f2f3; overflow: hidden; margin-top: 8rpx; }
+.daily-fill { height: 100%; border-radius: 6rpx; transition: width .4s ease; }
+.body-hidden { font-size: var(--fs-caption); color: var(--ink-6); margin-top: 8rpx; }
+.body-more { margin-top: 12rpx; font-size: var(--fs-caption); color: #32A964; }
+.share-mask { position: fixed; left: 0; top: 0; right: 0; bottom: 0; z-index: 120; background: rgba(24,21,15,.5); display: flex; align-items: center; justify-content: center; }
+.share-panel { box-sizing: border-box; width: 640rpx; max-width: 92vw; background: #fff; border-radius: 32rpx; padding: 28rpx 28rpx 24rpx; display: flex; flex-direction: column; align-items: center; }
+.share-panel-title { font-size: var(--fs-meta); color: var(--ink-3); font-weight: 600; margin-bottom: 20rpx; }
+.share-canvas { display: block; width: 280px; height: 248px; border-radius: 16px; }
+.share-preview { display: block; width: 280px; height: 248px; }
+.share-send { box-sizing: border-box; width: 100%; margin: 24rpx 0 0; padding: 0; line-height: 78rpx; border-radius: 999rpx; background: #ffffff; color: #3f4d55; border: 2rpx solid #C9E4E9; font-size: var(--fs-body); font-weight: 600; box-shadow: 0 4rpx 16rpx rgba(23, 90, 110, .10); }
+.share-send::after { border: 0; }
+.share-save { box-sizing: border-box; width: 100%; margin: 12rpx 0 0; padding: 0; line-height: 70rpx; border-radius: 24rpx; background: #fff; color: var(--ink-1); font-size: var(--fs-meta); font-weight: 600; border: 1rpx solid #e8e8e8; }
+.share-save::after { border: 0; }
+/* 相册只是兜底：正常发群直接发原图，不经过相册，所以这里只留一行小字 */
+.share-save-link { margin-top: 14rpx; padding: 6rpx 10rpx; font-size: var(--fs-caption); color: var(--ink-6); }
+/* 图没导出成功时才出现的一句实话，平时不占位 */
+.share-note { margin-top: 12rpx; font-size: var(--fs-caption); color: var(--ink-5); text-align: center; }
+.share-cancel { margin-top: 12rpx; padding: 8rpx 24rpx; font-size: var(--fs-caption); color: var(--ink-5); }
+
+/* ---- Home: 日/周闭环圆环（Apple Watch 式同心环） ---- */
+.ring-switch { flex: none; display: flex; gap: 2rpx; padding: 4rpx; border-radius: 100rpx; background: #f4f4f5; margin-left: auto; }
+.ring-tab { padding: 0 18rpx; line-height: 38rpx; border-radius: 100rpx; font-size: var(--fs-micro); color: var(--ink-5); }
+.ring-tab-on { background: #fff; color: var(--ink-1); font-weight: 600; box-shadow: 0 1rpx 4rpx rgba(17,17,17,.08); }
+/* 圆环定死（用户 10-31）：环占一个固定宽度的格位，图例从固定左边缘起、只往右长。
+   以前整组 justify-content:center —— 日/周切换时图例一宽一窄（「900/1800 ml」↔「达标 3 / 5 天」），
+   整组就跟着左右挪，环看着像跳来跳去。现在环的左边缘永远贴着卡片正文的左边缘，
+   字变长只是往右加，不会把环挤走。 */
+.ring-body { display: flex; align-items: center; justify-content: flex-start; gap: 44rpx; margin-top: 18rpx; padding: 0; }
+.ring-slot { flex: 0 0 240rpx; width: 240rpx; display: flex; align-items: center; justify-content: flex-start; }
+/* 图例留一条跟环同高的最小高度：项数从 2 变 3 时高度不跳，环的上下位置也就不动 */
+.ring-legend { flex: 1 1 0; min-width: 0; min-height: 240rpx; justify-content: center; display: flex; flex-direction: column; gap: 14rpx; }
+.ring-item { display: flex; align-items: flex-start; gap: 10rpx; }
+.ring-dot { width: 12rpx; height: 12rpx; border-radius: 50%; margin-top: 10rpx; flex: none; }
+.ring-item-main { flex: 1; min-width: 0; }
+.ring-item-head { display: flex; align-items: baseline; justify-content: flex-start; gap: 12rpx; }
+.ring-item-label { font-size: var(--fs-caption); color: var(--ink-3); }
+.ring-item-val { font-size: var(--fs-caption); color: var(--ink-1); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ring-item-note { font-size: var(--fs-micro); color: var(--ink-5); margin-top: 2rpx; }
+/* 过半之后那句「再来 X 就到了」稍微提一点墨色，是这条线上唯一一次加重 */
+.ring-note-strong { color: var(--ink-2); }
+
+/* ---- 首页饮水卡：进度只看右侧圆环，下面一条选「这一杯」，点水滴才记账 ---- */
+.water-hint { margin-top: 12rpx; font-size: var(--fs-caption); color: var(--ink-5); line-height: 1.5; }
+
+/* 这一杯：拖圆点选量，松手只改本地预览，点右边水滴才写库 —— 选错可以重拖，不会误触 */
+.water-choose { display: flex; align-items: center; gap: 18rpx; margin-top: 20rpx; }
+.water-cup { position: relative; flex: 1; min-width: 0; height: 20rpx; border-radius: 10rpx; background: #eef4f6; }
+.water-cup-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 10rpx; opacity: .38; transition: width .12s linear; }
+.water-knob { position: absolute; top: 50%; width: 34rpx; height: 34rpx; margin: -17rpx 0 0 -17rpx; box-sizing: border-box; border-radius: 50%; background: #fff; border: 5rpx solid #06B6D4; box-shadow: 0 2rpx 10rpx rgba(6, 120, 140, .22); pointer-events: none; }
+/* 拖动时浮出的气泡：白底细边 + 柔投影，跟着手指走 */
+.water-bubble { position: absolute; bottom: 34rpx; transform: translateX(-50%); display: flex; align-items: center; gap: 6rpx; background: #fff; border: 1rpx solid #e7e7e8; box-shadow: 0 6rpx 16rpx rgba(17,17,17,.12); color: var(--ink-1); font-size: var(--fs-caption); font-weight: 600; padding: 8rpx 18rpx; border-radius: 100rpx; white-space: nowrap; pointer-events: none; z-index: 2; }
+
+/* 水滴记号：CSS 画的一滴水（圆 + 45° 尖角），跟着 currentColor 走，
+   不用 emoji —— 平台字体不同会长成不一样的东西，也不受扁平风格约束 */
+.drop-mark { flex: none; width: 15rpx; height: 15rpx; border-radius: 50% 50% 50% 2rpx; background: currentColor; transform: rotate(-45deg); }
+.drop-mark-sm { width: 12rpx; height: 12rpx; }
+
+/* 水滴确认键：白底浅青描边的小胶囊，量还没选时退成灰 */
+.water-drop { flex: none; display: flex; align-items: center; gap: 8rpx; height: 64rpx; padding: 0 22rpx; box-sizing: border-box; border-radius: 999rpx; background: #fff; border: 2rpx solid #C4E6EC; color: #2f5a63; font-size: var(--fs-caption); font-weight: 650; font-variant-numeric: tabular-nums; box-shadow: 0 4rpx 14rpx rgba(6, 150, 180, .10); }
+.water-drop-off { border-color: #ececee; color: var(--ink-6); box-shadow: none; }
+.water-drop-busy { opacity: .55; }
+.water-drop-text { font-size: var(--fs-caption); }
+
+.water-week { background: #fff; border-radius: 0 0 38rpx 38rpx; margin: -18rpx 0 20rpx; padding: 26rpx var(--pad-card) 22rpx; }
+.water-week-head { font-size: var(--fs-meta); color: var(--ink-4); margin-bottom: 16rpx; }
+.water-day { display: flex; align-items: center; gap: 16rpx; padding: 11rpx 0; }
+.water-day + .water-day { border-top: 1rpx solid #f4f4f5; }
+.water-day-label { width: 74rpx; flex: none; font-size: var(--fs-meta); color: var(--ink-5); }
+.water-day-today .water-day-label { color: var(--ink-1); font-weight: 650; }
+.water-day-track { flex: 1; height: 8rpx; border-radius: 4rpx; background: #f1f1f2; overflow: hidden; }
+.water-day-fill { height: 100%; border-radius: 4rpx; }
+.water-day-num { flex: none; font-size: var(--fs-meta); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.water-day-target { color: var(--ink-6); }
+.water-week-clear { margin-top: 14rpx; padding-top: 14rpx; border-top: 1rpx solid #f4f4f5; font-size: var(--fs-caption); color: var(--ink-6); text-align: center; }
+
+/* 首页体测局部：沿用白卡、绿色侧线，只替换卡片内部。 */
+.body-summary-content { width:100%; min-width:0; }
+.body-summary-head { display:flex; align-items:center; justify-content:space-between; gap:16rpx; }
+.body-summary-period { font-size:var(--fs-caption); color:var(--ink-4); white-space:nowrap; }
+.body-summary-metrics { display:flex; margin-top:16rpx; }
+.body-summary-column { flex:1; min-width:0; }
+.body-summary-column + .body-summary-column { border-left:1rpx solid #edf1ee; padding-left:28rpx; margin-left:16rpx; }
+.body-summary-value { display:flex; align-items:baseline; gap:8rpx; white-space:nowrap; }
+.body-summary-label,.body-summary-unit { font-size:var(--fs-caption); color:var(--ink-4); }
+.body-summary-number { font-size:var(--fs-title); line-height:1.2; font-weight:650; color:#32A964; letter-spacing:-1rpx; }
+.body-summary-delta { margin-top:8rpx; font-size:var(--fs-caption); color:var(--ink-4); white-space:nowrap; }
+
+/* 与导出坐标320×360保持相同比例，不依赖小程序aspect-ratio支持。 */
+.share-artboard{position:relative;width:560rpx;height:630rpx;margin:0 auto;flex-shrink:0;}
+.share-artboard .share-canvas,.share-artboard .share-preview{display:block;width:560rpx;height:630rpx;max-height:none;border-radius:24rpx;}
+.share-summary-hit,.share-inline-summary{position:absolute;left:42rpx;top:342rpx;width:224rpx;height:40rpx;z-index:3;box-sizing:border-box;}
+.share-summary-hit{background:transparent;}
+.share-inline-summary{min-height:0;padding:0 6rpx;font-size:var(--fs-micro);line-height:24rpx;text-align:center;color:var(--ink-3);background:#f5f8f5;border-radius:8rpx;}
+.share-shuffle{position:absolute;right:0;top:518rpx;width:56rpx;height:56rpx;display:flex;align-items:center;justify-content:center;z-index:4;font-size:var(--fs-em);color:var(--ink-4);}
+.share-panel{max-height:88vh;overflow-y:auto;}
+
+
+.share-artboard .share-preview{position:absolute;left:0;top:0;z-index:1;pointer-events:none;}
+
+/* 首页加载骨架:云函数冷启动的几秒里给「正在加载」的观感,不是白屏(11-02 审核驳回对策) */
+.home-skeleton { padding: 8rpx 0 40rpx; }
+.hs-card { background: #fff; border-radius: 32rpx; padding: 26rpx var(--pad-card) 30rpx; margin: 16rpx 0 20rpx; }
+.hs-ring-row { display: flex; align-items: center; gap: 32rpx; }
+.hs-ring { width: 240rpx; height: 240rpx; border-radius: 50%; background: #f4f4f5; flex-shrink: 0; }
+.hs-legend { flex: 1 1 0; min-height: 240rpx; display: flex; flex-direction: column; justify-content: center; gap: 24rpx; }
+.hs-line { height: 26rpx; border-radius: 13rpx; background: #ededed; }
+.hs-line-lg { width: 62%; height: 32rpx; }
+.hs-line-sm { width: 86%; }
+.hs-line-half { width: 44%; }
+.hs-gap-top { margin-top: 22rpx; }
+.hs-ring, .hs-line { animation: hs-pulse 1.3s ease-in-out infinite; }
+@keyframes hs-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+.hs-hint { text-align: center; color: var(--ink-3); font-size: var(--fs-caption); margin: 30rpx 0 18rpx; }
+.hs-retry { margin: 0 auto; width: 320rpx; }

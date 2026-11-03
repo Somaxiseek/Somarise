@@ -1,0 +1,60 @@
+<view wx:if="{{show}}" class="editor-mask" catchtap="close">
+  <view class="editor-card" catchtap="noop">
+    <view class="editor-head">
+      <view class="screen-heading">ACTIVE RING</view>
+    </view>
+
+    <view class="editor-preview">
+      <rings values="{{preview}}" size="150" center="{{previewCenter}}" bg="#ffffff"/>
+    </view>
+
+    <scroll-view scroll-y class="editor-list">
+      <!-- 主列表最多三行 = 会占环的前三个可见项（用户 10-29：取舍） -->
+      <block wx:for="{{view==='day'?dayItems:weekItems}}" wx:key="key">
+        <view wx:if="{{!item.hidden && !item.overflow}}" class="edit-row">
+          <view class="edit-dot" style="background:{{item.color}}" data-key="{{item.key}}" bindtap="{{item.weekAvatar?'':'openPicker'}}" role="button" aria-label="选择颜色"/>
+          <view class="edit-main">
+            <view class="edit-label">{{item.label}}<text class="edit-tag">{{item.periodLabel}}</text><text class="edit-note">{{item.note}}</text></view>
+          </view>
+          <view wx:if="{{!item.isMove}}" class="edit-toggle edit-on" data-key="{{item.key}}" bindtap="toggleHidden" role="button" aria-label="隐藏">隐藏</view>
+          <view wx:else class="edit-locked">始终</view>
+          <view class="edit-gear {{editKey===item.key?'edit-gear-on':''}}" data-key="{{item.key}}" catchtap="editRow" role="button" aria-label="编辑">编辑</view>
+
+          <view wx:if="{{picker===item.key}}" class="palette">
+            <view wx:for="{{palette}}" wx:for-item="sw" wx:key="*this" class="swatch {{item.color===sw?'swatch-on':''}}" style="background:{{sw}}" data-key="{{item.key}}" data-hex="{{sw}}" bindtap="pickColor" role="button" aria-label="选这个颜色"/>
+            <view wx:if="{{item.color!==item.defaultColor}}" class="swatch swatch-reset" data-key="{{item.key}}" data-hex="" bindtap="pickColor" role="button" aria-label="恢复默认色">默认</view>
+          </view>
+
+          <!-- 编辑面板：每日项设周规则（定死），周项跳目标设置页改数值 -->
+          <view wx:if="{{editKey===item.key && item.period==='daily'}}" class="edit-panel">
+            <view class="edit-panel-cap">放进周圈（一周至少几天，定死后不能改）</view>
+            <view wx:if="{{!item.weekRule}}" class="rule-pills">
+              <view wx:for="{{[1,2,3,4,5,6,7]}}" wx:for-item="n" wx:key="*this" class="rule-pill" data-key="{{item.key}}" data-n="{{n}}" bindtap="setRule" role="button">{{n}} 天</view>
+            </view>
+            <view wx:else class="rule-set">
+              <text class="rule-set-txt">一周 {{item.weekRule}} 天 · 已定死</text>
+              <view class="rule-clear" data-key="{{item.key}}" bindtap="clearRule" role="button">删除重设</view>
+            </view>
+          </view>
+          <view wx:if="{{editKey===item.key && item.period==='weekly'}}" class="edit-panel">
+            <view class="edit-panel-cap">目标数值在「目标设置」里改，随时可以调</view>
+            <view class="rule-set"><view class="rule-clear" bindtap="goGoals" role="button">去目标设置 ›</view></view>
+          </view>
+        </view>
+      </block>
+
+      <!-- 底部灰区：隐藏的（点「显示」放回来）和超出三行的（标「不占环」，仍计入周闭环） -->
+      <block wx:for="{{view==='day'?dayItems:weekItems}}" wx:key="key">
+        <view wx:if="{{item.hidden || item.overflow}}" class="edit-row edit-row-off">
+          <view class="edit-dot" style="background:{{item.color}}"/>
+          <view class="edit-main"><view class="edit-label edit-label-off">{{item.label}}<text class="edit-tag">{{item.hidden?'已隐藏':'不占环'}}</text></view></view>
+          <view class="edit-toggle" data-key="{{item.key}}" bindtap="toggleHidden" role="button" aria-label="{{item.hidden?'显示':'隐藏'}}">{{item.hidden?'显示':'隐藏'}}</view>
+        </view>
+      </block>
+    </scroll-view>
+
+    <view class="editor-foot">
+      <view class="editor-hint">隐藏不等于删除，记录一条都不会少</view>
+    </view>
+  </view>
+</view>

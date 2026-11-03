@@ -1,0 +1,51 @@
+{
+  "description": "Somarise · 独立手机测试准备",
+  "miniprogramRoot": "miniprogram/",
+  "compileType": "miniprogram",
+  "appid": "wx6b81913a5a90b3e0",
+  "projectname": "Somarise-local-mvp",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": false,
+    "compileWorklet": false,
+    "minified": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
+  },
+  "libVersion": "3.6.0",
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [
+      {
+        "type": "folder",
+        "value": "data/words"
+      },
+      {
+        "type": "file",
+        "value": "data/words.js"
+      },
+      {
+        "type": "file",
+        "value": "data/roots.js"
+      }
+    ],
+    "include": []
+  },
+  "editorSetting": {},
+  "cloudfunctionRoot": "cloudfunctions/"
+}

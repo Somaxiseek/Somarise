@@ -1,0 +1,84 @@
+/* 项目标记：8 个几何形状，纯 CSS，尺寸由 --g 驱动（三档）。
+   全部用 currentColor，所以形状颜色 = 组件上设的 color，不需要第二份样式。 */
+.glyph {
+  box-sizing: border-box;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24rpx;
+}
+.glyph-tint { border: 1rpx solid rgba(23, 23, 23, .05); }
+
+/* 三档尺寸：选择器 / 列表 / 详情页头图 */
+.glyph-sm { --g: 21rpx; width: 56rpx; height: 56rpx; border-radius: 16rpx; }
+.glyph-md { --g: 30rpx; width: 80rpx; height: 80rpx; border-radius: 22rpx; }
+.glyph-lg { --g: 46rpx; width: 116rpx; height: 116rpx; border-radius: 32rpx; }
+
+.glyph-shape { flex: none; position: relative; }
+
+/* 实心圆 */
+.shape-dot {
+  width: var(--g); height: var(--g);
+  border-radius: 50%;
+  background: currentColor;
+}
+/* 空心环：跟首页圆环同一个语言 */
+.shape-ring {
+  width: var(--g); height: var(--g);
+  box-sizing: border-box;
+  border: calc(var(--g) * .32) solid currentColor;
+  border-radius: 50%;
+}
+/* 单条：横线 */
+.shape-bar {
+  width: calc(var(--g) * 1.45);
+  height: calc(var(--g) * .34);
+  border-radius: 100rpx;
+  background: currentColor;
+}
+/* 三条横线：靠重复渐变画，不需要额外节点 */
+.shape-bars {
+  width: calc(var(--g) * 1.45);
+  height: var(--g);
+  background: repeating-linear-gradient(
+    to bottom,
+    currentColor 0, currentColor calc(var(--g) * .22),
+    transparent calc(var(--g) * .22), transparent calc(var(--g) * .39)
+  );
+}
+/* 三条竖线 */
+.shape-cols {
+  width: calc(var(--g) * 1.45);
+  height: var(--g);
+  background: repeating-linear-gradient(
+    to right,
+    currentColor 0, currentColor calc(var(--g) * .22),
+    transparent calc(var(--g) * .22), transparent calc(var(--g) * .39)
+  );
+}
+/* 三角：朝上的实心三角 */
+.shape-tri {
+  width: 0; height: 0;
+  border-left: calc(var(--g) * .62) solid transparent;
+  border-right: calc(var(--g) * .62) solid transparent;
+  border-bottom: calc(var(--g) * 1.04) solid currentColor;
+}
+/* 菱形 */
+.shape-diamond {
+  width: calc(var(--g) * .78);
+  height: calc(var(--g) * .78);
+  border-radius: calc(var(--g) * .14);
+  background: currentColor;
+  transform: rotate(45deg);
+}
+/* 碗形半环：开口朝上 */
+.shape-arc {
+  width: var(--g);
+  height: calc(var(--g) * .58);
+  box-sizing: border-box;
+  border: calc(var(--g) * .28) solid currentColor;
+  border-top: 0;
+  border-radius: 0 0 var(--g) var(--g);
+  margin-top: calc(var(--g) * .2);
+}

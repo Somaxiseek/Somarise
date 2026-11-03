@@ -1,0 +1,87 @@
+<view class="form-page body-page">
+  <view class="screen-heading body-heading">体测</view>
+
+  <view class="body-card">
+    <view class="body-row head">
+      <view class="body-label"><view class="title-with-info"><text>今天</text><view class="info-dot {{tip==='measure'?'info-dot-on':''}}" data-tip="measure" catchtap="toggleTip" role="button" aria-label="体测说明">!</view></view></view>
+      <picker class="body-date" mode="date" value="{{date}}" end="{{today}}" bindchange="pickDate">{{date}} ▾</picker>
+    </view>
+    <view wx:if="{{tip==='measure'}}" class="info-pop">天天测更准；漏测也没关系，有测就计入平均。</view>
+    <view class="body-fields">
+      <view class="body-field">
+        <label>体重（kg）</label>
+        <input type="digit" value="{{weightKg}}" data-key="weightKg" bindinput="input" placeholder="例如 72.5" placeholder-class="ph"/>
+      </view>
+      <view class="body-field">
+        <label>腰围（cm）</label>
+        <input type="digit" value="{{waistCm}}" data-key="waistCm" bindinput="input" placeholder="例如 82.0" placeholder-class="ph"/>
+      </view>
+    </view>
+    <button class="primary btn-soft--body body-save" hover-class="btn-soft-hover" bindtap="save" loading="{{busy}}" disabled="{{busy}}">保存{{date===today?'今天':' '+date}}的测量</button>
+    <view wx:if="{{latest&&latest.date===today}}" class="body-ok">今天已测 · 体重 {{latest.weightKg==null?'—':latest.weightKg+'kg'}} · 腰围 {{latest.waistCm==null?'—':latest.waistCm+'cm'}}（再次保存会更新）</view>
+  </view>
+
+  <view class="body-card">
+    <view class="body-row head">
+      <view class="body-label">趋势</view>
+      <view class="body-legend">
+        <text class="lg lg-weight">体重</text>
+        <text class="lg lg-waist">腰围</text>
+      </view>
+    </view>
+    <view class="range-row">
+      <view wx:for="{{ranges}}" wx:key="id" class="range-chip {{range===item.id?'range-chip-on':''}}" data-range="{{item.id}}" bindtap="pickRange" role="button" aria-label="{{item.label}}">{{item.label}}</view>
+    </view>
+    <canvas type="2d" id="chart" class="body-chart"/>
+    <view class="body-hint">切换区间看长期变化：近一月按周、近 1/3 年按月、近 5 年按季度。没有测量的片段留空，不连线。</view>
+  </view>
+
+  <view class="body-card">
+    <view class="body-label">按时间查看</view>
+    <view wx:for="{{years}}" wx:for-item="y" wx:key="year" class="tree-year">
+      <view class="tree-row tree-year-row {{openYear===y.year?'tree-row-open':''}}" data-year="{{y.year}}" bindtap="toggleYear">
+        <text class="tree-caret">{{openYear===y.year?'▾':'▸'}}</text>
+        <text class="tree-name">{{y.year}} 年</text>
+        <text class="tree-val">{{y.weightKg==null?'—':y.weightKg+' kg'}}</text>
+        <text class="tree-val">{{y.waistCm==null?'—':y.waistCm+' cm'}}</text>
+        <text class="tree-count">{{y.count}} 天</text>
+      </view>
+
+      <block wx:if="{{openYear===y.year}}">
+        <view wx:for="{{y.months}}" wx:for-item="m" wx:key="month" class="tree-month">
+          <view class="tree-row tree-month-row {{openMonth===m.month?'tree-row-open':''}}" data-month="{{m.month}}" bindtap="toggleMonth">
+            <text class="tree-caret">{{openMonth===m.month?'▾':'▸'}}</text>
+            <text class="tree-name">{{m.label}}</text>
+            <text class="tree-val">{{m.weightKg==null?'—':m.weightKg+' kg'}}</text>
+            <text class="tree-val">{{m.waistCm==null?'—':m.waistCm+' cm'}}</text>
+            <text class="tree-count">{{m.count}} 天</text>
+          </view>
+
+          <block wx:if="{{openMonth===m.month}}">
+            <view wx:for="{{m.weeks}}" wx:for-item="w" wx:key="start" class="tree-row tree-week-row">
+              <text class="tree-caret tree-leaf">·</text>
+              <text class="tree-name">{{w.label}}</text>
+              <text class="tree-val">{{w.weightKg==null?'—':w.weightKg+' kg'}}</text>
+              <text class="tree-val">{{w.waistCm==null?'—':w.waistCm+' cm'}}</text>
+              <text class="tree-count">{{w.count}} 天</text>
+            </view>
+          </block>
+        </view>
+      </block>
+    </view>
+    <view wx:if="{{!years.length}}" class="body-empty">还没有记录，先测一次吧。</view>
+  </view>
+
+  <view class="body-card">
+    <view class="body-label">测量记录</view>
+    <view class="body-empty" wx:if="{{!entries.length}}">还没有记录，先测一次吧。</view>
+    <view wx:for="{{entries}}" wx:key="date" class="body-entry">
+      <text class="body-entry-date">{{item.date}}</text>
+      <text class="body-entry-val">体重 {{item.weightKg==null?'—':item.weightKg+'kg'}}</text>
+      <text class="body-entry-val">腰围 {{item.waistCm==null?'—':item.waistCm+'cm'}}</text>
+      <text class="body-entry-del" data-date="{{item.date}}" bindtap="remove">删除</text>
+    </view>
+  </view>
+
+  <dock current=""/>
+</view>

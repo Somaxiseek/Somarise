@@ -1,0 +1,174 @@
+<view class="page form-page">
+  <view class="learn-top">
+    <view class="title-with-info">
+      <text class="learn-title">学习</text>
+      <view class="info-dot {{tip==='srs'?'info-dot-on':''}}" data-tip="srs" catchtap="toggleTip" role="button" aria-label="记忆曲线说明">!</view>
+    </view>
+    <text wx:if="{{today}}" class="learn-sub">{{sub}}</text>
+    <!-- 学习范围：点开勾分类，新词只从勾的范围里出（老人可以只学日常） -->
+    <view wx:if="{{today}}" class="learn-scope" bindtap="toggleCatPanel" hover-class="btn-ghost-hover" role="button" aria-label="选择学习范围，当前 {{catLabel}}">
+      <text class="learn-scope-text">范围 · {{catLabel}}</text><view class="scope-caret"></view>
+    </view>
+  </view>
+  <view wx:if="{{tip==='srs'}}" class="info-pop">
+    <view class="ip-lead">复习走记忆曲线：</view>
+    <view class="ip-line">每个词在第 1、2、4、7、15、30、60、120 天各回来一次；全走完进入「已掌握」，之后每半年遛一遛。</view>
+    <view class="ip-line">新词有自己的节奏：连续几次没记住，可以先放一放。</view>
+    <view class="ip-line">每天学几个，在「我的 → 目标设置」里改。</view>
+  </view>
+  <view wx:if="{{today}}" class="learn-bar"><view class="learn-bar-fill" style="width:{{pct}}%"></view></view>
+
+  <!-- 复习 / 学新词：两块分开，各有各的队和按钮（用户 10-30）；
+       10-30 晚按用户要求左右对调：新词在左（日常主任务是学新词），复习在右。
+       页签和下面的卡片包在同一个白框里：选中的页签是白底，和卡片连成一体 -->
+  <view class="learn-tabpanel">
+  <view class="learn-seg">
+    <view class="learn-seg-item {{mode==='fresh'?'learn-seg-on':''}}" data-mode="fresh" bindtap="switchMode" role="button" aria-label="学新词 {{freshLeft}} 个">学新词 <text wx:if="{{freshLeft}}" class="learn-seg-n">{{freshLeft}}</text></view>
+    <view class="learn-seg-item {{mode==='review'?'learn-seg-on':''}}" data-mode="review" bindtap="switchMode" role="button" aria-label="复习 {{reviewLeft}} 个">复习 <text wx:if="{{reviewLeft}}" class="learn-seg-n">{{reviewLeft}}</text></view>
+  </view>
+
+  <block wx:if="{{loaded}}">
+    <view wx:if="{{word}}" class="card word-card">
+      <view class="word-meta">
+        <text class="word-tag">{{word.catLabel}}</text>
+        <text class="word-kind">{{kindLabel}}</text>
+      </view>
+      <view class="word-head">
+        <!-- 有词根就把词切开：un·able、plantar·fascia，点某一段弹它的意思 -->
+        <view class="word-big {{word.parts?'word-big-split':''}}">
+          <block wx:if="{{word.parts}}">
+            <block wx:for="{{word.parts}}" wx:key="index" wx:for-item="seg">
+              <text wx:if="{{index>0}}" class="word-joint">·</text>
+              <text class="word-seg {{seg.zh?'word-seg-on':''}}" data-index="{{index}}" catchtap="explainPart">{{seg.t}}</text>
+            </block>
+          </block>
+          <text wx:else>{{word.word}}</text>
+        </view>
+        <view wx:if="{{word.audio}}" class="speak" catchtap="speak" hover-class="speak-hover" role="button" aria-label="朗读 {{word.word}}"><view class="speak-icon"></view></view>
+      </view>
+      <view class="word-ipa">{{word.ipa}}<text class="word-pos"> {{word.pos}}</text></view>
+
+      <!-- 展开 = 释义 + 例句 + 收起；没展开 = 卡片底部一行小字「看释义」，上面一条细分隔线 -->
+      <block wx:if="{{revealed}}">
+        <view class="word-zh">{{word.meaning}}</view>
+        <view wx:if="{{word.linked}}" class="link-tip">句里带下划线的词，点开就能看它的意思</view>
+        <view class="word-lines">
+          <view wx:for="{{word.lines}}" wx:key="key" class="word-line">
+            <view class="line-body">
+              <view class="line-en">
+                <block wx:for="{{item.segs}}" wx:for-item="seg" wx:key="index">
+                  <text wx:if="{{seg.id}}" class="wl" data-id="{{seg.id}}" catchtap="openWord" hover-class="wl-hover" role="button" aria-label="看 {{seg.t}} 的意思">{{seg.t}}</text>
+                  <text wx:else>{{seg.t}}</text>
+                </block>
+              </view>
+              <view class="line-zh">{{item.zh}}</view>
+            </view>
+            <!-- 整句朗读：有录音才画，点了不冒泡 -->
+            <view wx:if="{{item.audio}}" class="line-speak" catchtap="speakLine" data-index="{{index}}" hover-class="line-speak-hover" role="button" aria-label="朗读这一句"><view class="line-speak-icon"></view></view>
+          </view>
+        </view>
+        <view class="word-fold" bindtap="unreveal" role="button" aria-label="收起释义">
+          <text>收起</text><view class="fold-caret"></view>
+        </view>
+      </block>
+      <view wx:else class="word-peek" bindtap="reveal" hover-class="word-peek-hover" role="button" aria-label="看释义">
+        <text>看释义</text><view class="peek-caret"></view>
+      </view>
+    </view>
+
+    <!-- 复习：记忆曲线三键；新词：自己的按钮（用户 10-30：三个复习键不该出现在新词上） -->
+    <view wx:if="{{word && mode==='review'}}" class="grade-row">
+      <button class="grade" data-grade="again" bindtap="grade" disabled="{{busy}}">还不认识</button>
+      <button class="grade" data-grade="hard" bindtap="grade" disabled="{{busy}}">有点模糊</button>
+      <button class="grade grade-good" data-grade="good" bindtap="grade" disabled="{{busy}}">记得</button>
+    </view>
+    <view wx:if="{{word && mode==='fresh'}}" class="grade-row">
+      <button class="grade" data-grade="again" bindtap="grade" disabled="{{busy}}">还没记住</button>
+      <button class="grade grade-good" data-grade="good" bindtap="grade" disabled="{{busy}}">认识了</button>
+    </view>
+
+    <!-- 新词连续几次没记住：可以放一放，也可以现在就开始按曲线复习 -->
+    <view wx:if="{{word && mode==='fresh' && word.strikes >= 3}}" class="strike-card">
+      <view class="field-note">这个词试了 {{word.strikes}} 次还没记住，不着急，可以先放一放</view>
+      <view class="strike-acts">
+        <view class="done-link" hover-class="btn-ghost-hover" bindtap="parkWord" role="button" aria-label="先放一放">先放一放（待学）</view>
+        <view class="done-link done-more" hover-class="btn-soft-hover" bindtap="startCurve" role="button" aria-label="放进待回忆">放进待回忆</view>
+      </view>
+    </view>
+
+    <view wx:if="{{!word && mode==='review'}}" class="card done-card">
+      <view class="done-mark">✓</view>
+      <view class="done-title">复习都过完了</view>
+      <view class="done-sub">今天过了 {{doneToday}} 个{{tomorrow ? '，明天复习 ' + tomorrow + ' 个' : ''}}</view>
+      <view class="done-acts">
+        <view wx:if="{{freshLeft}}" class="done-link done-more" hover-class="btn-soft-hover" bindtap="switchMode" data-mode="fresh" role="button" aria-label="去学新词">去学新词 ›</view>
+        <view class="done-link" hover-class="btn-ghost-hover" bindtap="openVocab" role="button" aria-label="打开我的词库">翻翻词库 ›</view>
+      </view>
+    </view>
+
+    <view wx:if="{{!word && mode==='fresh'}}" class="card done-card">
+      <view class="done-mark">✓</view>
+      <view class="done-title">今天的新词看完了</view>
+      <view class="done-sub">词库里还有 {{planUnseen}} 个词等着</view>
+      <view class="done-acts">
+        <view class="done-link done-more" hover-class="btn-soft-hover" bindtap="more" role="button" aria-label="再学几个新词">还想再学几个 ›</view>
+        <view wx:if="{{reviewLeft}}" class="done-link" hover-class="btn-ghost-hover" bindtap="switchMode" data-mode="review" role="button" aria-label="去复习">去复习 ›</view>
+      </view>
+    </view>
+  </block>
+  </view>
+
+  <!-- 词库入口从「我的」搬到这里：学习页才是有词可翻的地方 -->
+  <block wx:if="{{loaded}}">
+    <view class="menu-card vocab-entry" bindtap="openVocab" hover-class="btn-ghost-hover" role="button" aria-label="打开我的词库">
+      <view>
+        <view class="panel-heading">我的词库</view>
+        <view class="field-note">{{vocabNote}}</view>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+  </block>
+
+  <!-- 词根解释：小浮窗，不跳页、不打断这一个词 -->
+  <view wx:if="{{part}}" class="part-mask" bindtap="closePart">
+    <view class="part-card" catchtap="popupNoop">
+      <view class="part-grab"></view>
+      <!-- 这一段是从哪个词里拆出来的：unable 里的 un + able -->
+      <view wx:if="{{part.ctx}}" class="part-ctx">
+        <text>{{part.ctx.word}} 里的 </text>
+        <block wx:for="{{part.ctx.segs}}" wx:key="index">
+          <text wx:if="{{index>0}}"> + </text>
+          <text class="part-ctx-seg {{item.on?'part-ctx-on':''}}">{{item.t}}</text>
+        </block>
+      </view>
+      <view class="part-head">
+        <text class="part-key">{{part.t}}</text>
+        <text wx:if="{{part.type}}" class="part-type">{{part.type}}</text>
+      </view>
+      <view class="part-zh">{{part.zh}}</view>
+      <view class="part-hint">{{part.hint}}</view>
+      <view wx:if="{{part.caps}}" class="part-caps">
+        <text class="part-ex-label">常见词</text>
+        <view class="part-chips">
+          <text wx:for="{{part.caps}}" wx:key="index" class="part-chip">{{item}}</text>
+        </view>
+      </view>
+      <view wx:elif="{{part.exText}}" class="part-ex"><text class="part-ex-label">常见</text><text>{{part.exText}}</text></view>
+    </view>
+  </view>
+
+  <!-- 学习范围勾选：底部浮层，和多选胶囊 -->
+  <view wx:if="{{catPanel}}" class="cat-mask" bindtap="closeCatPanel">
+    <view class="cat-card" catchtap="popupNoop">
+      <view class="part-grab"></view>
+      <view class="cat-head">学习范围</view>
+      <view class="cat-note">新词只从勾选的分类里出；学过的词照常回来复习。全不勾 = 恢复默认范围（日常4类）；想学全部就把 9 类都勾上。</view>
+      <view class="cat-chips">
+        <view wx:for="{{catRows}}" wx:key="key" class="cat-chip {{item.on?'cat-chip-on':''}}" data-key="{{item.key}}" bindtap="pickCat" role="button" aria-label="{{item.label}}">{{item.label}}</view>
+      </view>
+      <button class="cat-save" bindtap="saveCats" disabled="{{busy}}">保存</button>
+    </view>
+  </view>
+
+  <dock current="learn"/>
+</view>

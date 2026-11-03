@@ -1,0 +1,19 @@
+<scroll-view class="ch-scroll" scroll-x scroll-left="{{scrollLeft}}">
+  <view class="ch-body" style="width:{{gridW}}rpx">
+    <view class="ch-grid" style="width:{{gridW}}rpx">
+      <view class="ch-col" wx:for="{{columns}}" wx:for-item="col">
+        <view class="ch-cell {{item.level?'l'+item.level:''}} {{item.future?'fut':''}} {{item.pre?'pre':''}} {{item.today?'td':''}}" wx:for="{{col}}" wx:for-item="item" wx:key="date"></view>
+      </view>
+    </view>
+    <!-- 闭环周的小星：一列对应一周，闭环就点亮一颗。
+         这不是又一组数字，是「这一年攒下多少个完整的星期」，可以直接数出来。 -->
+    <view class="ch-marks" style="width:{{gridW}}rpx">
+      <view class="ch-mk" wx:for="{{marks}}" wx:key="index">
+        <view wx:if="{{item}}" class="ch-star"/>
+      </view>
+    </view>
+    <view class="ch-months" style="width:{{gridW}}rpx">
+      <view class="ch-ml" wx:for="{{monthlabels}}">{{item}}</view>
+    </view>
+  </view>
+</scroll-view>

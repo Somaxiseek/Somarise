@@ -1,0 +1,3 @@
+<view class="glyph glyph-{{size}} {{tint?'glyph-tint':''}}" style="color:{{color}};{{tint?'background:'+color+'1a;':''}}">
+  <view class="glyph-shape shape-{{shape}}"></view>
+</view>

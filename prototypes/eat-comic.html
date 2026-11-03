@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>28 天课程 · 漫画版排版稿</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; padding: 20px; background: #efefed; font-family: system-ui, "PingFang SC", sans-serif; color: #171717; display: flex; flex-direction: column; align-items: center; }
+  .switch { display: flex; gap: 8px; margin-bottom: 12px; }
+  .switch button { border: 1px solid #dcdcd8; background: #fff; border-radius: 999px; padding: 7px 16px; font-size: 12px; color: #545454; cursor: pointer; }
+  .switch button.on { background: #171717; border-color: #171717; color: #fff; }
+  .hint { font-size: 12px; color: #8a8a84; margin-bottom: 12px; text-align: center; line-height: 1.6; }
+  .phone { width: 375px; height: 780px; background: #f5f5f5; border-radius: 32px; border: 1px solid #e2e2df; overflow: hidden; position: relative; display: flex; flex-direction: column; }
+  .scroll { flex: 1; overflow-y: auto; }
+  .fp { padding: 0 0 90px; }
+
+  .heading { font-size: 20px; font-weight: 700; letter-spacing: -.5px; margin: 5px 0 8px; line-height: 1.3; color: #171717; }
+  .intro { font-size: 12px; color: #6f6f6f; line-height: 1.7; margin: 0 0 16px; }
+  .card { background: #fff; border-radius: 16px; padding: 15px 16px; margin: 0 16px 16px; }
+  .phead { font-size: 14px; font-weight: 600; margin: 0; line-height: 1.5; color: #171717; }
+  .fnote { color: #6f6f6f; font-size: 12px; line-height: 1.7; margin: 6px 0; }
+  .foot { text-align: center; color: #6f6f6f; font-size: 11px; line-height: 1.7; margin: 14px 16px 0; }
+  .tag { font-size: 12px; color: #6f6f6f; margin-bottom: 6px; }
+  .lead { font-size: 16px; font-weight: 600; color: #171717; line-height: 1.5; margin: 0 0 6px; }
+  button.primary { display: block; width: 170px; max-width: 100%; margin: 13px auto 2px; padding: 0 20px; line-height: 38px; border-radius: 999px; background: #fff; color: #3f4d55; border: 1px solid #C9E4E9; font-size: 13.5px; box-shadow: 0 2px 8px rgba(23,90,110,.10); cursor: pointer; }
+
+  .poster { display: block; width: 100%; }
+
+  .group-name { font-size: 12px; color: #6f6f6f; margin: 14px 0 2px; display: flex; justify-content: space-between; }
+  .row { display: flex; align-items: center; gap: 10px; padding: 11px 0; border-bottom: 1px solid #eee; font-size: 14px; cursor: pointer; }
+  .row:last-child { border-bottom: 0; }
+  .row .n { flex: 0 0 46px; font-size: 12px; color: #9c9c9c; }
+  .row .t { flex: 1; color: #171717; }
+  .row .go { font-size: 15px; color: #6f6f6f; }
+  .row.locked { cursor: default; }
+  .row.locked .t { color: #9c9c9c; }
+  .row.locked .go { color: #d4d4d4; }
+
+  .read-tag { padding: 14px 16px 10px; font-size: 12px; color: #6f6f6f; }
+  .sheet { display: block; width: 100%; }
+  .sheet-gap { height: 2px; background: #f5f5f5; }
+  .next { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #fff; border-radius: 16px; padding: 15px 16px; margin: 16px 16px 0; cursor: pointer; }
+  .next .l { flex: 1; min-width: 0; }
+  .next .go { font-size: 18px; color: #6f6f6f; }
+
+  .toast { position: absolute; left: 50%; bottom: 92px; transform: translateX(-50%); background: rgba(23,23,23,.86); color: #fff; font-size: 12px; padding: 9px 16px; border-radius: 999px; opacity: 0; transition: opacity .2s; pointer-events: none; white-space: nowrap; }
+  .toast.show { opacity: 1; }
+
+  .dock { height: 56px; border-top: 1px solid #e5e5e5; background: #f5f5f5; display: flex; align-items: center; }
+  .slot { flex: 1; text-align: center; color: #9c9c9c; font-size: 10px; }
+  .slot .g { width: 18px; height: 18px; margin: 0 auto 3px; border: 1.5px solid currentColor; border-radius: 50%; }
+  .slot.on { color: #171717; }
+  .screen { display: none; }
+  .screen.on { display: block; }
+</style>
+</head>
+<body>
+
+<div class="switch">
+  <button class="on" onclick="go(0)">① 开课前</button>
+  <button onclick="go(1)">② 课程首页</button>
+  <button onclick="go(2)">③ 一幅漫画</button>
+</div>
+<div class="hint">第 ① 屏海报位、第 ③ 屏漫画位暂时都用你给的这张图占位（实际海报会另出一张）。文字是占位，只看版式。</div>
+
+<div class="phone">
+  <div class="scroll">
+
+    <div class="screen on" id="s0">
+      <div class="fp">
+        <img class="poster" src="sample-day01.jpg"/>
+        <div class="card" style="margin-top:16px">
+          <div class="phead">28 天，每天一幅小漫画</div>
+          <div class="fnote">一天一幅，讲完一个话题就翻篇。</div>
+          <div class="fnote">四个主题，每个主题七天。</div>
+          <div class="fnote">没看的那天不会消失，第二天照样接着开。</div>
+          <button class="primary" onclick="go(1)">开始这 28 天</button>
+        </div>
+        <div class="card">
+          <div class="phead">看完之后</div>
+          <div class="fnote">28 幅会留成一个图谱，随时能翻回去。</div>
+        </div>
+        <div class="foot">海报是另外出的一整张预告图，完整显示，不裁切</div>
+      </div>
+    </div>
+
+    <div class="screen" id="s1">
+      <div class="fp">
+        <div style="padding:16px 16px 0">
+          <div class="heading">28 天，把吃这件事想明白</div>
+          <div class="intro">每天一幅小漫画，四个主题。</div>
+        </div>
+
+        <div class="card">
+          <div class="tag">第 1 天 · 好好吃饭</div>
+          <div class="lead">好好吃饭，从一顿普通的饭开始</div>
+          <div class="fnote">今天这一幅的一句话引子，两行以内。</div>
+          <button class="primary" onclick="go(2)">看今天这一幅</button>
+        </div>
+
+        <div class="card">
+          <div class="phead">全部 28 天</div>
+          <div class="group-name"><span>主题一的标题</span><span>第 1–7 天</span></div>
+          <div class="row" onclick="go(2)"><span class="n">第 1 天</span><span class="t">重新认识食物</span><span class="go">›</span></div>
+          <div class="row" onclick="go(2)"><span class="n">第 2 天</span><span class="t">第二节的标题</span><span class="go">›</span></div>
+          <div class="row" onclick="go(2)"><span class="n">第 3 天</span><span class="t">第三节的标题</span><span class="go">›</span></div>
+          <div class="row locked" onclick="lock(4)"><span class="n">第 4 天</span><span class="t">第四节的标题</span><span class="go">·</span></div>
+          <div class="row locked" onclick="lock(5)"><span class="n">第 5 天</span><span class="t">第五节的标题</span><span class="go">·</span></div>
+          <div class="row locked" onclick="lock(6)"><span class="n">第 6 天</span><span class="t">第六节的标题</span><span class="go">·</span></div>
+          <div class="row locked" onclick="lock(7)"><span class="n">第 7 天</span><span class="t">第七节的标题</span><span class="go">·</span></div>
+
+          <div class="group-name"><span>主题二的标题</span><span>第 8–14 天</span></div>
+          <div class="row locked" onclick="lock(8)"><span class="n">第 8 天</span><span class="t">第八节的标题</span><span class="go">·</span></div>
+          <div class="row locked" onclick="lock(9)"><span class="n">第 9 天</span><span class="t">第九节的标题</span><span class="go">·</span></div>
+          <div class="row locked" onclick="lock(14)"><span class="n">第 14 天</span><span class="t">第十四节的标题</span><span class="go">·</span></div>
+
+          <div class="group-name"><span>主题三的标题</span><span>第 15–21 天</span></div>
+          <div class="row locked" onclick="lock(15)"><span class="n">第 15 天</span><span class="t">第十五节的标题</span><span class="go">·</span></div>
+          <div class="row locked" onclick="lock(21)"><span class="n">第 21 天</span><span class="t">第二十一节的标题</span><span class="go">·</span></div>
+
+          <div class="group-name"><span>主题四的标题</span><span>第 22–28 天</span></div>
+          <div class="row locked" onclick="lock(22)"><span class="n">第 22 天</span><span class="t">第二十二节的标题</span><span class="go">·</span></div>
+          <div class="row locked" onclick="lock(28)"><span class="n">第 28 天</span><span class="t">第二十八节的标题</span><span class="go">·</span></div>
+        </div>
+
+        <div class="foot">后面的标题都先摆在这里，还没到的会是灰的</div>
+      </div>
+    </div>
+
+    <div class="screen" id="s2">
+      <div class="fp">
+        <div class="read-tag">第 1 天 · 好好吃饭</div>
+        <img class="sheet" src="sample-day01.jpg" onclick="zoom()"/>
+        <div class="foot">点图可以放大看细节</div>
+        <div class="next" onclick="go(1)">
+          <div class="l">
+            <div class="tag">下一幅 · 第 2 天</div>
+            <div class="lead">第二节的标题</div>
+          </div>
+          <div class="go">›</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="dock">
+    <div class="slot"><div class="g"></div>打卡</div>
+    <div class="slot"><div class="g" style="border-radius:4px"></div>学习</div>
+    <div class="slot on"><div class="g" style="border-radius:50% 50% 3px 3px"></div>饮食</div>
+    <div class="slot"><div class="g" style="border-radius:4px;border-width:1.5px 1.5px 0 0"></div>看板</div>
+    <div class="slot"><div class="g" style="border-radius:50% 50% 0 0;border-bottom:0"></div>我的</div>
+  </div>
+</div>
+
+<script>
+function go(i) {
+  for (var k = 0; k < 3; k++) document.getElementById('s' + k).classList.toggle('on', k === i);
+  var b = document.querySelectorAll('.switch button');
+  for (var k = 0; k < b.length; k++) b[k].classList.toggle('on', k === i);
+  document.querySelector('.scroll').scrollTop = 0;
+}
+var t = null;
+function say(m) {
+  t = document.getElementById('toast');
+  t.textContent = m; t.classList.add('show');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(function () { t.classList.remove('show'); }, 1600);
+}
+function lock(d) { say('第 ' + d + ' 天会开，前面的先看也行'); }
+function zoom() { say('点开可放大，硬核那几幅能看清字'); }
+</script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+/* 我的词库：一份居左的清单，词和释义同一行（一屏能多翻几个），点开看例句。
+   另一套是卡片模式：一次一张，左右滑换下一个。 */
+.vocab-top { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; margin: 6rpx 2rpx 18rpx; }
+.vocab-title { font-size: var(--fs-title); font-weight: 750; letter-spacing: -1rpx; }
+.vocab-top-right { display: flex; align-items: center; gap: 16rpx; }
+.vocab-sub { font-size: var(--fs-micro); color: var(--ink-5); font-variant-numeric: tabular-nums; }
+/* 「卡片」入口：轻轻一条，别跟下面的主按钮抢 */
+.vcard-entry {
+  padding: 0 18rpx; line-height: 46rpx; border-radius: 100rpx;
+  background: #f5f1f8; color: #6b4b84; font-size: var(--fs-micro); font-weight: 650;
+}
+
+.vocab-sum { display: flex; background: #fff; border-radius: 28rpx; padding: 18rpx 8rpx 16rpx; }
+.sum-cell { flex: 1; text-align: center; font-size: var(--fs-micro); color: var(--ink-5); }
+.sum-num { display: block; font-size: var(--fs-subhead); font-weight: 750; color: var(--ink-1); margin-bottom: 2rpx; font-variant-numeric: tabular-nums; }
+
+.vocab-filter { display: flex; gap: 10rpx; margin: 18rpx 2rpx 2rpx; overflow-x: auto; }
+.vchip { flex: none; padding: 0 22rpx; line-height: 50rpx; border: 1rpx solid transparent; border-radius: 100rpx; background: #f5f5f6; color: var(--ink-4); font-size: var(--fs-caption); }
+.vchip-on { background: #ffffff; border: 1rpx solid #171717; color: var(--ink-1); font-weight: 600; }
+
+.vocab-list { margin-top: 6rpx; padding-bottom: 240rpx; }
+.vocab-row { background: #fff; border-radius: 28rpx; padding: 20rpx var(--pad-card); margin-bottom: 10rpx; }
+.vrow { display: flex; align-items: center; gap: 14rpx; }
+/* 词和释义排一行：释义跟在词后面，长了就自然换到第二行，不再固定占两行 */
+.vmain { flex: 1; min-width: 0; display: flex; align-items: baseline; flex-wrap: wrap; column-gap: 12rpx; }
+.vword { font-size: var(--fs-body); font-weight: 700; color: var(--ink-1); letter-spacing: -.2rpx; word-break: break-word; }
+.vzh { font-size: var(--fs-micro); font-weight: 400; color: var(--ink-5); }
+.vpos { color: var(--ink-7); }
+.vrow-right { flex: none; display: flex; align-items: center; gap: 10rpx; }
+/* 行内小喇叭：只听读音，不展开这一行 */
+.speak { flex: none; width: 48rpx; height: 48rpx; border-radius: 50%; background: #f5f5f6; display: flex; align-items: center; justify-content: center; }
+.speak-hover { background: #e9e9ea; }
+.speak-icon { width: 22rpx; height: 22rpx; background: no-repeat center / contain url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTQgOS41aDMuMkwxMiA1LjZ2MTIuOEw3LjIgMTQuNUg0eiIgZmlsbD0iIzUyNTI1MiIvPjxwYXRoIGQ9Ik0xNS40IDguNmE0LjggNC44IDAgMCAxIDAgNi44IiBzdHJva2U9IiM1MjUyNTIiIHN0cm9rZS13aWR0aD0iMS43IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMTguMiA2LjJhOC4yIDguMiAwIDAgMSAwIDExLjYiIHN0cm9rZT0iIzUyNTI1MiIgc3Ryb2tlLXdpZHRoPSIxLjciIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg=="); }
+.vbadge { flex: none; font-size: var(--fs-micro); color: var(--ink-5); background: #f5f5f6; border-radius: 8rpx; padding: 4rpx 10rpx; font-variant-numeric: tabular-nums; }
+.vbadge-due { background: #F3EAF8; color: #A659C5; }
+.vbadge-known { background: #f5f5f6; color: var(--ink-6); }
+
+.vbody { margin-top: 16rpx; padding-top: 16rpx; border-top: 1rpx solid #f2f2f3; }
+.vline { display: flex; align-items: center; gap: 14rpx; margin-bottom: 16rpx; }
+.vline:last-child { margin-bottom: 0; }
+.line-body { flex: 1; min-width: 0; }
+/* 整句朗读的小喇叭：跟学习页同一套 */
+.line-speak { flex: none; width: 46rpx; height: 46rpx; border-radius: 50%; background: #f5f5f6; display: flex; align-items: center; justify-content: center; }
+.line-speak-hover { background: #e9e9ea; }
+.line-speak-icon { width: 22rpx; height: 22rpx; background: no-repeat center / contain url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTQgOS41aDMuMkwxMiA1LjZ2MTIuOEw3LjIgMTQuNUg0eiIgZmlsbD0iIzUyNTI1MiIvPjxwYXRoIGQ9Ik0xNS40IDguNmE0LjggNC44IDAgMCAxIDAgNi44IiBzdHJva2U9IiM1MjUyNTIiIHN0cm9rZS13aWR0aD0iMS43IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMTguMiA2LjJhOC4yIDguMiAwIDAgMSAwIDExLjYiIHN0cm9rZT0iIzUyNTI1MiIgc3Ryb2tlLXdpZHRoPSIxLjciIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg=="); }
+.line-en { font-size: var(--fs-meta); font-weight: 650; color: var(--ink-1); line-height: 1.55; text-align: left; }
+.line-zh { font-size: var(--fs-meta); font-weight: 400; color: var(--ink-5); line-height: 1.55; margin-top: 4rpx; text-align: left; }
+/* 例句里能点的词：跟学习页、单词页同一套紫色下划线 */
+.line-en .wl, .vcard-en .wl { color: #A659C5; border-bottom: 2rpx solid #E3CFF0; }
+.wl-hover { opacity: .55; }
+
+/* 进学习的入口：不用 button，自己画，避免小程序按钮默认灰底把主色吃掉 */
+.vocab-cta {
+  display: flex; align-items: center; justify-content: center; gap: 10rpx;
+  height: 96rpx; border-radius: 999rpx; box-sizing: border-box;
+  background: #ffffff; color: #5b4470;
+  border: 2rpx solid #E3CFF0;
+  font-size: var(--fs-body); font-weight: 650; letter-spacing: -.2rpx;
+  box-shadow: 0 8rpx 24rpx rgba(120, 60, 160, .12);
+}
+.cta-text { line-height: 1; }
+.cta-arrow {
+  width: 13rpx; height: 13rpx; margin-left: 2rpx;
+  border-top: 3rpx solid currentColor; border-right: 3rpx solid currentColor;
+  transform: rotate(45deg);
+}
+/* 有词：吸在底部导航之上，滚到哪都点得到 */
+.vocab-cta-fixed {
+  position: fixed; left: 32rpx; right: 32rpx;
+  bottom: calc(150rpx + env(safe-area-inset-bottom));
+  z-index: 9;
+}
+/* 空库：跟着空态提示居中，不飘到屏幕最下面 */
+.vocab-cta-inline { width: 400rpx; margin: 26rpx auto 0; box-shadow: 0 12rpx 26rpx rgba(17, 17, 17, .16); }
+
+/* ── 卡片复习模式 ── */
+.vc-top { display: flex; align-items: center; justify-content: space-between; margin: 4rpx 2rpx 20rpx; }
+.vc-back { display: flex; align-items: center; gap: 8rpx; font-size: var(--fs-body); color: var(--ink-3); padding: 8rpx 4rpx; }
+.vc-back-caret { width: 16rpx; height: 16rpx; border-left: 3rpx solid currentColor; border-bottom: 3rpx solid currentColor; transform: rotate(45deg); }
+.vc-count { font-size: var(--fs-caption); color: var(--ink-5); font-variant-numeric: tabular-nums; }
+.vc-shuffle { font-size: var(--fs-caption); color: #6b4b84; padding: 8rpx 4rpx; }
+.vc-tap { opacity: .55; }
+
+/* 翻面后卡片会变矮，stage 留个下限把位置占住：按钮不跟着上下跳 */
+.vc-stage { min-height: 54vh; display: flex; align-items: center; }
+.vc-stage > .vcard { flex: 1; }
+.vcard {
+  background: #fff; border-radius: 44rpx;
+  min-height: 36vh; box-sizing: border-box;
+  padding: 36rpx 40rpx 32rpx;
+  display: flex; flex-direction: column;
+  box-shadow: 0 14rpx 40rpx rgba(20, 12, 30, .08);
+}
+/* 翻面后高度交给内容：固定高度会在下面留一大片白，像是没加载出来 */
+.vcard-open { min-height: 0; }
+.vcard-anim { transition: transform .13s ease-in; }
+.vcard-in { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+/* 没翻面时词块在卡里垂直居中：否则卡片上面挤一堆、下面空一大片，看着像没加载完 */
+.vcard-head { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
+.vcard-head.is-open { flex: none; justify-content: flex-start; }
+.vcard-meta { display: flex; align-items: center; gap: 10rpx; }
+.vcard-cat { font-size: var(--fs-micro); color: var(--ink-6); background: #f5f5f6; border-radius: 8rpx; padding: 4rpx 12rpx; }
+.vcard-word-wrap { display: flex; align-items: center; gap: 16rpx; margin-top: 26rpx; }
+.vcard-word { flex: 1; min-width: 0; font-size: var(--fs-hero); line-height: 1.18; font-weight: 750; letter-spacing: -1.4rpx; color: var(--ink-1); word-break: break-word; }
+.vcard-speak { width: 60rpx; height: 60rpx; }
+.vcard-ipa { margin-top: 12rpx; font-size: var(--fs-meta); color: var(--ink-5); }
+.vcard-hint { margin-top: auto; padding-bottom: 6rpx; font-size: var(--fs-caption); color: var(--ink-7); text-align: center; }
+.vcard-zh { margin-top: 26rpx; font-size: var(--fs-subhead); font-weight: 650; color: var(--ink-1); line-height: 1.4; }
+.vcard-lines { margin-top: 20rpx; padding-top: 18rpx; border-top: 1rpx solid #f2f2f3; overflow: hidden; }
+.vcard-line { margin-bottom: 18rpx; }
+.vcard-line:last-child { margin-bottom: 0; }
+.vcard-en { font-size: var(--fs-meta); font-weight: 650; line-height: 1.55; color: var(--ink-1); }
+.vcard-zh-line { font-size: var(--fs-meta); font-weight: 400; line-height: 1.55; color: var(--ink-5); margin-top: 2rpx; }
+
+.vc-foot { margin-top: 26rpx; }
+.vc-arrows { display: flex; gap: 20rpx; }
+/* 箭头按钮自己画：不用文字按钮，跟全站的「轻按钮」一致 */
+.vc-arrow {
+  flex: 1; height: 84rpx; border-radius: 999rpx; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  border: 1rpx solid #ececee;
+}
+.vc-arrow-caret { width: 18rpx; height: 18rpx; border-top: 3rpx solid var(--ink-3); border-right: 3rpx solid var(--ink-3); transform: rotate(45deg); margin-left: -4rpx; }
+.vc-arrow-left { transform: rotate(-135deg); margin-left: 4rpx; }
+.vc-tip { margin-top: 16rpx; text-align: center; font-size: var(--fs-micro); color: var(--ink-7); }
+
+/* 未学 tab：待学的小签（紫底 = 搁置中的），往下翻的按钮 */
+.vbadge-new { background: #f5f5f6; color: var(--ink-6); }
+.vbadge-due { background: #F3EAF8; color: #A659C5; }
+.vocab-more { text-align: center; line-height: 88rpx; border-radius: 32rpx; background: #ffffff; font-size: var(--fs-caption); color: var(--ink-5); margin-top: 4rpx; }
+
+/* 重新开始：安静的灰字链接，蹲在最底下，不抢戏；点开有确认弹窗 */
+.vocab-reset { text-align: center; color: var(--ink-5); font-size: var(--fs-caption); padding: 24rpx 0 160rpx; }

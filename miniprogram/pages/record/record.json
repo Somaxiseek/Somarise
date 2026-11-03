@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "运动",
+  "usingComponents": {
+    "dock": "/components/dock/dock"
+  }
+}

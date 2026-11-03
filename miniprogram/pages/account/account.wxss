@@ -1,0 +1,21 @@
+/* pages/account/account.wxss */
+/* 每天新词的行样式跟着搬到目标设置页；这一页只剩头像/昵称和目标、引导入口。 */
+
+/* 头像行：整行做成胶囊框（浅灰底 + 大圆角），头像因内缩 padding 往里收一点；
+   右侧「头像 / 20 位动物朋友」由两行改一行，末尾仍是箭头 */
+.ac-me { display: flex; align-items: center; gap: 22rpx; margin: 2rpx 0 22rpx; padding: 16rpx 30rpx; background: #f5f5f6; border-radius: 999rpx; }
+.ac-hover { opacity: 0.72; }
+.ac-me-txt { flex: 1; min-width: 0; display: flex; flex-direction: row; align-items: baseline; gap: 16rpx; }
+.ac-me-t { font-size: var(--fs-body); color: var(--ink-1); }
+.ac-me-s { font-size: var(--fs-caption); color: var(--ink-4); }
+
+/* 昵称行：标签「昵称」和输入框同一行，整行包进浅灰胶囊框（与头像行一致）。
+   覆盖全局 .form-field 的 block label + 下边框；字号对齐「头像」的 --fs-body
+   （全局 .form-page .form-field > label 用的是 --fs-caption，优先级更高，必须压过它）。 */
+.ac-nick { display: flex; align-items: center; gap: 18rpx; margin: 24rpx 0 0; padding: 14rpx 30rpx; background: #f5f5f6; border-radius: 999rpx; border-bottom: none; }
+.form-page .ac-nick > label { display: inline; flex: none; font-size: var(--fs-body); color: var(--ink-1); margin: 0; }
+.form-page .ac-nick > input { flex: 1; min-width: 0; height: 56rpx; line-height: 56rpx; background: transparent; border: 0; border-radius: 0; padding: 0; margin: 0; font-size: var(--fs-body); color: var(--ink-1); }
+
+/* 教练码（只有教练账号才渲染这张卡）：码要一眼能念给学员听，所以居中放大 + 拉开字距 */
+.cc-code { margin: 18rpx 0 14rpx; text-align: center; font-size: var(--fs-title); font-weight: 600; letter-spacing: 10rpx; color: var(--ink-1); font-variant-numeric: tabular-nums; }
+.coach-code-card button { margin-top: 8rpx; }

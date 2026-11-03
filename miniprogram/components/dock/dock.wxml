@@ -1,0 +1,14 @@
+<view class="bottom-dock">
+  <view class="dock-slot {{current==='log'?'dock-selected':''}}" bindtap="tapLog" role="button" aria-label="打卡">
+    <view class="dock-glyph dg-log"/><text class="dock-label">打卡</text>
+  </view>
+  <view class="dock-slot {{current==='learn'?'dock-selected':''}}" bindtap="tapLearn" role="button" aria-label="学习">
+    <view class="dock-glyph dg-learn"/><text class="dock-label">学习</text>
+  </view>
+  <view class="dock-slot {{current==='cycle'||current==='coach'?'dock-selected':''}}" bindtap="tapBoard" role="button" aria-label="看板">
+    <view class="dock-glyph dg-board"><view class="dg-bar-r"/></view><text class="dock-label">看板</text>
+  </view>
+  <view class="dock-slot {{current==='account'?'dock-selected':''}}" bindtap="tapAccount" role="button" aria-label="我的">
+    <view class="dock-glyph dg-me"/><text class="dock-label">我的</text>
+  </view>
+</view>

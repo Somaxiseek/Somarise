@@ -1,0 +1,4 @@
+<view class="pf" style="width:{{size}}rpx;height:{{size}}rpx">
+  <image wx:if="{{src}}" class="pf-img" src="{{src}}" mode="aspectFit"/>
+  <text wx:else class="pf-letter" style="font-size:{{size*0.36}}rpx">{{letter}}</text>
+</view>

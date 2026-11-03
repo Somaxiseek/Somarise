@@ -1,0 +1,45 @@
+/* pages/onboard/onboard.wxss */
+/* 整页竖向撑满，卡片那一步把内容顶到中间；选难度那一步内容长，就从上往下排 */
+.ob-page { box-sizing: border-box; min-height: 100vh; padding: 32rpx var(--pad-page) calc(240rpx + env(safe-area-inset-bottom)); display: flex; flex-direction: column; }
+.ob-top { display: flex; align-items: center; justify-content: space-between; }
+.ob-step { font-size: var(--fs-caption); color: var(--ink-6); letter-spacing: .5rpx; }
+.ob-skip { font-size: var(--fs-caption); color: var(--ink-5); padding: 8rpx 4rpx; }
+
+/* flex:1 吃掉顶部和底部按钮之间的空位，卡片就落在屏幕中间 */
+.ob-stage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40rpx 0; }
+.ob-stage-top { justify-content: flex-start; padding-top: 48rpx; }
+
+/* 引导卡：方形插图 + 三段文字，宽度跟着内容走，不铺满整屏 */
+.ob-card { display: flex; flex-direction: column; align-items: center; max-width: 540rpx; }
+.ob-art { width: 220rpx; height: 220rpx; border-radius: 32rpx; background: #f5f5f6; display: flex; align-items: center; justify-content: center; margin-bottom: 40rpx; }
+.ob-art-inner { width: 120rpx; height: 120rpx; border-radius: 50%; border: 13rpx solid #dcdcde; }
+.ob-art-0 .ob-art-inner { border-color: #dcdcde; border-top-color: #06B6D4; border-right-color: #D93B36; }
+.ob-art-1 .ob-art-inner { border-radius: 24rpx; border-width: 9rpx; border-color: #e2e2e4; border-bottom-color: #32A964; border-right-color: #32A964; }
+.ob-art-2 .ob-art-inner { width: 138rpx; height: 94rpx; border-radius: 18rpx; border-width: 8rpx; border-color: #EADBF0; border-top-color: #A659C5; }
+
+.ob-title { font-size: var(--fs-em); font-weight: 700; color: var(--ink-1); letter-spacing: -.5rpx; line-height: 1.4; text-align: center; }
+.ob-body { margin-top: 20rpx; font-size: var(--fs-body); color: var(--ink-3); line-height: 1.75; text-align: center; }
+.ob-more { margin-top: 16rpx; font-size: var(--fs-meta); color: var(--ink-5); line-height: 1.7; text-align: center; }
+.ob-dots { display: flex; gap: 10rpx; margin-top: 44rpx; }
+.ob-dot { width: 10rpx; height: 10rpx; border-radius: 50%; background: #e0e0e0; }
+.ob-dot-on { background: #171717; }
+
+/* 最后一步：项目 + 目标。每项一张小卡，chips 选预设 / 仅记录 / 先不记 */
+.ob-item { width: 100%; margin-top: 20rpx; padding: 26rpx var(--pad-card); box-sizing: border-box; border: 1rpx solid #ececec; border-radius: 32rpx; background: #fff; }
+.ob-item-head { display: flex; align-items: baseline; gap: 14rpx; }
+.ob-item-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink-1); }
+.ob-item-period { font-size: var(--fs-caption); color: var(--ink-5); }
+.ob-item-hint { margin-top: 8rpx; font-size: var(--fs-meta); color: var(--ink-5); line-height: 1.6; }
+/* .ob-chips / .ob-chip 已删：最后一步改成了 goal-set 组件，这两条是旧版自己画档位的残留 */
+
+.ob-foot { position: fixed; left: 0; right: 0; bottom: 0; display: flex; gap: 16rpx; padding: 24rpx var(--pad-page) calc(40rpx + env(safe-area-inset-bottom)); background: #fff; border-top: 1rpx solid #f0f0f0; }
+.ob-btn { flex: 1; height: 84rpx; line-height: 84rpx; text-align: center; border-radius: 999rpx; background: #ffffff; color: #3f4d55; border: 2rpx solid #C9E4E9; font-size: var(--fs-body); font-weight: 600; box-shadow: 0 4rpx 16rpx rgba(23, 90, 110, .10); }
+.ob-btn-ghost { flex: 0 0 220rpx; background: #ffffff; color: var(--ink-4); border-color: #e0e0e0; box-shadow: none; }
+
+/* 建账号这一步：昵称输入 + 目标小标题 */
+.ob-name { width: 100%; margin-top: 36rpx; }
+.ob-name-label { font-size: var(--fs-caption); color: var(--ink-4); margin-bottom: 14rpx; }
+.ob-name-input { box-sizing: border-box; width: 100%; height: 92rpx; padding: 0 24rpx; background: var(--bg); border: 1rpx solid var(--line); border-radius: 20rpx; font-size: var(--fs-subhead); color: var(--ink-1); }
+.ob-sub { width: 100%; margin: 40rpx 0 4rpx; font-size: var(--fs-subhead); font-weight: 650; color: var(--ink-1); }
+/* 起点按钮用了原生 button 才能 disable，清掉它自带的 16rpx 外边距，跟其余 ob-btn 对齐 */
+button.ob-btn { margin: 0; }

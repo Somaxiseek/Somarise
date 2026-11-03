@@ -1,0 +1,4 @@
+/* 教练授权：一页只做一件事 —— 把看板分享给教练，或者收回。 */
+.scope-row { font-size: var(--fs-meta); color: var(--ink-2); line-height: 1.9; }
+.code-input { letter-spacing: 6rpx; font-weight: 600; }
+.consent-text { flex: 1; font-size: var(--fs-meta); color: var(--ink-3); line-height: 1.6; }

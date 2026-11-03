@@ -1,0 +1,135 @@
+<view class="page form-page">
+  <view class="screen-heading">教练端</view>
+  <view class="field-note">会员的周期与体测 · 你自己的看板在底部「看板」里，教练码在「我的」</view>
+
+  <block>
+    <!-- 教练码不摆在这儿了（2026-10-30）：那是「我的账号」里的东西，搬去「我的 → 教练码」，
+         只有教练账号才看得到。会员不是教练建的，会员拿着这串码授权过来，教练这边自动出现。 -->
+    <view class="period-row">
+      <view wx:for="{{periods}}" wx:key="v" class="chip {{period===item.v?'chip-on':''}}" data-v="{{item.v}}" bindtap="pickPeriod" role="button">{{item.label}}视图</view>
+      <view class="period-range">{{rangeText}}</view>
+    </view>
+    <view wx:if="{{counts}}" class="board-counts">{{counts}}</view>
+
+    <view wx:if="{{members.length===0}}" class="member-empty">
+      <text>还没有会员。学员在「我的 → 教练授权」里输入你的教练码，就会出现在这里。</text>
+      <view class="empty-link" bindtap="openAccount" hover-class="me-hover" role="button">教练码在「我的」里 ›</view>
+    </view>
+
+    <block wx:else>
+      <!-- 训练结构（乐高柱，2026-10-30）：像记账软件的分类汇总，一人一行细条。
+           一屏放得下十来个人，扫一眼就知道每个人这段时间练的是什么结构。 -->
+      <view class="chart-card">
+        <view class="chart-head">
+          <text class="chart-title">训练结构</text>
+          <text class="chart-note">{{rangeText}}</text>
+        </view>
+        <view class="mix-list">
+          <view wx:for="{{mixRows}}" wx:key="id" class="mix-row" data-id="{{item.id}}" data-name="{{item.name}}" bindtap="openMember" role="button">
+            <text class="mix-name">{{item.name}}</text>
+            <view class="mix-track">
+              <view wx:for="{{item.segs}}" wx:for-item="s" wx:key="label" class="mix-seg" style="width:{{s.pct}}%;background:{{s.color}}"/>
+            </view>
+            <text class="mix-val">{{item.total?item.total+' 次':'未记录'}}</text>
+          </view>
+        </view>
+        <view class="chart-axis-cap">每根条 = 这位会员动过的次数，按类别分段：红 = 心肺、蓝 = 抗阻、其他颜色 = TA 自己建的运动类别（如瑜伽）。条越满练得越多。</view>
+      </view>
+
+      <!-- 总看板两种看法：默认按项目（一个项目一张卡，横轴是人），按人则是下面那种一人一卡 -->
+      <view class="seg2">
+        <view class="seg2-item {{mode==='metric'?'on':''}}" data-mode="metric" bindtap="setMode" role="button">按项目看</view>
+        <view class="seg2-item {{mode==='person'?'on':''}}" data-mode="person" bindtap="setMode" role="button">按人看</view>
+      </view>
+
+      <!-- 按项目看：一个项目一张卡，卡里每个人一根柱子，横轴是人（像排行榜） -->
+      <block wx:if="{{mode==='metric'}}">
+        <view wx:for="{{charts}}" wx:key="key" class="chart-card">
+          <view class="chart-head">
+            <text class="chart-title {{item.cls}}">{{item.label}}</text>
+            <text class="chart-note">{{item.note}}</text>
+          </view>
+          <!-- 纵轴固定在最左，不跟着横轴一起横滑：一眼能读出「这根柱子有多高」 -->
+          <view class="chart-body">
+            <view class="chart-y">
+              <view class="chart-y-spacer"/>
+              <view class="chart-y-track">
+                <view wx:for="{{item.yTicks}}" wx:for-item="t" wx:key="v" class="chart-y-item" style="bottom:{{t.b}}%">
+                  <text class="chart-y-k">{{t.v}}</text>
+                  <view class="chart-y-tick"/>
+                </view>
+              </view>
+              <view class="chart-y-foot"/>
+            </view>
+            <view class="chart-plot">
+              <view class="chart-line {{item.bipolar?'chart-line-zero':''}}" style="bottom:{{item.lineRpx}}rpx"></view>
+              <scroll-view class="chart-cols" scroll-x>
+                <view class="chart-row">
+                  <view wx:for="{{item.bars}}" wx:for-item="b" wx:key="id" class="chart-col" data-id="{{b.id}}" data-name="{{b.name}}" bindtap="openMember" role="button">
+                    <!-- 头顶留 32rpx：最高的柱子（150%）上面还要放得下数字 -->
+                    <view class="col-top"/>
+                    <view class="col-slot">
+                      <!-- 数字贴着柱顶走，柱子矮的时候不会飘到天上去 -->
+                      <view wx:if="{{b.top}}" class="col-val {{b.muted?'col-muted':''}}" style="bottom:calc({{b.h}}% + 6rpx)">{{b.top}}</view>
+                      <view wx:if="{{item.bipolar}}">
+                        <view wx:if="{{b.dir==='up'}}" class="col-bar bar-up" style="bottom:50%;height:{{b.h}}%"></view>
+                        <view wx:elif="{{b.dir==='down'}}" class="col-bar bar-down" style="top:50%;height:{{b.h}}%"></view>
+                        <view wx:else class="col-bar col-stub" style="bottom:46%"></view>
+                      </view>
+                      <view wx:elif="{{b.show}}" class="col-bar {{item.cls}} {{b.muted?'col-loose':''}}" style="height:{{b.h}}%"></view>
+                      <view wx:else class="col-bar col-stub"></view>
+                    </view>
+                    <view class="col-name">{{b.name}}</view>
+                    <view class="col-sub">{{b.sub}}</view>
+                  </view>
+                </view>
+              </scroll-view>
+            </view>
+          </view>
+          <!-- 纵轴是什么、基线在哪，都写在这儿 -->
+          <view class="chart-axis-cap">{{item.axisCap}}</view>
+        </view>
+        <view class="board-foot">每张图的横轴都是人：点任意一根柱子进这个人的详情页。体测给的是变化量（本周期均值较上一周期，不够就取最近两次的差），中线上方是涨、下方是降。</view>
+      </block>
+
+      <!-- 按人看：一人一张卡，三条进度条 + 体测变化量 -->
+      <block wx:else>
+        <view wx:for="{{cards}}" wx:key="id" class="mcard">
+          <view class="mcard-head">
+            <view class="mcard-id" data-id="{{item.id}}" data-name="{{item.name}}" bindtap="openMember" role="button">
+              <view class="mcard-name">{{item.name}}</view>
+              <view class="mcard-sub">{{item.daysText}} · 授权于 {{item.authorizedAt}}</view>
+            </view>
+            <view class="mcard-remark-btn" data-id="{{item.id}}" data-name="{{item.name}}" data-remark="{{item.remark}}" catchtap="editRemark" role="button">{{item.remark?'改备注':'备注'}}</view>
+            <view class="mcard-unlink" data-id="{{item.id}}" data-name="{{item.name}}" catchtap="unlink" role="button">解除</view>
+          </view>
+          <!-- 备注只在教练端出现（用户 10-30）：会员昵称认不出人时，教练自己记的那个名字 -->
+          <view wx:if="{{item.remark}}" class="mcard-remark">备注 · {{item.remark}}</view>
+
+          <view wx:for="{{item.rows}}" wx:for-item="r" wx:key="key" class="mrow">
+            <view class="mrow-label {{r.cls}}">{{r.label}}</view>
+            <view class="mrow-track">
+              <view wx:if="{{r.pct!==null}}" class="mrow-fill {{r.cls}}" style="width:{{r.pct}}%"></view>
+              <view wx:elif="{{r.has}}" class="mrow-fill mrow-loose"></view>
+            </view>
+            <view class="mrow-val {{r.has?'':'mrow-empty'}}">{{r.text}}</view>
+          </view>
+
+          <view class="mdelta-row">
+            <view class="mdelta">
+              <view class="mdelta-top"><text class="mdelta-k">体重</text><text class="mdelta-v">{{item.weight.text}}</text></view>
+              <view class="mdelta-sub">{{item.weight.sub}}</view>
+            </view>
+            <view class="mdelta">
+              <view class="mdelta-top"><text class="mdelta-k">腰围</text><text class="mdelta-v">{{item.waist.text}}</text></view>
+              <view class="mdelta-sub">{{item.waist.sub}}</view>
+            </view>
+          </view>
+        </view>
+        <view class="board-foot">进度条按每个人自己的目标画，满了就是达标；体测给的是变化量。点名字看每天的具体数值。</view>
+      </block>
+    </block>
+  </block>
+
+  <dock current="coach"/>
+</view>

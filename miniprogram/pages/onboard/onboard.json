@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "先认识一下",
+  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarTextStyle": "black",
+  "backgroundColor": "#ffffff",
+  "usingComponents": {
+    "goal-set": "/components/goal-set/goal-set"
+  }
+}

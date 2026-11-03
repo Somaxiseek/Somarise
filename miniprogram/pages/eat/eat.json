@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "饮食小建议",
+  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarTextStyle": "black",
+  "backgroundColor": "#ffffff",
+  "usingComponents": {
+    "dock": "/components/dock/dock"
+  }
+}

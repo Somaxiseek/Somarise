@@ -1,0 +1,82 @@
+/* pages/achievements/achievements.wxss —— 扁平线条风：浅灰底 + 白卡，细线、无填充无阴影
+   版式对齐设计稿：标题 → 三格统计（标签在上、数字在下）→ 12 月徽章墙（当月色点亮）
+   → 点开月历（周日起头，行尾小环 = 该周闭环）→ 里程碑按模块折叠。 */
+
+/* 内边距交给 .form-page（含 dock 的底部留白），这里只管底色 */
+.page { background:#f5f5f5; min-height:100vh; box-sizing:border-box; }
+
+.screen-sub { display:block; font-size: var(--fs-meta); color: var(--ink-5); margin:-8rpx 0 22rpx; }
+
+/* ── 三格统计：跟词库页同一套 —— 一张白卡，数字在上（40rpx 粗体）、标签在下（19rpx 灰字）。
+      原来是三个浅灰方块、标签在上、数字 32rpx，同一个「统计行」在站内长成了两个样子。 ── */
+.summary-strip { display:flex; background:#fff; border-radius:32rpx; padding:26rpx 8rpx 22rpx; margin-bottom:26rpx; }
+.summary-strip .stat { flex:1; text-align:center; }
+.stat-num { display:block; font-size: var(--fs-title); font-weight:750; color: var(--ink-1); margin-bottom:6rpx; font-variant-numeric: tabular-nums; }
+.stat-label { font-size: var(--fs-micro); color: var(--ink-5); white-space:nowrap; }
+
+/* 区块标题 */
+.section-title { font-size: var(--fs-body); font-weight:600; color: var(--ink-1); letter-spacing:0.5rpx; }
+
+/* ── 12 月徽章墙 ── */
+.wall-card { background:#fff; border-radius: 32rpx; padding:26rpx var(--pad-card) 30rpx; margin-bottom:22rpx; }
+.wall-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:18rpx; }
+.wall-count { font-size: var(--fs-caption); color: var(--ink-5); }
+
+.badge-grid { display:grid; grid-template-columns:repeat(4,1fr); row-gap:10rpx; padding:4rpx 0 2rpx; }
+
+/* 每格 = 圆环 +（点亮的）「已点亮」小字；环居中，小字贴底，所以所有环在同一水平线上 */
+/* 显式归零：曾经 app.wxss 里有个废弃的 .badge（虚线方框）会漏到这里，把圆环套进方框里 */
+/* 高度 124：环占 6–94rpx，剩下 30rpx 留给「已点亮」，字不会再贴到环底 */
+.badge { position:relative; width:88rpx; height:124rpx; justify-self:center; border:0; padding:0; box-sizing:border-box; }
+.badge-ring-wrap { position:absolute; left:0; right:0; top:6rpx; height:88rpx; }
+.badge-ring { position:absolute; left:0; top:0; width:100%; height:100%; border-radius:50%; overflow:hidden; }
+/* 选中的月份：环外加一圈细描边（替代原来压在环上的「展开中」胶囊） */
+.badge-selected .badge-ring { box-shadow:0 0 0 3rpx rgba(23,23,23,.28); }
+.badge-fill { position:absolute; left:0; top:0; width:100%; height:100%; border-radius:50%; }
+.badge-hole { position:absolute; left:8rpx; top:8rpx; right:8rpx; bottom:8rpx; border-radius:50%; background:#fff; }
+.badge-num { position:absolute; left:0; top:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; font-size: var(--fs-subhead); font-weight:600; }
+/* 已点亮的那个月：数字换成当月色的勾，比数字更能一眼看出「这个月成了」 */
+.badge-check { position:absolute; left:0; top:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; font-size: var(--fs-title); font-weight:600; }
+.badge-cap { position:absolute; left:-10rpx; right:-10rpx; bottom:2rpx; text-align:center; font-size: var(--fs-micro); line-height:1.2; white-space:nowrap; }
+.wall-note { font-size: var(--fs-caption); color: var(--ink-5); margin-top:16rpx; line-height:1.5; }
+
+/* ── 展开的当月日历 ── */
+.cal-card { background:#fff; border-radius: 32rpx; padding:24rpx var(--pad-card) 16rpx; margin:-6rpx 0 22rpx; }
+.cal-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:14rpx; }
+.cal-title { font-size: var(--fs-body); font-weight:600; color: var(--ink-1); }
+.cal-sub { font-size: var(--fs-caption); color: var(--ink-5); }
+.weekdays { display:flex; }
+.weekdays .weekday { flex:1; text-align:center; font-size: var(--fs-caption); color: var(--ink-5); padding-bottom:8rpx; }
+.cal-week { display:flex; align-items:center; padding:6rpx 0; }
+.cal-cell { flex:1; display:flex; align-items:center; justify-content:center; height:54rpx; }
+.cal-day {
+  position:relative; width:44rpx; height:44rpx; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; font-size: var(--fs-caption); color: var(--ink-5);
+}
+/* 有记录的日子：字变墨色 + 下面点一个小点，不描边，保持扁平 */
+.cal-day.is-active { color: var(--ink-1); }
+.cal-day.is-today { font-weight:700; }
+.cal-dot { position:absolute; bottom:5rpx; left:50%; margin-left:-3.5rpx; width:7rpx; height:7rpx; border-radius:50%; background:#171717; }
+/* 行尾的小环 = 这一整周闭环 */
+.week-closed { flex:0 0 auto; width:14rpx; height:14rpx; border-radius:50%; border:2rpx solid #171717; box-sizing:border-box; margin-left:8rpx; }
+.cal-empty { font-size: var(--fs-caption); color: var(--ink-5); text-align:center; padding:14rpx 0 8rpx; }
+
+/* ── 里程碑折叠 ── */
+.ms-section { margin-top:6rpx; }
+.ms-section .section-title { display:block; margin:6rpx 0 14rpx; }
+.ms-group { background:#fff; border-radius: 32rpx; margin-bottom:16rpx; overflow:hidden; }
+.ms-head { display:flex; align-items:center; justify-content:space-between; padding:26rpx var(--pad-card); }
+.ms-name { font-size: var(--fs-body); font-weight:600; color: var(--ink-1); }
+.ms-count { font-size: var(--fs-caption); color: var(--ink-5); margin-left:auto; margin-right:18rpx; }
+.ms-arrow { flex:0 0 auto; width:16rpx; height:16rpx; border-right:2rpx solid #a3a3a3; border-bottom:2rpx solid #a3a3a3; transform:rotate(45deg); transition:transform .2s; }
+.ms-arrow-open { transform:rotate(-135deg); }
+.ms-body { padding:4rpx var(--pad-card) 22rpx; }
+.ms-item { display:flex; align-items:center; padding:16rpx 0; border-top:1rpx solid #f0f0f1; }
+.ms-item:first-child { border-top:0; }
+.ms-mark { flex:0 0 auto; width:18rpx; height:18rpx; border-radius:50%; border:1.5rpx solid #d4d4d4; box-sizing:border-box; }
+.ms-text { flex:1; display:flex; flex-direction:column; margin-left:16rpx; }
+.ms-label { font-size: var(--fs-body); color: var(--ink-1); }
+.ms-note { font-size: var(--fs-caption); color: var(--ink-5); margin-top:2rpx; }
+.ms-done { font-size: var(--fs-caption); color:#3f8a4f; font-weight:600; }
+.ms-bar { flex:0 0 auto; width:120rpx; height:6rpx; border-radius:3rpx; background:#efefef; overflow:hidden; }
+.ms-bar-fill { height:100%; background:#171717; }

@@ -1,0 +1,24 @@
+<view class="page form-page">
+  <view class="note-line">
+    <view class="title-with-info">
+      <view class="screen-heading" style="margin-bottom:0">目标设置</view>
+      <view class="info-dot {{tip==='how'?'info-dot-on':''}}" data-tip="how" catchtap="toggleTip" role="button" aria-label="目标说明">!</view>
+    </view>
+  </view>
+  <view wx:if="{{tip==='how'}}" class="info-pop">
+    <view class="ip-lead">每一项各设各的口径：</view>
+    <view class="ip-bul">心肺 → 每周分钟数</view>
+    <view class="ip-bul">抗阻 → 每周训练天数</view>
+    <view class="ip-bul">饮水 → 按体重算成每天毫升</view>
+    <view class="ip-bul">英语 → 每天词数</view>
+    <view class="ip-bul">自建习惯 → 你选的指标</view>
+    <view class="ip-line">每周目标要定一个数值，这周才闭得上环；每天的项目可以选「仅记录」，只记不算达标。</view>
+    <view class="ip-line">改目标默认下个周期生效，之前按原目标算。</view>
+  </view>
+
+  <!-- 跟新手引导最后一步是同一个组件：配色就是打卡页那四个色。
+       「英语」那个数同时也是学习页每天发的新词数（服务端对齐），所以这里不再单独放一张「每天新词」卡。 -->
+  <goal-set id="goalset" show-save="{{true}}" show-now="{{true}}"/>
+
+  <dock current=""/>
+</view>

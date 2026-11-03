@@ -1,0 +1,8 @@
+.ring { position: relative; flex-shrink: 0; }
+/* overflow:hidden 只裁到外圆：圆头直径=环宽、正好内切，不会被裁出缺口；
+   端头阴影裁在环内，不会溢到环外或相邻元素上。 */
+.ring-track { position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: 50%; overflow: hidden; }
+.ring-fill { position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: 50%; }
+.ring-hole { position: absolute; border-radius: 50%; }
+.ring-cap { position: absolute; border-radius: 50%; }
+.ring-label { position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-weight: 650; color: #111; pointer-events: none; }

@@ -1,0 +1,67 @@
+/* 新建项目：Fastlog 式卡片分组表单 */
+.sheet-page { padding: 0 var(--pad-page) calc(170rpx + env(safe-area-inset-bottom)); }
+/* 保存键：常驻在 dock 上方。顶部右上角是微信胶囊菜单，放那儿永远点不到 */
+.create-page { padding-top: 20rpx; padding-bottom: 400rpx; }
+.create-foot { position: fixed; left: 0; right: 0; bottom: 0; z-index: 9; box-sizing: border-box; padding: 20rpx var(--pad-page) calc(150rpx + env(safe-area-inset-bottom)); background: linear-gradient(to bottom, rgba(245,245,245,0) 0%, rgba(245,245,245,.94) 26%, #f5f5f5 48%); pointer-events: none; }
+.create-foot button.create-save { display: block; margin: 0 auto; box-sizing: border-box; width: 360rpx; max-width: 100%; padding: 0 36rpx; line-height: 80rpx; border-radius: 999rpx; background: #ffffff; font-size: var(--fs-body); font-weight: 650; letter-spacing: 1rpx; border-width: 2rpx; border-style: solid; pointer-events: auto; }
+.sheet { background: #fff; border-radius: 32rpx; padding: 0 var(--pad-card); margin-bottom: 18rpx; box-shadow: 0 2rpx 12rpx rgba(17,17,17,.04); }
+
+.proj-head { display: flex; align-items: center; gap: 24rpx; padding: 32rpx 0 24rpx; }
+.proj-fields { flex: 1; min-width: 0; }
+/* 名称/鼓励语是卡里的一行字，不是输入框：去掉全局 input 的边框垫底，
+   否则 width:100% 加上 24rpx 内边距会把卡片顶出屏幕右边 */
+.create-page .proj-name, .create-page .proj-note { box-sizing: border-box; width: 100%; padding: 0; margin: 0; border: 0; border-radius: 0; background: transparent; }
+.create-page .proj-name { height: 56rpx; font-size: var(--fs-subhead); font-weight: 600; color: var(--ink-1); }
+.create-page .proj-note { height: 46rpx; margin-top: 6rpx; font-size: var(--fs-body); color: var(--ink-3); }
+
+/* 形状选择：8 个几何形状一行摆开。选中的形状上项目色，未选的是灰 ——
+   颜色这件事交给下面那排色板说，两排不抢同一件事 */
+.shape-row { display: flex; flex-wrap: wrap; gap: 10rpx; padding: 2rpx 0 22rpx; }
+.shape-chip { flex: none; width: 64rpx; height: 64rpx; box-sizing: border-box; border-radius: 18rpx; background: #f5f5f6; border: 2rpx solid transparent; display: flex; align-items: center; justify-content: center; }
+.shape-on { background: #ffffff; border-color: var(--ink-1); }
+.swatch-row { display: flex; gap: 18rpx; padding: 0 0 22rpx; }
+.swatch { width: 52rpx; height: 52rpx; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.swatch-tick { color: #fff; font-size: var(--fs-meta); line-height: 1; }
+
+.sheet-row { display: flex; align-items: center; justify-content: space-between; gap: 20rpx; min-height: 100rpx; border-top: 1rpx solid #f2f2f4; }
+.sheet-row-first { border-top: 0; }
+.row-label { font-size: var(--fs-body); font-weight: 600; color: var(--ink-1); }
+.row-value { font-size: var(--fs-body); color: var(--ink-5); white-space: nowrap; }
+.row-link { min-height: 92rpx; }
+.row-link-text { font-size: var(--fs-body); color: var(--ink-3); }
+.hint { font-size: var(--fs-caption); color: var(--ink-5); line-height: 1.65; padding: 0 0 22rpx; }
+
+.goal-ctl { display: flex; align-items: center; gap: 14rpx; min-width: 0; }
+.stepper { display: flex; align-items: center; gap: 14rpx; background: #f4f4f6; border-radius: 18rpx; padding: 6rpx 12rpx; }
+.step-btn { width: 48rpx; height: 48rpx; border-radius: 12rpx; background: #fff; display: flex; align-items: center; justify-content: center; font-size: var(--fs-body); color: var(--ink-1); }
+.step-num { min-width: 44rpx; text-align: center; font-size: var(--fs-subhead); font-weight: 600; color: var(--ink-1); font-variant-numeric: tabular-nums; }
+
+.period-row { display: flex; flex-wrap: wrap; gap: 14rpx; padding: 0 0 24rpx; }
+
+.cat-new { display: flex; align-items: center; gap: 16rpx; padding: 0 0 24rpx; border-top: 1rpx solid #f1f1f1; }
+.cat-new input { box-sizing: border-box; flex: 1; min-width: 0; height: 76rpx; margin-top: 20rpx; padding: 0 22rpx; background: #f5f5f6; border-radius: 16rpx; font-size: var(--fs-subhead); }
+/* 「算作运动」开关行：跟在新建分组输入框下面 */
+.cat-sport-row { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; padding: 0 0 24rpx; }
+.cat-sport-label { font-size: var(--fs-caption); color: var(--ink-4); }
+.cat-cancel { margin-top: 20rpx; font-size: var(--fs-body); color: var(--ink-5); }
+
+.create-page .inline-num { box-sizing: border-box; width: 140rpx; height: 60rpx; margin: 0; padding: 0 16rpx; text-align: right; font-size: var(--fs-subhead); color: var(--ink-1); background: #f5f5f6; border: 0; border-radius: 12rpx; }
+
+/* 健康基准：卡内浅底说明块，不再另起一张白卡 */
+.guide-card { background: #fafafa; border-radius: 18rpx; padding: 20rpx 24rpx; margin: 4rpx 0 8rpx; border-left: 6rpx solid #D93B36; }
+.guide-card.guide-resistance { border-left-color: #3D6EDC; }
+.guide-card.guide-water { border-left-color: #06B6D4; }
+.guide-head { display: flex; align-items: center; gap: 12rpx; margin: 0 0 10rpx; }
+.guide-dot { width: 12rpx; height: 12rpx; border-radius: 50%; background: #D93B36; }
+.guide-resistance .guide-dot { background: #3D6EDC; }
+.guide-water .guide-dot { background: #06B6D4; }
+.guide-title { font-size: var(--fs-body); font-weight: 650; color: var(--ink-1); }
+.guide-quote { font-size: var(--fs-caption); color: var(--ink-4); line-height: 1.65; margin-bottom: 12rpx; }
+.guide-progress { margin: 2rpx 0 12rpx; }
+.guide-bar { height: 6rpx; border-radius: 6rpx; background: #ededed; overflow: hidden; }
+.guide-bar-fill { height: 100%; background: #D93B36; border-radius: 6rpx; }
+.guide-resistance .guide-bar-fill { background: #3D6EDC; }
+.guide-water .guide-bar-fill { background: #06B6D4; }
+.guide-progress-text { display: block; font-size: var(--fs-caption); color: var(--ink-5); margin-top: 8rpx; }
+.guide-bullet { font-size: var(--fs-caption); color: var(--ink-3); line-height: 1.7; }
+.guide-example { font-size: var(--fs-caption); color: var(--ink-5); margin-top: 10rpx; }

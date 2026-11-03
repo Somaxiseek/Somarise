@@ -1,0 +1,150 @@
+<!-- 用系统原生导航栏：顶部自定义条会盖住微信胶囊菜单，也会让页内 fixed 定位失效 -->
+<view class="sheet-page create-page">
+  <view class="sheet">
+    <view class="proj-head">
+      <proj-glyph shape="{{icon}}" color="{{color}}" size="md"/>
+      <view class="proj-fields">
+        <input class="proj-name" placeholder="{{only?'分组名称，例如 学习':'项目名称'}}" placeholder-class="ph" value="{{name}}" data-key="name" bindinput="input" maxlength="30"/>
+        <input wx:if="{{!only}}" class="proj-note" placeholder="一句鼓励的话（选填）" placeholder-class="ph" value="{{note}}" data-key="note" bindinput="input" maxlength="30"/>
+      </view>
+    </view>
+
+    <!-- 「算作运动」通路（2026-10-30）：勾上的分组，打卡会算进运动热力图和教练看板的训练结构 -->
+    <view wx:if="{{only}}" class="sheet-row">
+      <view class="title-with-info">
+        <text class="row-label">算作运动</text>
+        <view class="info-dot {{tip==='sport'?'info-dot-on':''}}" data-tip="sport" catchtap="toggleTip" role="button" aria-label="算作运动说明">!</view>
+      </view>
+      <switch checked="{{catSport}}" bindchange="toggleCatSport" color="#111111"/>
+    </view>
+
+    <block wx:if="{{!only}}">
+      <!-- 形状而不是 emoji：跟全站同一套「色块 + 形状 + 文字」，也不受平台字体影响 -->
+      <view class="shape-row">
+        <view wx:for="{{shapes}}" wx:key="*this" class="shape-chip {{icon===item?'shape-on':''}}" data-icon="{{item}}" bindtap="pickIcon" role="button" aria-label="项目形状">
+          <proj-glyph shape="{{item}}" color="{{icon===item?color:'#9c9c9c'}}" size="sm" tint="{{false}}"/>
+        </view>
+      </view>
+      <view class="swatch-row">
+        <view wx:for="{{colors}}" wx:key="*this" class="swatch {{color===item?'swatch-on':''}}" style="background:{{item}}" data-color="{{item}}" bindtap="pickColor" role="button"><text wx:if="{{color===item}}" class="swatch-tick">✓</text></view>
+      </view>
+
+      <picker wx:if="{{!creatingCat}}" range="{{catNames}}" value="{{catIndex}}" bindchange="pickCategory">
+        <view class="sheet-row">
+          <text class="row-label">分组</text>
+          <text class="row-value">{{catName||'选择分组'}} ›</text>
+        </view>
+      </picker>
+      <view wx:if="{{creatingCat}}" class="cat-new">
+        <input placeholder="新分组名称" placeholder-class="ph" value="{{catInput}}" data-key="catInput" bindinput="input" maxlength="10"/>
+        <text class="cat-cancel" bindtap="cancelCat">取消</text>
+      </view>
+      <view wx:if="{{creatingCat}}" class="cat-sport-row">
+        <text class="cat-sport-label">算作运动（瑜伽、球类这类就勾上）</text>
+        <switch checked="{{catSport}}" bindchange="toggleCatSport" color="#111111"/>
+      </view>
+      <view wx:if="{{!creatingCat}}" class="sheet-row row-link" bindtap="newCat"><text class="row-link-text">＋ 新建分组</text></view>
+    </block>
+
+    <!-- 「算作运动」的说明：新建分组（only）和项目里顺手建分组（creatingCat）共用一个 -->
+    <view wx:if="{{tip==='sport'}}" class="info-pop">
+      <view class="ip-lead">身体活动才勾这一项：</view>
+      <view class="ip-bul">瑜伽、球类 → 打卡进「运动热力图」，教练端也能看到</view>
+      <view class="ip-bul">纯生活习惯（学习、早睡等）→ 不用勾</view>
+    </view>
+  </view>
+
+    <view wx:if="{{!only && !hydration}}" class="sheet-row">
+      <view class="title-with-info">
+        <text class="row-label">仅记录</text>
+        <view class="info-dot {{tip==='recordonly'?'info-dot-on':''}}" data-tip="recordonly" catchtap="toggleTip" role="button" aria-label="仅记录说明">!</view>
+      </view>
+      <switch checked="{{recordOnly}}" bindchange="toggleRecordOnly" color="#111111"/>
+    </view>
+    <view wx:if="{{tip==='recordonly'}}" class="info-pop">
+      <view class="ip-lead">只想记一笔、不想被目标追着走：</view>
+      <view class="ip-bul">关掉后只留「今天记了没」，不显示达成率、不给压力</view>
+      <view class="ip-bul">随时能在项目里重新打开目标</view>
+    </view>
+
+  <view wx:if="{{!only && !recordOnly}}" class="sheet">
+    <view class="sheet-row sheet-row-first">
+      <view class="title-with-info"><text class="row-label">目标</text><view class="info-dot {{tip==='goal'?'info-dot-on':''}}" data-tip="goal" catchtap="toggleTip" role="button" aria-label="目标说明">!</view></view>
+      <view class="goal-ctl">
+        <text class="row-value">{{periodLabel}}</text>
+        <view class="stepper">
+          <view class="step-btn" data-step="-1" bindtap="stepTarget" role="button">−</view>
+          <text class="step-num">{{target}}</text>
+          <view class="step-btn" data-step="1" bindtap="stepTarget" role="button">＋</view>
+        </view>
+        <text class="row-value">{{unitLabel}}</text>
+      </view>
+    </view>
+    <view wx:if="{{tip==='goal'}}" class="info-pop">保存后可在项目详情里随时调整目标。</view>
+    <view class="hint">{{goalHint}}</view>
+
+    <view wx:if="{{guide}}" class="guide-card guide-{{guide.kind}}">
+      <view class="guide-head">
+        <text class="guide-dot"></text>
+        <text class="guide-title">{{guide.title}}</text>
+      </view>
+      <view class="guide-quote">{{guide.quote}}</view>
+      <view wx:if="{{guide.progress}}" class="guide-progress">
+        <view class="guide-bar"><view class="guide-bar-fill" style="width:{{guide.progress.percent}}%"></view></view>
+        <text class="guide-progress-text">本周已累计 {{guide.progress.current}} / {{guide.progress.target}} 分钟{{guide.progress.remain>0?'':' · 达成 ✓'}}</text>
+      </view>
+      <view wx:for="{{guide.bullets}}" wx:key="*this" class="guide-bullet">· {{item}}</view>
+      <view wx:if="{{guide.example}}" class="guide-example">{{guide.example}}</view>
+    </view>
+
+    <view class="sheet-row row-link" bindtap="toggleMore">
+      <text class="row-label">更多设置</text>
+      <text class="row-value">{{more?'收起 ▴':'周期选项 ›'}}</text>
+    </view>
+    <block wx:if="{{more}}">
+      <view class="period-row">
+        <view wx:for="{{periods}}" wx:key="key" class="chip {{period===item.key?'chip-on':''}}" data-key="{{item.key}}" bindtap="pickPeriod" role="button">{{item.label}}</view>
+      </view>
+      <!-- 单位：次（打卡即计 1）/ 分钟（打卡时填时长）；连续与限期只按次 -->
+      <view wx:if="{{period!=='streak'&&period!=='window'}}" class="period-row">
+        <view class="chip {{metric!=='duration'?'chip-on':''}}" data-unit="count" bindtap="pickUnit" role="button">按次</view>
+        <view class="chip {{metric==='duration'?'chip-on':''}}" data-unit="duration" bindtap="pickUnit" role="button">按分钟</view>
+      </view>
+      <view wx:if="{{period==='window'}}" class="sheet-row">
+        <text class="row-label">期限</text>
+        <view class="goal-ctl">
+          <view class="stepper">
+            <view class="step-btn" data-step="-1" bindtap="stepMonths" role="button">−</view>
+            <text class="step-num">{{months}}</text>
+            <view class="step-btn" data-step="1" bindtap="stepMonths" role="button">＋</view>
+          </view>
+          <text class="row-value">个月</text>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view wx:if="{{hydration}}" class="sheet">
+    <view class="sheet-row sheet-row-first">
+      <text class="row-label">体重</text>
+      <view class="goal-ctl">
+        <input class="inline-num" type="digit" placeholder="60" placeholder-class="ph" value="{{weightKg}}" data-key="weightKg" bindinput="input"/>
+        <text class="row-value">kg</text>
+      </view>
+    </view>
+    <picker range="{{coefficients}}" value="{{coefficientIndex}}" bindchange="pickCoefficient">
+      <view class="sheet-row">
+        <text class="row-label">每公斤饮水量</text>
+        <text class="row-value">{{coefficients[coefficientIndex]}} ›</text>
+      </view>
+    </picker>
+    <view class="hint">{{hydrationHint}} · {{waterNote}}</view>
+  </view>
+
+  <!-- 保存常驻在 dock 上方：不放右上角，那儿是微信胶囊菜单的地盘，点了也没反应 -->
+  <view class="create-foot">
+    <button class="create-save" hover-class="btn-soft-hover-fixed" style="{{saveStyle}}" loading="{{busy}}" disabled="{{busy||!canSave}}" bindtap="save">{{canSave?(only?'保存分组':editing?'保存修改':'保存项目'):(only?'先给分组起个名字':'先给项目起个名字')}}</button>
+  </view>
+
+  <dock current=""/>
+</view>

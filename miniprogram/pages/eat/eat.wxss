@@ -1,0 +1,5 @@
+/* 饮食小建议：纯展示页，只复用 app.wxss 的 form-card / panel-heading，
+   下面两条是唯一新增样式，字号、文字色全走字阶 / 墨阶变量 */
+.page-intro { font-size: var(--fs-body); color: var(--ink-4); line-height: 1.75; margin: 4rpx 0 28rpx; }
+.eat-point { font-size: var(--fs-body); color: var(--ink-2); line-height: 1.7; margin: 16rpx 0; }
+.eat-point:first-of-type { margin-top: 18rpx; }

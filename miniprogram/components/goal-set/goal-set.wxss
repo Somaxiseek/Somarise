@@ -1,0 +1,53 @@
+/* components/goal-set —— 「想记哪些」的卡片：引导最后一步与目标设置页共用 */
+.gs-card { background: #fff; border-radius: 32rpx; padding: 28rpx var(--pad-card) 24rpx; }
+.gs-card + .gs-card { margin-top: 18rpx; }
+
+.gs-head { display: flex; align-items: baseline; gap: 12rpx; }
+.gs-name-row { display: flex; align-items: center; gap: 10rpx; }
+.gs-dot { width: 16rpx; height: 16rpx; border-radius: 50%; flex: none; }
+.gs-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink-1); letter-spacing: -0.3rpx; }
+.gs-period { margin-left: auto; font-size: var(--fs-micro); color: var(--ink-6); }
+.gs-hint { font-size: var(--fs-caption); color: var(--ink-5); line-height: 1.6; margin-top: 8rpx; }
+
+/* 档位：跟全站胶囊同一套规格（54 行高 + 1rpx 透明边框 / #f5f5f6 / ink-4 / 21rpx） */
+.gs-chips { display: flex; flex-wrap: wrap; gap: 14rpx; margin-top: 18rpx; }
+.gs-chip { min-width: 96rpx; text-align: center; padding: 0 24rpx; line-height: 54rpx; border: 1rpx solid transparent; border-radius: 100rpx;
+  background: #f5f5f6; color: var(--ink-4); font-size: var(--fs-caption); }
+/* 选中：白底 + 这一项自己的描边色 + 墨色字。颜色只做「这一档属于哪个分类」的提示，
+   不再把整颗胶囊填成实心色 —— 那是全站唯一一处还在用实心色块的选中态。 */
+.gs-chip-on { background: #ffffff; border-color: #171717; color: var(--ink-1); font-weight: 600; }
+
+/* 饮水：体重 × 每公斤毫升数 —— 拆成两行「标签 + 值 + 单位」。
+   挤在一行时「kg ×」会被压断成两行，而且读起来像一串没有分隔的数字。 */
+.gs-water { margin-top: 18rpx; }
+.gs-wline { display: flex; align-items: center; gap: 14rpx; }
+.gs-wline + .gs-wline { margin-top: 12rpx; }
+/* 标签列等宽：两行的输入框和胶囊左边缘对齐，读起来是一张表而不是两行散字 */
+.gs-wlabel { flex: none; width: 92rpx; font-size: var(--fs-caption); color: var(--ink-5); }
+/* 写成 .gs .gs-weight 而不是 .gs-weight：目标设置页是 form-page，
+   .form-page input 会把输入框改成「透明底 + 78rpx 高 + 无圆角」，压掉这里的灰底药丸 */
+.gs .gs-weight { flex: none; width: 200rpx; height: 56rpx; min-height: 56rpx; box-sizing: border-box; margin: 0; padding: 0 20rpx;
+  border: 0; border-radius: 16rpx; background: #f5f5f6; color: var(--ink-1);
+  font-size: var(--fs-body); font-weight: 650; text-align: center; }
+.gs-coef { display: flex; gap: 12rpx; }
+.gs-coef .gs-chip { min-width: 0; padding: 0 24rpx; }
+.gs-unit { flex: none; font-size: var(--fs-caption); color: var(--ink-5); }
+
+/* 选了什么 = 什么意思，一句话写在下面 */
+.gs-echo { font-size: var(--fs-caption); color: var(--ink-1); line-height: 1.6; margin-top: 16rpx; font-weight: 600; }
+.gs-echo-soft { color: var(--ink-6); font-weight: 400; }
+.gs-note { font-size: var(--fs-micro); color: var(--ink-6); margin-top: 6rpx; }
+
+.gs-custom { display: flex; align-items: center; gap: 10rpx; margin-top: 14rpx; }
+.gs-custom input { width: 200rpx; height: 56rpx; line-height: 54rpx; padding: 0 16rpx; border-radius: 16rpx;
+  background: #f5f5f6; font-size: var(--fs-body); color: var(--ink-1); }
+
+.gs-now { font-size: var(--fs-caption); color: var(--ink-5); margin-top: 16rpx; }
+.gs-foot { margin-top: 18rpx; }
+/* 浮光胶囊：窄款居中，跟新建项目页、记录页那些「确认」是同一颗。
+   一屏三四张卡各带一个保存键，满宽会连成四根白条，字也会被撑大得像主按钮。 */
+.gs .gs-save { box-sizing: border-box; width: 340rpx; max-width: 100%; margin: 26rpx auto 4rpx; padding: 0 40rpx;
+  line-height: 76rpx; border-radius: 999rpx; font-size: var(--fs-meta); font-weight: 650;
+  background: #ffffff; color: #3f4d55; border: 2rpx solid #C9E4E9; box-shadow: 0 4rpx 16rpx rgba(23, 90, 110, .10); }
+.gs-save[disabled] { background: #f4f4f5; color: var(--ink-6); border-color: #e8e8e8; box-shadow: none; }
+.gs-msg { font-size: var(--fs-micro); color: var(--ink-5); margin-top: 10rpx; }

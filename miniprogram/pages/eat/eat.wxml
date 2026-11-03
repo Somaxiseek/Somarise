@@ -1,0 +1,36 @@
+<view class="page form-page">
+  <view class="screen-heading">减脂怎么吃</view>
+  <view class="page-intro">不逼自己顿顿水煮。下面这些小建议，点外卖、做饭、便利店都能用上；挑你能做到的就行。</view>
+
+  <view class="form-card">
+    <view class="panel-heading">点外卖怎么选</view>
+    <view class="eat-point">优先蒸、煮、凉拌，少点红烧、油焖、干锅这类</view>
+    <view class="eat-point">主食选杂粮饭，别顺手再加一份白米饭</view>
+    <view class="eat-point">蛋白质点清蒸鱼、白切鸡、卤牛肉这类</view>
+    <view class="eat-point">备注「少油少盐」，很多店会照做</view>
+  </view>
+
+  <view class="form-card">
+    <view class="panel-heading">自己做一顿</view>
+    <view class="eat-point">一餐 = 1 手掌蛋白 + 2 拳头蔬菜 + 1 拳头主食</view>
+    <view class="eat-point">先热锅再倒油，控制在 1 汤匙以内</view>
+    <view class="eat-point">调味用醋、柠檬、黑胡椒，少放酱</view>
+  </view>
+
+  <view class="form-card">
+    <view class="panel-heading">便利店应急</view>
+    <view class="eat-point">茶叶蛋、无糖酸奶、即食鸡胸都能当一餐</view>
+    <view class="eat-point">玉米、红薯当主食，比面包稳</view>
+    <view class="eat-point">别拿含糖饮料当水喝</view>
+  </view>
+
+  <view class="form-card">
+    <view class="panel-heading">减脂期小提醒</view>
+    <view class="eat-point">不用顿顿水煮，能坚持的才长久</view>
+    <view class="eat-point">饿了先喝一杯水，等十分钟再决定吃不吃</view>
+    <view class="eat-point">偶尔吃多了别自责，下一顿回来就好</view>
+  </view>
+
+  <view class="page-footnote">小建议仅供参考，不替代专业营养建议</view>
+  <dock current=""/>
+</view>

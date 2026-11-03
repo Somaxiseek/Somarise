@@ -1,0 +1,45 @@
+<view class="page form-page">
+  <view class="screen-heading">我的</view>
+  <block wx:if="{{loaded}}">
+    <!-- 账号身份卡：线上不展示（用户 10-30）——会员没必要看/改身份，教练身份由服务端认定，
+         谁也不用动这张卡；本地演示留着，方便核对虚构账号的编号。 -->
+    <view class="form-card" wx:if="{{demo && accountAccess}}"><view class="panel-heading">账号身份 · {{accountAccess.isCoach?'教练':'会员'}}</view><view class="field-note">{{demo?'本地演示账号，不能用于微信教练授权':'Somarise 用户编号'}}</view><view style="font-size:22rpx;word-break:break-all;margin:16rpx 0" selectable="true">{{accountAccess.userId}}</view><button bindtap="copyAccount">复制用户编号</button><view class="field-note" wx:if="{{accountAccess.isCoach}}">教练身份已确认。会员资料需绑定授权后开放。</view><view class="field-note" wx:if="{{accountAccess.pending}}">身份服务待更新，当前编号仍可用于核对账号。</view></view>
+
+    <view class="form-card"><view class="panel-heading">个人设置</view><view class="ac-me" bindtap="pickAvatar" hover-class="ac-hover"><pixel-face name="{{user.avatar}}" size="112" fallback="{{user.nickname}}"/><view class="ac-me-txt"><text class="ac-me-t">头像</text><text class="ac-me-s">20 位动物朋友</text></view><text class="menu-arrow">›</text></view><form bindsubmit="profile"><view class="form-field ac-nick"><label>昵称</label><input name="nickname" type="nickname" value="{{user.nickname}}"/></view><button class="primary" hover-class="btn-soft-hover" form-type="submit">保存设置</button></form></view>
+    <view class="menu-card" bindtap="goals" role="button"><view><view class="title-with-info"><view class="panel-heading">目标设置</view><view class="info-dot {{tip==='goals'?'info-dot-on':''}}" data-tip="goals" catchtap="toggleTip" role="button" aria-label="目标说明">!</view></view><view wx:if="{{tip==='goals'}}" class="info-pop">每项单独设目标或仅记录；想记什么、定多少，都由你来定。</view></view><text class="menu-arrow">›</text></view>
+    <!-- 教练授权：关联只能由会员本人建立，所以入口放在「我的」，教练那边不提供手填新建 -->
+    <view class="menu-card" bindtap="authorize" role="button"><view><view class="panel-heading">教练授权</view><view class="field-note">{{coachLine}}</view></view><text class="menu-arrow">›</text></view>
+    <!-- 教练码：只有教练账号才有这一块（2026-10-30 从教练端搬过来）。
+         它不是给会员看的东西，也不该占教练端那张看板的版面，就放在「我的账号」里。 -->
+    <view wx:if="{{isCoach}}" class="form-card coach-code-card">
+      <view class="panel-heading">教练码</view>
+      <view class="cc-code" bindtap="copyInvite" selectable="true">{{invite || '——'}}</view>
+      <view class="field-note">学员在「我的 → 教练授权」里输入这串码并同意，就会出现在你的教练端。码只有你能看到，别人拿不到。</view>
+      <button class="btn-soft" hover-class="btn-soft-hover" bindtap="copyInvite">复制教练码</button>
+    </view>
+    <view class="menu-card" bindtap="onboard" role="button"><view><view class="title-with-info"><view class="panel-heading">重看新手引导</view><view class="info-dot {{tip==='onboard'?'info-dot-on':''}}" data-tip="onboard" catchtap="toggleTip" role="button" aria-label="引导说明">!</view></view><view wx:if="{{tip==='onboard'}}" class="info-pop">每个页面是做什么的，再看一遍。</view></view><text class="menu-arrow">›</text></view>
+    <!-- 云端还没接通 Somaxis（/somaxis/* 直接 503），公开版本不展示这张卡：
+         放出来审核员会点到「授权并连接」失败，判功能不完整。本地演示仍可看。 -->
+    <view wx:if="{{demo}}" class="form-card"><view class="title-with-info"><view class="panel-heading">Somaxis</view><view class="info-dot {{tip==='somaxis'?'info-dot-on':''}}" data-tip="somaxis" catchtap="toggleTip" role="button" aria-label="Somaxis 说明">!</view></view><view wx:if="{{tip==='somaxis'}}" class="info-pop">按你的意愿，向教练分享心肺训练汇总。</view>
+      <block wx:if="{{!link}}"><view class="form-field"><label>绑定码</label><input placeholder="输入教练提供的绑定码" value="{{code}}" bindinput="input"/></view><view class="switch-line"><view class="title-with-info"><text>同意分享运动汇总</text><view class="info-dot {{tip==='share'?'info-dot-on':''}}" data-tip="share" catchtap="toggleTip" role="button" aria-label="分享内容说明">!</view></view><switch color="#111111" checked="{{consent}}" bindchange="consent"/></view><view wx:if="{{tip==='share'}}" class="info-pop">
+        <view class="ip-lead">分享给教练的只有：</view>
+        <view class="ip-bul">最近 28 天打卡天数、打卡率、连续天数</view>
+        <view class="ip-bul">最近运动日期与分类统计</view>
+        <view class="ip-line">不分享截图，可随时解除。</view>
+      </view><button class="primary" hover-class="btn-soft-hover" bindtap="bind" disabled="{{!consent}}">授权并连接</button><view class="field-note">本地测试码：DEMO-MEMBER-001，仅绑定虚构会员与教练。</view></block>
+      <block wx:else><view class="status-line">已连接 · 虚构会员 / 教练</view><view class="field-note">授权于 {{link.consentedAt}}</view><button bindtap="unbind">解除连接</button></block>
+    </view>
+    <block wx:if="{{demo}}">
+      <view class="form-card">
+        <view class="title-with-info"><view class="panel-heading">重置为新人状态</view><view class="info-dot {{tip==='reset'?'info-dot-on':''}}" data-tip="reset" catchtap="toggleTip" role="button" aria-label="重置说明">!</view></view>
+        <view wx:if="{{tip==='reset'}}" class="info-pop">
+          <view class="ip-line">清空这个账号的记录、项目、目标和学习进度，回到刚进来的样子。</view>
+          <view class="ip-line">只影响当前这个虚构账号。</view>
+        </view>
+        <button bindtap="resetDemo" disabled="{{resetting}}">{{resetting?'正在重置…':'清空并回到新手引导'}}</button>
+      </view>
+    </block>
+    <view class="page-footnote">本地演示 · 仅虚构成员数据</view>
+  </block>
+  <dock current="account"/>
+</view>

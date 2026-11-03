@@ -1,0 +1,148 @@
+/* 周期看板：看自己任务达成情况（与成就页的「勋章」区分开） */
+.screen-sub { display: block; color: var(--ink-4); font-size: var(--fs-meta); margin: 0 0 28rpx; }
+
+/* 标题行：左标题、右角标（成就 + 教练端）。成就从底部导航收进来后，入口落在这里 */
+.heading-row { display: flex; align-items: center; justify-content: space-between; }
+.head-chips { display: flex; align-items: center; gap: 12rpx; }
+.ach-chip { display: flex; align-items: center; gap: 10rpx; background: #fff; border: 1rpx solid var(--line); border-radius: 999rpx; padding: 10rpx 22rpx; }
+.ach-diamond { width: 18rpx; height: 18rpx; border: 2.5rpx solid var(--ink-4); border-radius: 3rpx; transform: rotate(45deg); }
+.ach-t { font-size: var(--fs-caption); color: var(--ink-2); line-height: 1; }
+
+/* 个人卡片：大头像 + 昵称 + @编号 + 一排统计。参考打卡 APP 的开场页，
+   数字用大字、单位缩小、标签压到最小，5 格在窄屏也塞得下。 */
+.me-card { background: #fff; border-radius: 32rpx; padding: 44rpx var(--pad-card) 10rpx; margin: 4rpx 0 24rpx; }
+.me-top { display: flex; flex-direction: column; align-items: center; }
+.me-hover { opacity: 0.82; }
+.me-name { margin-top: 20rpx; font-size: var(--fs-title); color: var(--ink-1); font-weight: 600; line-height: 1.3; }
+.me-sub { display: flex; align-items: baseline; gap: 8rpx; margin-top: 6rpx; }
+.me-handle, .me-dot, .me-edit { font-size: var(--fs-caption); color: var(--ink-4); }
+
+.me-stats { display: flex; width: 100%; margin: 34rpx 0 26rpx; }
+.ms { flex: 1; min-width: 0; position: relative; display: flex; flex-direction: column; align-items: center; gap: 8rpx; }
+.ms + .ms::before { content: ''; position: absolute; left: 0; top: 6rpx; bottom: 6rpx; width: 1rpx; background: var(--line); }
+.ms-v { display: flex; align-items: baseline; gap: 4rpx; }
+.ms-n { font-size: var(--fs-em); color: var(--ink-1); font-weight: 600; line-height: 1.1; }
+.ms-u { font-size: var(--fs-micro); color: var(--ink-4); }
+.ms-l { font-size: var(--fs-micro); color: var(--ink-4); white-space: nowrap; }
+
+.cycle-card { background: #fff; border-radius: 32rpx; padding: 30rpx var(--pad-card); margin: 0 0 24rpx; }
+
+.cycle-head { display: flex; align-items: baseline; gap: 16rpx; margin-bottom: 18rpx; }
+.cycle-range { color: var(--ink-5); font-size: var(--fs-caption); }
+.cycle-pill { margin-left: auto; font-size: var(--fs-micro); color: var(--ink-4); border: 1rpx solid var(--line); border-radius: 999rpx; padding: 4rpx 16rpx; line-height: 1.6; }
+/* 闭环那一下要看得出来是「完成」而不是另一个人造术语：换成金色小胶囊 */
+.cycle-pill.pill-on { color: #8a5f1e; background: #FFF4E4; border-color: #F1D8AF; font-weight: 600; }
+
+.goal-list { margin-top: 6rpx; }
+.goal-row { display: flex; align-items: center; gap: 18rpx; margin: 20rpx 0; }
+.goal-dot { width: 16rpx; height: 16rpx; border-radius: 50%; flex: none; }
+.goal-main { flex: 1; min-width: 0; }
+.goal-top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10rpx; }
+.goal-label { font-size: var(--fs-body); color: var(--ink-1); }
+.goal-figure { font-size: var(--fs-meta); color: var(--ink-4); }
+
+.goal-track { height: 12rpx; border-radius: 999rpx; background: var(--line); overflow: hidden; }
+.goal-fill { height: 100%; border-radius: 999rpx; }
+
+.cycle-empty { font-size: var(--fs-meta); color: var(--ink-4); line-height: 1.7; }
+
+/* 趋势区：三张图，白卡与上面同一套 */
+.trend-head { display: flex; align-items: baseline; gap: 16rpx; margin: 36rpx 0 4rpx; }
+
+.chart-card { background: #fff; border-radius: 32rpx; padding: 28rpx var(--pad-card); margin: 0 0 24rpx; }
+.chart-head { display: flex; align-items: baseline; gap: 16rpx; margin-bottom: 12rpx; }
+.chart-title { font-size: var(--fs-subhead); color: var(--ink-1); font-weight: 600; }
+.chart-sub { margin-left: auto; font-size: var(--fs-micro); color: var(--ink-5); }
+
+/* 强度饼图：环在左、图例在右。
+   刻意不用 canvas：canvas 在微信里是原生层，页面高度一变（数据回来后再排版）
+   它就跟不上，首屏会飘在别的卡片上。conic-gradient 是纯样式，跟着文档流走。
+   角度在 cycle.js 里按 slice 占比拼好，这里只管形状。 */
+.pie-row { display: flex; align-items: center; gap: 28rpx; }
+.pie-donut { width: 240rpx; height: 240rpx; border-radius: 50%; flex: none;
+  display: flex; align-items: center; justify-content: center; }
+.pie-hole { width: 144rpx; height: 144rpx; border-radius: 50%; background: #fff;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.pie-n { font-size: var(--fs-title); font-weight: 600; color: var(--ink-1); line-height: 1.1; }
+.pie-u { font-size: var(--fs-micro); color: var(--ink-5); }
+.pie-legend { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 18rpx; }
+.pie-leg { display: flex; align-items: center; gap: 12rpx; }
+.pie-dot { width: 18rpx; height: 18rpx; border-radius: 5rpx; flex: none; }
+.pie-leg-label { font-size: var(--fs-body); color: var(--ink-1); }
+.pie-leg-val { margin-left: auto; font-size: var(--fs-caption); color: var(--ink-4); }
+
+/* 饼图下面那行口径说明：为什么这张饼里没有抗阻 */
+.pie-note { display: block; font-size: var(--fs-micro); color: var(--ink-4); line-height: 1.6; margin-top: 18rpx; }
+
+/* 本月为空时的占位文案（在页面作用域，不在 chart-bars 组件内，所以这里单独给样式） */
+.cb-empty { font-size: var(--fs-meta); color: var(--ink-4); line-height: 1.7; padding: 30rpx 0; text-align: center; }
+
+/* 日历热力图卡片：年=贡献网格，周/月=柱状图。明亮青梯度（与水同系） */
+.heat-card { }
+.heat-head { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; margin-bottom: 18rpx; }
+
+.hm-seg { display: flex; gap: 4rpx; background: var(--line); border-radius: 999rpx; padding: 4rpx; flex: none; }
+.hm-seg-item { font-size: var(--fs-caption); color: var(--ink-4); padding: 6rpx 22rpx; border-radius: 999rpx; line-height: 1.4; }
+.hm-seg-item.on { color: var(--ink-1); background: #fff; font-weight: 600; }
+
+/* 热力图上方那句话：走到哪儿了。达成时换暖底 + 金色标记（庆祝款） */
+/* 横幅框不要底色也不要彩框（用户 10-30 二稿：青框跟上下亮色实体卡风格不搭）：
+   白卡 + 灰阴影，跟页面其他卡片同一套质感 */
+.cheer { display: flex; align-items: center; gap: 18rpx; margin: 2rpx 0 22rpx; padding: 20rpx 24rpx; border-radius: 20rpx; background: #ffffff; box-shadow: 0 6rpx 18rpx rgba(23, 23, 23, .08); }
+.cheer-on { box-shadow: 0 8rpx 22rpx rgba(23, 23, 23, .12); }
+.cheer-mk { width: 40rpx; height: 40rpx; flex: none; display: flex; align-items: center; justify-content: center; }
+.cheer-gem { width: 18rpx; height: 18rpx; border: 3rpx solid var(--ink-6); border-radius: 5rpx; transform: rotate(45deg); }
+.cheer-on .cheer-gem { background: #E8A33D; border-color: #E8A33D; box-shadow: 0 0 0 8rpx rgba(232, 163, 61, .16); }
+.cheer-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4rpx; }
+.cheer-t { font-size: var(--fs-subhead); color: var(--ink-1); font-weight: 600; line-height: 1.3; }
+.cheer-s { font-size: var(--fs-caption); color: var(--ink-4); line-height: 1.5; }
+
+/* 图例：4 档色块 + 一颗金色小星（= 闭环的一周） */
+.heat-legend { display: flex; align-items: center; gap: 6rpx; margin-top: 16rpx; }
+.hl-t { font-size: var(--fs-micro); color: var(--ink-4); }
+.hl-sq { width: 22rpx; height: 22rpx; border-radius: 4rpx; background: #DCF1F7; }
+/* 梯度换青色系（用户 10-30：板块里的绿色都要换成青色），与网格同一套 */
+.hl-sq.l1 { background: #A6E1EC; }
+.hl-sq.l2 { background: #4EC3DE; }
+.hl-sq.l3 { background: #0AA6CE; }
+/* 图例「还没开始」：浅青灰填充，跟网格里的 pre 格子同一套 */
+.hl-sq.hl-pre { background: #E6EBEE; }
+/* 图例「还没到」：白底细框，跟网格里的 fut 格子同一套 */
+.hl-sq.hl-fut { background: #ffffff; box-shadow: inset 0 0 0 2rpx #C7E3EB; }
+.hl-gap { width: 18rpx; }
+.hl-gem { width: 10rpx; height: 10rpx; background: #E8A33D; border-radius: 2rpx; transform: rotate(45deg); margin: 0 2rpx; }
+
+.heat-stats { display: flex; gap: 12rpx; margin-top: 16rpx; }
+/* 三张统计卡同样白卡 + 灰阴影（用户 10-30 二稿），数字保留深青呼应热力图 */
+.hs { flex: 1; background: #ffffff; border-radius: 20rpx; padding: 18rpx 0; display: flex; flex-direction: column; align-items: center; gap: 4rpx; box-shadow: 0 6rpx 18rpx rgba(23, 23, 23, .08); }
+.hs-n { font-size: var(--fs-em); color: #0A86A8; font-weight: 600; }
+.hs-l { font-size: var(--fs-micro); color: var(--ink-4); }
+
+/* 周视图：7 根柱，每根背后有一条浅槽（没记的那天也看得见位置，不会像缺了东西）；
+   当天那根的字加粗；一天把三项都做全了，顶上给颗金星 */
+.wk-bars { display: flex; align-items: flex-end; gap: 14rpx; height: 190rpx; margin-top: 10rpx; border-bottom: 1rpx solid var(--line); }
+.wk-col { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; align-items: center; }
+.wk-slot { position: relative; width: 48rpx; max-width: 100%; flex: 1; display: flex; align-items: flex-end; justify-content: center; background: #F3F7F6; border-radius: 10rpx 10rpx 0 0; }
+.wk-bar { width: 100%; border-radius: 8rpx 8rpx 0 0; background: #0AA6CE; }
+.wk-bar.l1 { background: #A6E1EC; }
+.wk-bar.l2 { background: #4EC3DE; }
+.wk-bar.l3 { background: #0AA6CE; }
+.wk-gem { position: absolute; top: -14rpx; width: 12rpx; height: 12rpx; background: #E8A33D; border-radius: 3rpx; transform: rotate(45deg); }
+.wk-lab { margin-top: 10rpx; font-size: var(--fs-micro); color: var(--ink-4); line-height: 1; }
+.wk-lab-on { color: var(--ink-1); font-weight: 600; }
+/* 开始前的那几天：标签淡下去，柱子本来就是空的 */
+.wk-lab-off { color: var(--ink-6); }
+
+/* 月视图：12 根柱，柱顶写天数；最勤的那个月数字与月份标金色 */
+.mo-bars { display: flex; align-items: flex-end; gap: 8rpx; height: 220rpx; margin-top: 8rpx; }
+.mo-col { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; align-items: center; }
+.mo-val { height: 26rpx; line-height: 26rpx; font-size: var(--fs-micro); color: var(--ink-5); }
+.mo-val-on { color: #E8A33D; font-weight: 600; }
+.mo-slot { position: relative; width: 100%; flex: 1; display: flex; align-items: flex-end; justify-content: center; border-bottom: 1rpx solid var(--line); }
+.mo-bar { width: 100%; max-width: 40rpx; border-radius: 6rpx 6rpx 0 0; background: #4EC3DE; min-height: 2rpx; }
+.mo-bar-on { background: #0AA6CE; }
+.mo-lab { margin-top: 10rpx; font-size: var(--fs-micro); color: var(--ink-4); line-height: 1; }
+.mo-lab-on { color: var(--ink-1); font-weight: 600; }
+
+.mini-cap { display: block; font-size: var(--fs-caption); color: var(--ink-4); margin-top: 16rpx; text-align: center; }
+

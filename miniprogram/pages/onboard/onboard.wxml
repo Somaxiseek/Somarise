@@ -1,0 +1,43 @@
+<view class="page ob-page">
+  <view class="ob-top">
+    <text class="ob-step">{{stepLabel}}</text>
+    <text class="ob-skip" wx:if="{{onCard}}" bindtap="skip" role="button">跳过说明</text>
+  </view>
+
+  <block wx:if="{{onCard}}">
+    <view class="ob-stage">
+      <view class="ob-card">
+        <view class="ob-art ob-art-{{step}}"><view class="ob-art-inner"/></view>
+        <view class="ob-title">{{cards[step].title}}</view>
+        <view class="ob-body">{{cards[step].body}}</view>
+        <view class="ob-more">{{cards[step].more}}</view>
+      </view>
+      <view class="ob-dots">
+        <view wx:for="{{cards}}" wx:key="title" class="ob-dot {{index===step?'ob-dot-on':''}}"/>
+      </view>
+    </view>
+  </block>
+
+  <block wx:else>
+    <view class="ob-stage ob-stage-top">
+      <view class="ob-title">建个账号，再定个目标</view>
+      <view class="ob-body">先告诉我怎么称呼你（这就是你的账号）。下面顺手把目标定一下——每周的两项先填一个数，这周就能把环闭上了。</view>
+
+      <view class="ob-name">
+        <view class="ob-name-label">怎么称呼你</view>
+        <input class="ob-name-input" type="nickname" value="{{nickname}}" placeholder="例如 阿力" placeholder-class="ph" bindinput="nameInput"/>
+      </view>
+
+      <view class="ob-sub">这一周想练到什么程度</view>
+      <!-- 建账号这一步强制设目标：隐藏「先不记」，每周两项预填一个默认值，环一定闭得上。
+           卡片跟「我的 → 目标设置」是同一个组件，配色、文案、档位不会再各写一套 -->
+      <goal-set id="goalset" required="{{true}}"/>
+    </view>
+  </block>
+
+  <view class="ob-foot">
+    <view wx:if="{{step>0}}" class="ob-btn ob-btn-ghost" hover-class="btn-ghost-hover" bindtap="prev" role="button">上一张</view>
+    <view wx:if="{{onCard}}" class="ob-btn" hover-class="btn-soft-hover" bindtap="next" role="button">下一张</view>
+    <button wx:else class="ob-btn" hover-class="btn-soft-hover-fixed" bindtap="start" disabled="{{!nickname}}">就这样开始</button>
+  </view>
+</view>

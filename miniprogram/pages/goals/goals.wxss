@@ -1,0 +1,3 @@
+/* pages/goals/goals.wxss */
+/* 这一页只放 goal-set 组件，卡片/胶囊/按钮的样式全在 app.wxss 和组件自己的 wxss 里。
+   原来这里还留着一套 .goal-* 和「每天新词」那排 .chip* 的死样式，2026-10-29 清掉。 */

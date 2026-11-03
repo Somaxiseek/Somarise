@@ -1,0 +1,154 @@
+<view class="form-page rec-page">
+  <!-- 记哪一类由进来的入口决定（记笔页的心肺/抗阻两张卡、项目页、截图识别都带着类型），
+       这里不再让人选第二遍；标题把当下是哪一类说清楚就够了 -->
+  <view class="rec-head">{{editing?'运动详情':(mode==='strength'?'记录一次抗阻训练':'记录一次运动')}}</view>
+
+  <!-- 本周有氧压成一行细字：是背景信息，不跟要填的东西抢地方（用户 10-29） -->
+  <view wx:if="{{cardioGuide && mode==='cardio'}}" class="rec-week-line">
+    <view class="title-with-info">
+      <text class="rec-week-cap">本周有氧</text>
+      <view class="info-dot {{tip==='week'?'info-dot-on':''}}" data-tip="week" catchtap="toggleTip" role="button" aria-label="本周有氧说明">!</view>
+    </view>
+    <text class="rec-week-line-val">{{cardioGuide.current}}/{{cardioGuide.target}} 分钟{{cardioGuide.remain>0?'':' · 达成 ✓'}}</text>
+  </view>
+  <view wx:if="{{tip==='week'}}" class="info-pop">
+    <view class="ip-line">这是你在「目标设置」里定的每周有氧目标，不是通用健康标准。</view>
+    <view class="ip-line">随时可以改，改了不追溯过去的周。</view>
+  </view>
+  <view wx:if="{{notice}}" class="rec-notice">{{notice}}</view>
+
+  <view wx:if="{{mode==='cardio'}}" class="rec-card">
+    <!-- 每次真正要填的就这三样：时长 / 距离 / 心率，放最前、给最大（用户 10-29 定稿） -->
+    <view class="rec-metrics">
+      <view class="rec-metric">
+        <view class="rec-metric-label">时长（分钟）<text class="rec-req">{{form.intensity==='low'?'低强度可留空':'必填'}}</text></view>
+        <view class="rec-metric-box">
+          <input class="rec-metric-num" type="digit" value="{{form.durationMin}}" data-key="durationMin" bindinput="input" placeholder="0"/>
+        </view>
+      </view>
+      <view wx:if="{{showDistance}}" class="rec-metric">
+        <view class="rec-metric-label">距离（{{form.type==='swimming'?'m':'km'}}）<text class="rec-req">选填</text></view>
+        <view class="rec-metric-box">
+          <input class="rec-metric-num" type="digit" value="{{form.distance}}" data-key="distance" bindinput="input" placeholder="0"/>
+        </view>
+      </view>
+      <view class="rec-metric">
+        <view class="rec-metric-label">心率（bpm）<text class="rec-req">选填</text></view>
+        <view class="rec-metric-box">
+          <input class="rec-metric-num" type="number" value="{{form.heartRate}}" data-key="heartRate" bindinput="input" placeholder="—"/>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{metric}}" class="rec-metric-note">{{metric}}</view>
+
+    <!-- 步频 / 泳姿：跟类型挂钩的次要数值，小一号垫在下面 -->
+    <view wx:if="{{form.type==='running'||form.type==='cycling'||form.type==='swimming'}}" class="rec-pair">
+      <view wx:if="{{form.type==='running'||form.type==='cycling'}}" class="rec-cell">
+        <text class="rec-cell-label">{{form.type==='running'?'步频（步/分）':'踏频（rpm）'}}</text>
+        <view class="rec-cell-box">
+          <input type="number" value="{{form.cadence}}" data-key="cadence" bindinput="input" placeholder="选填"/>
+        </view>
+      </view>
+      <view wx:if="{{form.type==='swimming'}}" class="rec-cell">
+        <text class="rec-cell-label">泳姿</text>
+        <view class="rec-cell-box">
+          <input value="{{form.stroke}}" data-key="stroke" bindinput="input" placeholder="选填 · 自由泳"/>
+        </view>
+      </view>
+    </view>
+
+    <!-- 类型：一排小胶囊（2026-11-01：原下拉弹窗类别太多、滑动麻烦，改小胶囊，默认=上一次选择） -->
+    <view class="rec-block">
+      <view class="rec-label">运动类型<text wx:if="{{projectBound}}" class="rec-hint">自动归入当前项目</text></view>
+      <view class="rec-chips rec-type-chips">
+        <view wx:for="{{pickerSports}}" wx:key="type" class="rec-chip rec-chip-sm {{form.type===item.type?'rec-chip-on':''}}" data-type="{{item.type}}" bindtap="pickType" role="button" aria-label="{{item.label}}">{{item.label}}</view>
+      </view>
+    </view>
+
+    <!-- 强度：说的是身体感受，不是心率数字。选「低强度」时长可留空（散步只要记一笔） -->
+    <view class="rec-block">
+      <view class="rec-label">
+        <view class="title-with-info">
+          <text>这次有多喘</text>
+          <view class="info-dot {{tip==='intensity'?'info-dot-on':''}}" data-tip="intensity" catchtap="toggleTip" role="button" aria-label="强度说明">!</view>
+        </view>
+      </view>
+      <view wx:if="{{tip==='intensity'}}" class="info-pop">
+        <view class="ip-lead">心肺训练的健康收益，取决于「喘到什么程度」。</view>
+        <view class="ip-bul">能唱完一首歌 → 低强度（散步，不计训练量）</view>
+        <view class="ip-bul">会喘但能讲完一句话 → 中等强度</view>
+        <view class="ip-bul">只能说出一两个字 → 高强度</view>
+        <view class="ip-line">中等每周 150 分钟，或高强度每周 75 分钟；两种都算数，混着练也可以。</view>
+      </view>
+      <view class="rec-int-sm">
+        <view wx:for="{{intensities}}" wx:key="key" class="rec-int-pill {{form.intensity===item.key?'rec-int-pill-on':''}}" data-intensity="{{item.key}}" bindtap="pickIntensity" role="button">{{item.label}}</view>
+      </view>
+      <view class="rec-int-note">{{intensityNote}}</view>
+    </view>
+
+    <!-- 日期：一个滚筒下拉（用户 10-29：默认今天、不记时间点），点开是系统带渐变高光的滚筒 -->
+    <view class="rec-block rec-when">
+      <view class="rec-label">日期</view>
+      <picker mode="date" value="{{form.date}}" bindchange="pickDate">
+        <view class="rec-picker">{{dateText}}<text class="rec-picker-arrow">›</text></view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 抗阻：练了哪一块 + 这次多重（强度会进饼图和教练端）。时长在各自的训练 App 里，这里不重复记 -->
+  <view wx:if="{{mode==='strength'}}" class="rec-card">
+    <view class="rec-block">
+      <view class="rec-label">练的是</view>
+      <view class="rec-chips">
+        <view wx:for="{{parts}}" wx:key="key" class="rec-chip {{part===item.key?'rec-chip-on':''}}" data-part="{{item.key}}" bindtap="pickPart" role="button">{{item.label}}</view>
+      </view>
+    </view>
+    <view class="rec-block">
+      <view class="rec-label">这次练到什么程度</view>
+      <view class="rec-int-sm">
+        <view wx:for="{{intensities}}" wx:key="key" class="rec-int-pill {{strengthIntensity===item.key?'rec-int-pill-on':''}}" data-intensity="{{item.key}}" bindtap="pickStrengthIntensity" role="button">{{item.label}}</view>
+      </view>
+      <view class="rec-int-note">{{strengthNote}}</view>
+    </view>
+    <view class="rec-block rec-when">
+      <view class="rec-label">日期</view>
+      <picker mode="date" value="{{form.date}}" bindchange="pickDate">
+        <view class="rec-picker">{{dateText}}<text class="rec-picker-arrow">›</text></view>
+      </picker>
+    </view>
+    <view class="rec-int-note" style="padding:18rpx 0 22rpx">同一天记几次都只算 1 个训练日，所以不用纠结练了几组。没有抗阻项目的话，会自动归到「力量训练」。</view>
+  </view>
+
+  <!-- 截图识别降级成一行小字链接：是兜底入口，不该占首屏。
+       ocrEnabled 关掉时整行不渲染（个人主体未认证，微信 OCR 云调用不可用，见 config/runtime.js） -->
+  <view wx:if="{{ocrEnabled && !editing && mode==='cardio'}}" class="rec-ocr-link" bindtap="chooseImage" role="button" aria-label="上传运动截图自动识别">上传运动截图，自动识别 ›</view>
+
+  <view class="rec-foot">
+    <view class="note-line" style="margin:0 0 10rpx">
+      <view class="title-with-info">
+        <text class="note-label">{{mode==='strength'?'抗阻怎么算':'强度怎么判断'}}</text>
+        <view class="info-dot {{tip==='valid'?'info-dot-on':''}}" data-tip="valid" catchtap="toggleTip" role="button" aria-label="说明">!</view>
+      </view>
+    </view>
+    <view wx:if="{{tip==='valid'}}" class="info-pop">
+      <block wx:if="{{mode==='strength'}}">
+        <view class="ip-lead">抗阻按「训练日」算：同一天练几次都只算 1 天。</view>
+        <view class="ip-line">每周 2 天是基础线；练的部位和强度都记下来，回看和调整计划都用得上。</view>
+      </block>
+      <block wx:else>
+        <view class="ip-lead">用说话判断强度：</view>
+        <view class="ip-bul">能唱歌 → 低强度（散步，不计训练量）</view>
+        <view class="ip-bul">会喘但能讲完整一句话 → 中等（每周 150 分钟）</view>
+        <view class="ip-bul">只能冒出一两个字 → 高强度（每周 75 分钟就够）</view>
+        <view class="ip-line">两种强度可以混着凑。</view>
+      </block>
+    </view>
+    <text wx:if="{{editing}}">创建于 {{form.createdAt}} · 来源 {{form.source}}</text>
+  </view>
+
+  <button class="primary rec-save" hover-class="btn-soft-hover-fixed" bindtap="save" loading="{{busy}}" disabled="{{busy}}">{{editing?'保存修改':'保存'}}</button>
+  <button wx:if="{{editing}}" class="ghost rec-remove" bindtap="remove">删除这条记录</button>
+
+  <view wx:if="{{celebrate}}" class="celebrate-mask" catchtap="dismissCelebrate"><view class="celebrate-card" catchtap="popupNoop"><view class="celebrate-ring"><text class="celebrate-check">✓</text></view><view class="celebrate-title">已保存</view><view class="celebrate-sub">这条记录已计入你的打卡</view></view></view>
+  <dock current=""/>
+</view>

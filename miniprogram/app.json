@@ -1,0 +1,30 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/record/record",
+    "pages/account/account",
+    "pages/create/create",
+    "pages/project/project",
+    "pages/select/select",
+    "pages/learn/learn",
+    "pages/vocab/vocab",
+    "pages/word/word",
+    "pages/achievements/achievements",
+    "pages/body/body",
+    "pages/goals/goals",
+    "pages/onboard/onboard",
+    "pages/cycle/cycle",
+    "pages/avatar/avatar",
+    "pages/coach/coach",
+    "pages/member/member",
+    "pages/authorize/authorize"
+  ],
+  "window": {
+    "navigationBarTitleText": "Somarise",
+    "navigationBarBackgroundColor": "#f5f5f5",
+    "backgroundColor": "#f5f5f5",
+    "navigationBarTextStyle": "black"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

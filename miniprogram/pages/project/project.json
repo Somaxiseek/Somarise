@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "progress-ring": "/components/progress-ring/progress-ring",
+    "dock": "/components/dock/dock",
+    "proj-glyph": "/components/proj-glyph/proj-glyph"
+  }
+}

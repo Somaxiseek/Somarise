@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>28 天课程 · 排版稿</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; padding: 20px; background: #efefed; font-family: system-ui, "PingFang SC", sans-serif; color: #171717; display: flex; flex-direction: column; align-items: center; }
+  .switch { display: flex; gap: 8px; margin-bottom: 14px; }
+  .switch button { border: 1px solid #dcdcd8; background: #fff; border-radius: 999px; padding: 7px 16px; font-size: 12px; color: #545454; cursor: pointer; }
+  .switch button.on { background: #171717; border-color: #171717; color: #fff; }
+  .hint { font-size: 12px; color: #8a8a84; margin-bottom: 14px; }
+  .phone { width: 375px; height: 780px; background: #f5f5f5; border-radius: 32px; border: 1px solid #e2e2df; overflow: hidden; position: relative; display: flex; flex-direction: column; }
+  .scroll { flex: 1; overflow-y: auto; padding: 16px 16px 0; }
+  .fp { padding: 0 0 85px; }
+
+  .heading { font-size: 20px; font-weight: 700; letter-spacing: -.5px; margin: 5px 0 8px; line-height: 1.3; color: #171717; }
+  .intro { font-size: 12px; color: #6f6f6f; line-height: 1.7; margin: 0 0 16px; }
+  .card { background: #fff; border-radius: 16px; padding: 15px 16px; margin: 0 0 16px; }
+  .phead { font-size: 14px; font-weight: 600; margin: 0; line-height: 1.5; color: #171717; }
+  .fnote { color: #6f6f6f; font-size: 12px; line-height: 1.7; margin: 6px 0; }
+  .foot { text-align: center; color: #6f6f6f; font-size: 11px; line-height: 1.7; margin: 14px 0 0; }
+
+  .tag { font-size: 12px; color: #6f6f6f; margin-bottom: 6px; }
+  .lead { font-size: 16px; font-weight: 600; color: #171717; line-height: 1.5; margin: 0 0 6px; }
+  button.primary { display: block; width: 170px; max-width: 100%; margin: 13px auto 2px; padding: 0 20px; line-height: 38px; border-radius: 999px; background: #fff; color: #3f4d55; border: 1px solid #C9E4E9; font-size: 13.5px; box-shadow: 0 2px 8px rgba(23,90,110,.10); cursor: pointer; }
+
+  .group-name { font-size: 12px; color: #6f6f6f; margin: 14px 0 2px; display: flex; justify-content: space-between; }
+  .row { display: flex; align-items: center; gap: 10px; padding: 11px 0; border-bottom: 1px solid #eee; font-size: 14px; cursor: pointer; }
+  .row:last-child { border-bottom: 0; }
+  .row .n { flex: 0 0 46px; font-size: 12px; color: #9c9c9c; }
+  .row .t { flex: 1; color: #171717; }
+  .row .go { font-size: 15px; color: #6f6f6f; }
+  .row.locked { cursor: default; }
+  .row.locked .t { color: #9c9c9c; }
+  .row.locked .go { color: #d4d4d4; }
+
+  .seg { padding: 13px 0; border-bottom: 1px solid #eee; }
+  .seg:last-child { border-bottom: 0; }
+  .seg .k { font-size: 12px; color: #6f6f6f; margin-bottom: 4px; }
+  .seg .v { font-size: 14px; line-height: 1.75; color: #3d3d3d; }
+  .next { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #fff; border-radius: 16px; padding: 15px 16px; margin: 0 0 16px; cursor: pointer; }
+  .next .l { flex: 1; min-width: 0; }
+  .next .go { font-size: 18px; color: #6f6f6f; }
+
+  .toast { position: absolute; left: 50%; bottom: 92px; transform: translateX(-50%); background: rgba(23,23,23,.86); color: #fff; font-size: 12px; padding: 9px 16px; border-radius: 999px; opacity: 0; transition: opacity .2s; pointer-events: none; white-space: nowrap; }
+  .toast.show { opacity: 1; }
+
+  .dock { height: 56px; border-top: 1px solid #e5e5e5; background: #f5f5f5; display: flex; align-items: center; }
+  .slot { flex: 1; text-align: center; color: #9c9c9c; font-size: 10px; }
+  .slot .g { width: 18px; height: 18px; margin: 0 auto 3px; border: 1.5px solid currentColor; border-radius: 50%; }
+  .slot.on { color: #171717; }
+  .screen { display: none; }
+  .screen.on { display: block; }
+</style>
+</head>
+<body>
+
+<div class="switch">
+  <button class="on" onclick="go(0)">① 开课前</button>
+  <button onclick="go(1)">② 课程首页</button>
+  <button onclick="go(2)">③ 一节内容</button>
+</div>
+<div class="hint">文字全是占位，只看排版；尺寸按 375pt 宽还原（rpx ÷ 2）</div>
+
+<div class="phone">
+  <div class="scroll"><div class="fp">
+
+    <div class="screen on" id="s0">
+      <div class="heading">28 天，把吃这件事想明白</div>
+      <div class="intro">每天一节，四节课一个主题。看完就完了，不用打卡，也不用补。</div>
+
+      <div class="card">
+        <div class="phead">这 28 天怎么安排</div>
+        <div class="fnote">每天开一节，一天一节，节奏不快。</div>
+        <div class="fnote">四个主题，每个主题七天，讲完一块再换下一块。</div>
+        <div class="fnote">没看的那天不会消失，第二天照样接着开。</div>
+      </div>
+
+      <div class="card">
+        <div class="phead">看完之后</div>
+        <div class="fnote">28 节会留成一个图谱，随时能翻回去。</div>
+      </div>
+
+      <button class="primary" onclick="go(1)">开始这 28 天</button>
+      <div class="foot">小建议仅供参考，不替代专业营养建议</div>
+    </div>
+
+    <div class="screen" id="s1">
+      <div class="heading">28 天，把吃这件事想明白</div>
+      <div class="intro">每天一节，四节课一个主题。</div>
+
+      <div class="card">
+        <div class="tag">第 5 天 · 主题一的标题</div>
+        <div class="lead">今天这一节的标题放在这里</div>
+        <div class="fnote">一句话的引子，说明这节讲的是什么，两行以内。</div>
+        <button class="primary" onclick="go(2)">看今天这一节</button>
+      </div>
+
+      <div class="card">
+        <div class="phead">全部 28 天</div>
+
+        <div class="group-name"><span>主题一的标题</span><span>第 1–7 天</span></div>
+        <div class="row" onclick="go(2)"><span class="n">第 1 天</span><span class="t">第一节的标题</span><span class="go">›</span></div>
+        <div class="row" onclick="go(2)"><span class="n">第 2 天</span><span class="t">第二节的标题</span><span class="go">›</span></div>
+        <div class="row" onclick="go(2)"><span class="n">第 3 天</span><span class="t">第三节的标题</span><span class="go">›</span></div>
+        <div class="row" onclick="go(2)"><span class="n">第 4 天</span><span class="t">第四节的标题</span><span class="go">›</span></div>
+        <div class="row" onclick="go(2)"><span class="n">第 5 天</span><span class="t">第五节的标题</span><span class="go">›</span></div>
+        <div class="row locked" onclick="lock(6)"><span class="n">第 6 天</span><span class="t">第六节的标题</span><span class="go">·</span></div>
+        <div class="row locked" onclick="lock(7)"><span class="n">第 7 天</span><span class="t">第七节的标题</span><span class="go">·</span></div>
+
+        <div class="group-name"><span>主题二的标题</span><span>第 8–14 天</span></div>
+        <div class="row locked" onclick="lock(8)"><span class="n">第 8 天</span><span class="t">第八节的标题</span><span class="go">·</span></div>
+        <div class="row locked" onclick="lock(9)"><span class="n">第 9 天</span><span class="t">第九节的标题</span><span class="go">·</span></div>
+        <div class="row locked" onclick="lock(10)"><span class="n">第 10 天</span><span class="t">第十节的标题</span><span class="go">·</span></div>
+        <div class="row locked" onclick="lock(11)"><span class="n">第 11 天</span><span class="t">第十一节的标题</span><span class="go">·</span></div>
+        <div class="row locked" onclick="lock(12)"><span class="n">第 12 天</span><span class="t">第十二节的标题</span><span class="go">·</span></div>
+        <div class="row locked" onclick="lock(13)"><span class="n">第 13 天</span><span class="t">第十三节的标题</span><span class="go">·</span></div>
+        <div class="row locked" onclick="lock(14)"><span class="n">第 14 天</span><span class="t">第十四节的标题</span><span class="go">·</span></div>
+
+        <div class="group-name"><span>主题三的标题</span><span>第 15–21 天</span></div>
+        <div class="row locked" onclick="lock(15)"><span class="n">第 15 天</span><span class="t">第十五节的标题</span><span class="go">·</span></div>
+        <div class="row locked" onclick="lock(21)"><span class="n">第 21 天</span><span class="t">第二十一节的标题</span><span class="go">·</span></div>
+
+        <div class="group-name"><span>主题四的标题</span><span>第 22–28 天</span></div>
+        <div class="row locked" onclick="lock(22)"><span class="n">第 22 天</span><span class="t">第二十二节的标题</span><span class="go">·</span></div>
+        <div class="row locked" onclick="lock(28)"><span class="n">第 28 天</span><span class="t">第二十八节的标题</span><span class="go">·</span></div>
+      </div>
+
+      <div class="foot">后面的标题都先摆在这里，还没到的会是灰的</div>
+    </div>
+
+    <div class="screen" id="s2">
+      <div class="tag">第 5 天 · 主题一的标题</div>
+      <div class="heading">第五节的标题放在这里</div>
+
+      <div class="card">
+        <div class="seg">
+          <div class="k">记住一句</div>
+          <div class="v">这一节最想让你记住的那句话，一句话的长度，最多两行。</div>
+        </div>
+        <div class="seg">
+          <div class="k">怎么用</div>
+          <div class="v">具体到能照着做的一段说明。会写清楚在什么场合、怎么下手，篇幅可以到四五行。</div>
+        </div>
+        <div class="seg">
+          <div class="k">什么时候不适用</div>
+          <div class="v">这一条的边界。讲清楚哪些人、哪些情况下不该照做，免得一条建议被用错地方。</div>
+        </div>
+      </div>
+
+      <div class="next" onclick="go(1)">
+        <div class="l">
+          <div class="tag">下一节 · 第 6 天</div>
+          <div class="lead">第六节的标题</div>
+        </div>
+        <div class="go">›</div>
+      </div>
+
+      <div class="foot">小建议仅供参考，不替代专业营养建议</div>
+    </div>
+
+  </div></div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="dock">
+    <div class="slot"><div class="g"></div>打卡</div>
+    <div class="slot"><div class="g" style="border-radius:4px"></div>学习</div>
+    <div class="slot on"><div class="g" style="border-radius:50% 50% 3px 3px"></div>饮食</div>
+    <div class="slot"><div class="g" style="border-radius:4px;border-width:1.5px 1.5px 0 0"></div>看板</div>
+    <div class="slot"><div class="g" style="border-radius:50% 50% 0 0;border-bottom:0"></div>我的</div>
+  </div>
+</div>
+
+<script>
+function go(i) {
+  for (var k = 0; k < 3; k++) document.getElementById('s' + k).classList.toggle('on', k === i);
+  var b = document.querySelectorAll('.switch button');
+  for (var k = 0; k < b.length; k++) b[k].classList.toggle('on', k === i);
+  document.querySelector('.scroll').scrollTop = 0;
+}
+function lock(d) {
+  var t = document.getElementById('toast');
+  t.textContent = '第 ' + d + ' 天会开，前面的先看也行';
+  t.classList.add('show');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(function () { t.classList.remove('show'); }, 1800);
+}
+</script>
+</body>
+</html>

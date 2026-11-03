@@ -1,0 +1,58 @@
+<view class="gs">
+  <view wx:for="{{items}}" wx:key="key" class="gs-card">
+    <view class="gs-head">
+      <view class="gs-name-row">
+        <view class="gs-dot" style="background:{{item.accent}}"/>
+        <text class="gs-name">{{item.label}}</text>
+        <view class="info-dot {{tip===item.key?'info-dot-on':''}}" data-key="{{item.key}}" catchtap="openTip" role="button" aria-label="{{item.label}}为什么这么定">!</view>
+      </view>
+      <text class="gs-period">{{item.periodLabel}} · {{item.unit}}</text>
+    </view>
+
+    <view wx:if="{{tip===item.key}}" class="info-pop">
+      <view wx:for="{{item.whyLines}}" wx:for-item="ln" wx:key="s" class="ip-{{ln.t}}">{{ln.s}}</view>
+    </view>
+    <view class="gs-hint">{{item.hint}}</view>
+
+    <!-- 饮水不选毫升数，选「体重 × 每公斤多少毫升」 -->
+    <block wx:if="{{item.byWeight}}">
+      <view class="gs-water">
+        <view class="gs-wline">
+          <text class="gs-wlabel">体重</text>
+          <input class="gs-weight" type="digit" value="{{water.weightKg}}" placeholder="例如 62" placeholder-class="ph" bindinput="inputWeight"/>
+          <text class="gs-unit">kg</text>
+        </view>
+        <view class="gs-wline">
+          <text class="gs-wlabel">每公斤</text>
+          <view class="gs-coef">
+            <view wx:for="{{coefs}}" wx:for-item="c" wx:key="*this" class="gs-chip {{water.coef===c?'gs-chip-on':''}}" style="{{water.coef===c?'border-color:'+item.accent:''}}" data-coef="{{c}}" bindtap="pickCoef" role="button" aria-label="每公斤 {{c}} 毫升">{{c}}</view>
+          </view>
+          <text class="gs-unit">ml</text>
+        </view>
+      </view>
+      <view class="gs-echo {{water.ready?'':'gs-echo-soft'}}">{{water.echo}}</view>
+      <view class="gs-note">体重记下来之后，每日饮水目标就跟着体重变</view>
+    </block>
+
+    <block wx:else>
+      <view class="gs-chips">
+        <view wx:for="{{item.presets}}" wx:for-item="p" wx:key="*this" class="gs-chip {{item.picked===p?'gs-chip-on':''}}" style="{{item.picked===p?'border-color:'+item.accent:''}}" data-key="{{item.key}}" data-value="{{p}}" bindtap="pick" role="button">{{p}}</view>
+        <view wx:if="{{item.allowRecordOnly}}" class="gs-chip {{item.picked==='record'?'gs-chip-on':''}}" data-key="{{item.key}}" data-value="record" bindtap="pick" role="button">仅记录</view>
+        <view wx:if="{{showSave}}" class="gs-chip {{item.picked==='custom'?'gs-chip-on':''}}" data-key="{{item.key}}" data-value="custom" bindtap="pick" role="button">自定义</view>
+        <view wx:if="{{item.allowSkip}}" class="gs-chip {{item.picked==='skip'?'gs-chip-on':''}}" data-key="{{item.key}}" data-value="skip" bindtap="pick" role="button">先不记</view>
+      </view>
+      <view wx:if="{{item.picked==='custom'}}" class="gs-custom">
+        <input type="number" value="{{item.draft}}" placeholder="填一个数" placeholder-class="ph" data-key="{{item.key}}" bindinput="inputDraft"/>
+        <text class="gs-unit">{{item.unit}}</text>
+      </view>
+      <view class="gs-echo {{item.echo?'':'gs-echo-soft'}}">{{item.echo}}</view>
+    </block>
+
+    <view wx:if="{{showNow&&item.current!==''}}" class="gs-now">当前：{{item.recordOnly?('仅记录 · 累计 '+item.current+' '+item.unit):(item.current+' / '+item.target+' '+item.unit)}}</view>
+
+    <view wx:if="{{showSave}}" class="gs-foot">
+      <button class="gs-save primary" hover-class="btn-soft-hover" data-key="{{item.key}}" bindtap="save" disabled="{{busyKey!==''}}">{{busyKey===item.key?'保存中':'保存这项'}}</button>
+    </view>
+    <view wx:if="{{item.message}}" class="gs-msg">{{item.message}}</view>
+  </view>
+</view>

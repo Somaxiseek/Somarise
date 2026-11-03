@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "体测",
+  "usingComponents": {
+    "dock": "/components/dock/dock"
+  }
+}

@@ -1,0 +1,6 @@
+.local/
+project.private.config.json
+node_modules/
+outputs/
+*.log
+.DS_Store

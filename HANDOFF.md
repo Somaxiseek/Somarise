@@ -109,7 +109,7 @@ prototypes/ outputs/  历史设计稿与截图产物（可删，不参与构建�
   - **另一个失败是缺素材，不是 bug**：`tests/audio.test.js` 的"例句朗读…"要求 `outputs/audio-words/`、`outputs/audio-sent/`（3084 + 9232 个 m4a，共 155MB）真实存在。这批音频是**托管产物、已上传到云端**（`AUDIO_BASE`，见 `miniprogram/config/audio.js`），不随源码包发。要补：从原目录拷这两个文件夹到 `outputs/` 下即可恢复 398/399。
 - **README 过时**：仍写着"尚未部署"，实际已上云。以本文件为准。
 - **待办**：真机视觉验收（学习范围浮层、60 个新词发音）；Somaxis 真实对接未接通（仅有授权接口）；教练端未来分列"记录 N 天 / 达标 N 天"。
-- **无 git**：本目录目前**不是 git 仓库**。建议接手方第一件事 `git init` 并提交基线，之后每次改动可回溯（之前出过"整理时误删重要内容"的事故）。
+- **已接入 git**：远端 `https://github.com/Somaxiseek/Somarise`（公开仓，main 分支）。本目录已 `git init` 并配好凭据，`git pull` / `git push` 可直接用；每次改动提交后再动手，改完先 `git diff` 自查。
 - **死代码提示**：`miniprogram/pages/eat/` 存在但**未注册进 app.json、全项目零引用**，是历史遗留，不是现存功能，别误当成"饮食页坏了"。清理与否由接手方决定。
 
 ---
@@ -129,7 +129,7 @@ prototypes/ outputs/  历史设计稿与截图产物（可删，不参与构建�
 ## 8. 建议的接手顺序
 
 1. `npm install && npm test`，确认 397/399 基线（两个红灯的成因见 §6，都**不是本次交接新引入的**）。
-2. `git init` + 首次提交（把 `.local/`、`node_modules/`、`outputs/` 排除，`.gitignore` 已写好）。
+2. `git pull` 确认与远端一致，之后**每次改动都先提交**（已接 GitHub：`Somaxiseek/Somarise`）。
 3. `npm start`，开发者工具导入本目录，跑通首页。
 4. 读 §5 硬约束，再动任何代码。
 5. 改完按 §4 走：`npm test` → `npm run build:cloud`（若改了 server）→ `npm run cloud:deploy` → `npm run upload -- <新版本> "<说明>"`。
